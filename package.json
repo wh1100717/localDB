@@ -1,0 +1,36 @@
+{
+  "name": "localDB",
+  "version": "0.1.1",
+  "description": "local database using localStorage",
+  "keywords": [
+    "localdb",
+    "localstorage"
+  ],
+  "homepage": "localdb.emptystack.net",
+  "bugs": "https://github.com/wh1100717/localDB/issues",
+  "author": {
+    "name": "Eric Wang",
+    "email": "me@emptystack.net",
+    "url": "github.com/wh1100717"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wh1100717/localDB"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-qunit": "~0.2.2",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "~0.5.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "time-grunt": "~0.1.0",
+    "load-grunt-tasks": "~0.2.0",
+    "jshint-stylish": "~0.1.3"
+  }
+}
