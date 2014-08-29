@@ -94,7 +94,8 @@ define(function(require, exports, module) {
     }
     return true;
   };
-  localDB = localDB || function(dbName) {
+  localDB = localDB || function(dbName, storageType) {
+    ls = storageType;
     this.db = dbPrefix + dbName;
     if (ls.getItem(this.db) != null) {
       ls.setItem(this.db, "_");
