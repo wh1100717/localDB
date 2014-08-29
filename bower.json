@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "ignore": [
-    "node_modules",
+    "node_modules"
   ],
   "dependencies": {
     "seajs": "~2.3.0"
