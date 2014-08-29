@@ -48,7 +48,8 @@ define (require, exports, module) ->
 
     #Utils End
 
-    localDB = localDB or (dbName)->
+    localDB = localDB or (dbName, storageType)->
+        ls = storageType
         @db = dbPrefix+dbName
         ls.setItem(@db, "_") if ls.getItem(@db)?
         @length = -> @collections().length

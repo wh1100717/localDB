@@ -7,11 +7,11 @@
         <script src="sea.js"></script>
         <script>
             seajs.use('./src/localdb.js', function(localDB){
-                console.log("Current Keys:")
-                console.log((ls.key(i) for i in [0...ls.length]))
+
 
                 console.log("Create new db:")
-                abc = new localDB("abc")
+                //you can switch the storage type by using sessionStorage or localStorage
+                abc = new localDB("abc", localStorage)
                 console.log(abc)
              
                 console.log("Show Collections:")
@@ -42,11 +42,11 @@
                 console.log(abc.find("collection1",{a:{$gt:3,$lt:10}},4))
 
                 console.log("Update data by criteria and action")
-                abc.update("collection1", {$set:{b:4,c:5}} , {a:{$gt:3, $lt:10}}))
+                abc.update("collection1", {$set:{b:4,c:5}} , {a:{$gt:3, $lt:10}})
                 console.log(abc.find("collection1"))
 
                 console.log("Delete data by criteria")
-                abc.remove("collection1", {a:{$gt:3,$lt:10}}))
+                abc.remove("collection1", {a:{$gt:3,$lt:10}})
                 console.log(abc.find("collection1"))
 
                 console.log("Show Collections:")

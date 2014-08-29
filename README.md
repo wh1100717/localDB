@@ -11,7 +11,8 @@ seajs.use('./src/localdb.js', function(localDB){
     console.log((ls.key(i) for i in [0...ls.length]))
 
     console.log("Create new db:")
-    abc = new localDB("abc")
+    //you can switch the storage type by using sessionStorage or localStorage
+    abc = new localDB("abc", localStorage)
     console.log(abc)
  
     console.log("Show Collections:")
