@@ -3,6 +3,12 @@ localDB
 
 local database using localstorage
 
+##Install
+
+```bash
+$ bower install localdb
+```
+
 ###API
 
 ```coffee
