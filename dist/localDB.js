@@ -144,17 +144,14 @@ define(function(require, exports, module) {
     ls.setItem(collectionName, stringify(collection));
     return this;
   };
-  localDB.prototype.find = function(collectionName, criteria, projection, limit) {
-    var c, collection, d, data, key, r, result, value, _i, _j, _len, _len1;
-    if (criteria == null) {
-      criteria = {};
+  localDB.prototype.find = function(collectionName, options) {
+    var c, collection, criteria, d, data, key, limit, projection, r, result, value, _i, _j, _len, _len1;
+    if (options == null) {
+      options = {};
     }
-    if (projection == null) {
-      projection = {};
-    }
-    if (limit == null) {
-      limit = -1;
-    }
+    criteria = options.criteria != null ? options.criteria : {};
+    projection = options.projection != null ? options.projection : {};
+    limit = options.limit != null ? options.limit : -1;
     collectionName = "" + this.db + "_" + collectionName;
     collection = ls.getItem(collectionName);
     if (collection == null) {
@@ -202,17 +199,20 @@ define(function(require, exports, module) {
     }
     return result;
   };
-  localDB.prototype.findOne = function(collectionName, criteria) {
-    if (criteria == null) {
-      criteria = {};
+  localDB.prototype.findOne = function(collectionName, options) {
+    if (options == null) {
+      options = {};
     }
-    return this.find(collectionName, criteria, 1);
+    options.limit = 1;
+    return this.find(collectionName, options);
   };
-  localDB.prototype.update = function(collectionName, action, criteria) {
-    var actions, c, collection, key, value, _i, _len;
-    if (criteria == null) {
-      criteria = {};
+  localDB.prototype.update = function(collectionName, options) {
+    var action, actions, c, collection, criteria, key, value, _i, _len;
+    if (options == null) {
+      options = {};
     }
+    action = options.action;
+    criteria = options.criteria != null ? options.criteria : {};
     collectionName = "" + this.db + "_" + collectionName;
     collection = ls.getItem(collectionName);
     if (collection == null) {
@@ -232,11 +232,12 @@ define(function(require, exports, module) {
     }
     return ls.setItem(collectionName, stringify(collection));
   };
-  localDB.prototype.remove = function(collectionName, criteria) {
-    var c, collection;
-    if (criteria == null) {
-      criteria = {};
+  localDB.prototype.remove = function(collectionName, options) {
+    var c, collection, criteria;
+    if (options == null) {
+      options = {};
     }
+    criteria = options.criteria != null ? options.criteria : {};
     collectionName = "" + this.db + "_" + collectionName;
     collection = ls.getItem(collectionName);
     if (collection == null) {

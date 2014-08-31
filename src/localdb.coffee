@@ -66,7 +66,10 @@ define (require, exports, module) ->
         ls.setItem collectionName, stringify(collection)
         return @
 
-    localDB.prototype.find = (collectionName, criteria = {}, projection = {}, limit = -1) ->
+    localDB.prototype.find = (collectionName, options = {}) ->
+        criteria = if options.criteria? then options.criteria else {}
+        projection = if options.projection? then options.projection else {}
+        limit = if options.limit? then options.limit else -1
         collectionName = "#{@db}_#{collectionName}"
         collection = ls.getItem(collectionName)
         collection = "[]" if not collection?
@@ -94,9 +97,13 @@ define (require, exports, module) ->
             result.push r
         return result
 
-    localDB.prototype.findOne = (collectionName, criteria = {}) -> @find(collectionName, criteria, 1)
+    localDB.prototype.findOne = (collectionName, options = {}) ->
+        options.limit = 1
+        @find(collectionName, options)
 
-    localDB.prototype.update = (collectionName, action, criteria = {}) ->
+    localDB.prototype.update = (collectionName, options = {}) ->
+        action = options.action
+        criteria = if options.criteria? then options.criteria else {}
         collectionName = "#{@db}_#{collectionName}"
         collection = ls.getItem(collectionName)
         collection = "[]" if not collection?
@@ -107,7 +114,8 @@ define (require, exports, module) ->
                 c[key] = value
         ls.setItem collectionName, stringify(collection)
 
-    localDB.prototype.remove = (collectionName, criteria = {}) ->
+    localDB.prototype.remove = (collectionName, options = {}) ->
+        criteria = if options.criteria? then options.criteria else {}
         collectionName = "#{@db}_#{collectionName}"
         collection = ls.getItem(collectionName)
         collection = "[]" if not collection?
