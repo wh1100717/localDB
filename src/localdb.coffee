@@ -7,12 +7,12 @@
 ###
 
 ###localStorage API
-    *   setItem(key, val)
-    *   getItem(key)
-    *   removeItem(key)
-    *   clear()
-    *   key(index)
-    *   length
+ * setItem(key, val)
+ * getItem(key)
+ * removeItem(key)
+ * clear()
+ * key(index)
+ * length
 ###
 
 define (require, exports, module) ->
@@ -53,6 +53,13 @@ define (require, exports, module) ->
         @db = dbPrefix+dbName
         ls.setItem(@db, "_") if ls.getItem(@db)?
         @length = -> @collections().length
+        return
+
+    localDB.isSupport = -> if localStorage? then true else false
+
+    localDB.prototype.drop = (collectionName)->
+        collectionName = if collectionName? then "_#{collectionName}" else ""
+        ls.removeItem(ls.key(i)) for i in [0...ls.length] when ls.key(i).indexOf(@db + collectionName) is 0
         return
 
     localDB.prototype.collections = -> if @db? then (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf("#{@db}_") is 0) else []

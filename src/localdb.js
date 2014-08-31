@@ -9,12 +9,12 @@
  */
 
 /*localStorage API
-    *   setItem(key, val)
-    *   getItem(key)
-    *   removeItem(key)
-    *   clear()
-    *   key(index)
-    *   length
+ * setItem(key, val)
+ * getItem(key)
+ * removeItem(key)
+ * clear()
+ * key(index)
+ * length
  */
 define(function(require, exports, module) {
   'use strict';
@@ -100,6 +100,22 @@ define(function(require, exports, module) {
     this.length = function() {
       return this.collections().length;
     };
+  };
+  localDB.isSupport = function() {
+    if (typeof localStorage !== "undefined" && localStorage !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  localDB.prototype.drop = function(collectionName) {
+    var i, _i, _ref;
+    collectionName = collectionName != null ? "_" + collectionName : "";
+    for (i = _i = 0, _ref = ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+      if (ls.key(i).indexOf(this.db + collectionName) === 0) {
+        ls.removeItem(ls.key(i));
+      }
+    }
   };
   localDB.prototype.collections = function() {
     var i, _i, _ref, _results;
