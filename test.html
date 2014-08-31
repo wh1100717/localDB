@@ -34,10 +34,10 @@
                 abc.insert("collection2", {a:1,b:2,c:3})
 
                 console.log("Query data by criteria")
-                console.log(abc.find("collection1",{a:{$gt:3,$lt:10}, b:2}))
+                console.log(abc.find("collection1", {a:{$gt:3,$lt:10}, b:2}, {a:1,b:1,c:0}))
 
                 console.log("Query data by criteria and limit")
-                console.log(abc.find("collection1",{a:{$gt:3,$lt:10}},4))
+                console.log(abc.find("collection1",{a:{$gt:3,$lt:10}}, {}, 4))
 
                 console.log("Update data by criteria and action")
                 abc.update("collection1", {$set:{b:4,c:5}} , {a:{$gt:3, $lt:10}})

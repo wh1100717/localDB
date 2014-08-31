@@ -66,17 +66,33 @@ define (require, exports, module) ->
         ls.setItem collectionName, stringify(collection)
         return @
 
-    localDB.prototype.find = (collectionName, criteria = {}, limit = -1) ->
+    localDB.prototype.find = (collectionName, criteria = {}, projection = {}, limit = -1) ->
         collectionName = "#{@db}_#{collectionName}"
         collection = ls.getItem(collectionName)
         collection = "[]" if not collection?
         collection = parse collection
         data = []
+        ###
+         * Criteria
+        ###
         for c in collection when criteriaCheck(c, criteria)
+            ###
+             * Limit
+            ###
             break if limit is 0
             limit = limit - 1
             data.push c
-        return data
+        ###
+         * projection
+        ###
+        return data if JSON.stringify(projection) is '{}'
+        result = []
+        for d in data
+            r = {}
+            for key, value of projection
+                r[key] = d[key] if value is 1
+            result.push r
+        return result
 
     localDB.prototype.findOne = (collectionName, criteria = {}) -> @find(collectionName, criteria, 1)
 

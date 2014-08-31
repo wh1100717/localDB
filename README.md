@@ -103,7 +103,7 @@ db.insert("collection1", {a:1, b:2, c:3})
 
 #### Query data by criteria
 
-use `db.find(collectionName, criteria, limit)` to find the data in specific collection.
+use `db.find(collectionName, criteria, projection, limit)` to find the data in specific collection.
 
 There are six criteria operations currently:
 
@@ -119,12 +119,16 @@ var db = new localDB("foo", localStorage)
 db.find("collection1", {
     a: {$gt: 3, $lt: 10},
     b: 4
+}, {
+    a:1,
+    b:1,
+    c:0
 }, 4)
 ```
 
 #### Query only one piece of data by criteria
 
-use `db.findOne(collectionName, criteria)` to find only one piece of data in specific collection.
+use `db.findOne(collectionName, criteria, projection)` to find only one piece of data in specific collection.
 
 ```
 var db = new localDB("foo", localStorage)

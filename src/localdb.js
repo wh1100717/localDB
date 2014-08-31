@@ -141,10 +141,13 @@ define(function(require, exports, module) {
     ls.setItem(collectionName, stringify(collection));
     return this;
   };
-  localDB.prototype.find = function(collectionName, criteria, limit) {
-    var c, collection, data, _i, _len;
+  localDB.prototype.find = function(collectionName, criteria, projection, limit) {
+    var c, collection, d, data, key, r, result, value, _i, _j, _len, _len1;
     if (criteria == null) {
       criteria = {};
+    }
+    if (projection == null) {
+      projection = {};
     }
     if (limit == null) {
       limit = -1;
@@ -156,18 +159,45 @@ define(function(require, exports, module) {
     }
     collection = parse(collection);
     data = [];
+
+    /*
+     * Criteria
+     */
     for (_i = 0, _len = collection.length; _i < _len; _i++) {
       c = collection[_i];
       if (!(criteriaCheck(c, criteria))) {
         continue;
       }
+
+      /*
+       * Limit
+       */
       if (limit === 0) {
         break;
       }
       limit = limit - 1;
       data.push(c);
     }
-    return data;
+
+    /*
+     * projection
+     */
+    if (JSON.stringify(projection) === '{}') {
+      return data;
+    }
+    result = [];
+    for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
+      d = data[_j];
+      r = {};
+      for (key in projection) {
+        value = projection[key];
+        if (value === 1) {
+          r[key] = d[key];
+        }
+      }
+      result.push(r);
+    }
+    return result;
   };
   localDB.prototype.findOne = function(collectionName, criteria) {
     if (criteria == null) {
