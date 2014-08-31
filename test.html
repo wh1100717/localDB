@@ -65,9 +65,9 @@
                 console.log(abc.find("collection1"))
 
                 console.log("Delete data by criteria")
-                abc.remove("colelction1",{
-                    criteira: {
-                        a: {$gt:3 , $lt: 10, $ne: 5}
+                abc.remove("collection1",{
+                    criteria: {
+                        a: {$gt:3, $lt: 10}
                     }
                 })
                 console.log(abc.find("collection1"))

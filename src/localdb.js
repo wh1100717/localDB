@@ -100,6 +100,12 @@ define(function(require, exports, module) {
       return false;
     }
   };
+  localDB.prototype.serialize = function(collectionName, collection) {
+    return ls.setItem("" + this.db + "_" + collectionName, stringify(collection));
+  };
+  localDB.prototype.deserialize = function(collectionName) {
+    return parse(ls.getItem("" + this.db + "_" + collectionName));
+  };
   localDB.prototype.drop = function(collectionName) {
     var i, j, keys, _i, _len;
     collectionName = collectionName != null ? "_" + collectionName : "";
@@ -134,51 +140,32 @@ define(function(require, exports, module) {
   };
   localDB.prototype.insert = function(collectionName, rowData) {
     var collection;
-    collectionName = "" + this.db + "_" + collectionName;
-    collection = ls.getItem(collectionName);
-    collection = parse(collection);
+    collection = this.deserialize(collectionName);
     collection.push(rowData);
-    ls.setItem(collectionName, stringify(collection));
+    this.serialize(collectionName, collection);
     return this;
   };
   localDB.prototype.find = function(collectionName, options) {
-    var c, collection, criteria, d, data, key, limit, projection, r, result, value, _i, _j, _len, _len1;
+    var c, criteria, d, data, key, limit, projection, r, result, value, _i, _j, _len, _len1, _ref;
     if (options == null) {
       options = {};
     }
     criteria = options.criteria != null ? options.criteria : {};
     projection = options.projection != null ? options.projection : {};
     limit = options.limit != null ? options.limit : -1;
-    collectionName = "" + this.db + "_" + collectionName;
-    collection = ls.getItem(collectionName);
-    if (collection == null) {
-      collection = "[]";
-    }
-    collection = parse(collection);
     data = [];
-
-    /*
-     * Criteria
-     */
-    for (_i = 0, _len = collection.length; _i < _len; _i++) {
-      c = collection[_i];
+    _ref = this.deserialize(collectionName);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      c = _ref[_i];
       if (!(criteriaCheck(c, criteria))) {
         continue;
       }
-
-      /*
-       * Limit
-       */
       if (limit === 0) {
         break;
       }
       limit = limit - 1;
       data.push(c);
     }
-
-    /*
-     * projection
-     */
     if (JSON.stringify(projection) === '{}') {
       return data;
     }
@@ -210,12 +197,7 @@ define(function(require, exports, module) {
     }
     action = options.action;
     criteria = options.criteria != null ? options.criteria : {};
-    collectionName = "" + this.db + "_" + collectionName;
-    collection = ls.getItem(collectionName);
-    if (collection == null) {
-      collection = "[]";
-    }
-    collection = parse(collection);
+    collection = this.deserialize(collectionName);
     for (_i = 0, _len = collection.length; _i < _len; _i++) {
       c = collection[_i];
       if (!(criteriaCheck(c, criteria))) {
@@ -227,31 +209,26 @@ define(function(require, exports, module) {
         c[key] = value;
       }
     }
-    return ls.setItem(collectionName, stringify(collection));
+    return this.serialize(collectionName, collection);
   };
   localDB.prototype.remove = function(collectionName, options) {
-    var c, collection, criteria;
+    var c, criteria;
     if (options == null) {
       options = {};
     }
     criteria = options.criteria != null ? options.criteria : {};
-    collectionName = "" + this.db + "_" + collectionName;
-    collection = ls.getItem(collectionName);
-    if (collection == null) {
-      collection = "[]";
-    }
-    collection = parse(collection);
-    return ls.setItem(collectionName, stringify((function() {
-      var _i, _len, _results;
+    return this.serialize(collectionName, (function() {
+      var _i, _len, _ref, _results;
+      _ref = this.deserialize(collectionName);
       _results = [];
-      for (_i = 0, _len = collection.length; _i < _len; _i++) {
-        c = collection[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
         if (!criteriaCheck(c, criteria)) {
           _results.push(c);
         }
       }
       return _results;
-    })()));
+    }).call(this));
   };
   module.exports = localDB;
 });

@@ -38,17 +38,20 @@ define (require, exports, module) ->
             else
                 return false if obj[key] isnt condition
         return true
-
     #Utils End
 
     localDB = localDB or (dbName, storageType)->
         ls = storageType
-        @db = dbPrefix+dbName
+        @db = dbPrefix + dbName
         ls.setItem(@db, "_") if not ls.getItem(@db)?
         @length = -> @collections().length
         return
 
     localDB.isSupport = -> if localStorage? then true else false
+
+    localDB.prototype.serialize = (collectionName, collection) -> ls.setItem "#{@db}_#{collectionName}", stringify(collection)
+
+    localDB.prototype.deserialize = (collectionName) -> parse(ls.getItem("#{@db}_#{collectionName}"))
 
     localDB.prototype.drop = (collectionName)->
         collectionName = if collectionName? then "_#{collectionName}" else ""
@@ -59,35 +62,20 @@ define (require, exports, module) ->
     localDB.prototype.collections = -> if @db? then (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf("#{@db}_") is 0) else []
 
     localDB.prototype.insert = (collectionName, rowData) ->
-        collectionName = "#{@db}_#{collectionName}"
-        collection = ls.getItem(collectionName)
-        collection = parse collection
+        collection = @deserialize(collectionName)
         collection.push rowData
-        ls.setItem collectionName, stringify(collection)
+        @serialize(collectionName, collection)
         return @
 
     localDB.prototype.find = (collectionName, options = {}) ->
         criteria = if options.criteria? then options.criteria else {}
         projection = if options.projection? then options.projection else {}
         limit = if options.limit? then options.limit else -1
-        collectionName = "#{@db}_#{collectionName}"
-        collection = ls.getItem(collectionName)
-        collection = "[]" if not collection?
-        collection = parse collection
         data = []
-        ###
-         * Criteria
-        ###
-        for c in collection when criteriaCheck(c, criteria)
-            ###
-             * Limit
-            ###
+        for c in @deserialize(collectionName) when criteriaCheck(c, criteria)
             break if limit is 0
             limit = limit - 1
             data.push c
-        ###
-         * projection
-        ###
         return data if JSON.stringify(projection) is '{}'
         result = []
         for d in data
@@ -104,23 +92,16 @@ define (require, exports, module) ->
     localDB.prototype.update = (collectionName, options = {}) ->
         action = options.action
         criteria = if options.criteria? then options.criteria else {}
-        collectionName = "#{@db}_#{collectionName}"
-        collection = ls.getItem(collectionName)
-        collection = "[]" if not collection?
-        collection = parse collection
+        collection = @deserialize(collectionName)
         for c in collection when criteriaCheck(c, criteria)
             actions = action.$set
             for key, value of actions
                 c[key] = value
-        ls.setItem collectionName, stringify(collection)
+        @serialize(collectionName, collection)
 
     localDB.prototype.remove = (collectionName, options = {}) ->
         criteria = if options.criteria? then options.criteria else {}
-        collectionName = "#{@db}_#{collectionName}"
-        collection = ls.getItem(collectionName)
-        collection = "[]" if not collection?
-        collection = parse collection
-        ls.setItem collectionName, stringify(c for c in collection when not criteriaCheck(c, criteria))
+        @serialize(collectionName, (c for c in @deserialize(collectionName) when not criteriaCheck(c, criteria)))
 
     module.exports = localDB
 
