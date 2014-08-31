@@ -112,15 +112,26 @@ There are six criteria operations currently:
 *   $lt: less than (<)
 *   $lte: less than or equal to (<=)
 *   $ne: not equal to (!=)
-*   $eq: equal to (==)
 
 ```javascript
 var db = new localDB("foo", localStorage)
 // to find the data contain key `a`(whose value is greater than 3 and less then 10) and key `b`(whose key equals to 4) and limit is 4.
 db.find("collection1", {
     a: {$gt: 3, $lt: 10},
-    b: {$eq: 4}
+    b: 4
 }, 4)
+```
+
+#### Query only one piece of data by criteria
+
+use `db.findOne(collectionName, criteria)` to find only one piece of data in specific collection.
+
+```
+var db = new localDB("foo", localStorage)
+db.findOne("collection1", {
+    a: {$gt: 3, $lt: 10},
+    b: 4
+})
 ```
 
 #### Update data by criteria

@@ -6,15 +6,6 @@
  * Licensed under the MIT license.
 ###
 
-###localStorage API
- * setItem(key, val)
- * getItem(key)
- * removeItem(key)
- * clear()
- * key(index)
- * length
-###
-
 define (require, exports, module) ->
 
     'use strict'
@@ -36,14 +27,16 @@ define (require, exports, module) ->
 
     criteriaCheck = (obj, criteria) ->
         for key, condition of criteria
-            for c_key, c_value of condition
-                switch c_key
-                    when "$gt" then return false if obj[key] <= c_value
-                    when "$gte" then return false if obj[key] < c_value
-                    when "$lt" then return false if obj[key] >= c_value
-                    when "$lte" then return false if obj[key] > c_value
-                    when "$ne" then return false if obj[key] is c_value
-                    when "$eq" then return false if obj[key] isnt c_value
+            if isObject(condition)
+                for c_key, c_value of condition
+                    switch c_key
+                        when "$gt" then return false if obj[key] <= c_value
+                        when "$gte" then return false if obj[key] < c_value
+                        when "$lt" then return false if obj[key] >= c_value
+                        when "$lte" then return false if obj[key] > c_value
+                        when "$ne" then return false if obj[key] is c_value
+            else
+                return false if obj[key] isnt condition
         return true
 
     #Utils End
@@ -84,6 +77,8 @@ define (require, exports, module) ->
             limit = limit - 1
             data.push c
         return data
+
+    localDB.prototype.findOne = (collectionName, criteria = {}) -> @find(collectionName, criteria, 1)
 
     localDB.prototype.update = (collectionName, action, criteria = {}) ->
         collectionName = "#{@db}_#{collectionName}"

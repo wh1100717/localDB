@@ -7,15 +7,6 @@
  * Copyright (c) 2014 Eric Wang
  * Licensed under the MIT license.
  */
-
-/*localStorage API
- * setItem(key, val)
- * getItem(key)
- * removeItem(key)
- * clear()
- * key(index)
- * length
- */
 define(function(require, exports, module) {
   'use strict';
   var criteriaCheck, dbPrefix, isArray, isFunction, isNumber, isObject, isString, isType, localDB, ls, parse, stringify, _isType;
@@ -54,38 +45,39 @@ define(function(require, exports, module) {
     var c_key, c_value, condition, key;
     for (key in criteria) {
       condition = criteria[key];
-      for (c_key in condition) {
-        c_value = condition[c_key];
-        switch (c_key) {
-          case "$gt":
-            if (obj[key] <= c_value) {
-              return false;
-            }
-            break;
-          case "$gte":
-            if (obj[key] < c_value) {
-              return false;
-            }
-            break;
-          case "$lt":
-            if (obj[key] >= c_value) {
-              return false;
-            }
-            break;
-          case "$lte":
-            if (obj[key] > c_value) {
-              return false;
-            }
-            break;
-          case "$ne":
-            if (obj[key] === c_value) {
-              return false;
-            }
-            break;
-          case "$eq":
-            if (obj[key] !== c_value) {
-              return false;
-            }
+      if (isObject(condition)) {
+        for (c_key in condition) {
+          c_value = condition[c_key];
+          switch (c_key) {
+            case "$gt":
+              if (obj[key] <= c_value) {
+                return false;
+              }
+              break;
+            case "$gte":
+              if (obj[key] < c_value) {
+                return false;
+              }
+              break;
+            case "$lt":
+              if (obj[key] >= c_value) {
+                return false;
+              }
+              break;
+            case "$lte":
+              if (obj[key] > c_value) {
+                return false;
+              }
+              break;
+            case "$ne":
+              if (obj[key] === c_value) {
+                return false;
+              }
+          }
+        }
+      } else {
+        if (obj[key] !== condition) {
+          return false;
         }
       }
     }
@@ -176,6 +168,12 @@ define(function(require, exports, module) {
       data.push(c);
     }
     return data;
+  };
+  localDB.prototype.findOne = function(collectionName, criteria) {
+    if (criteria == null) {
+      criteria = {};
+    }
+    return this.find(collectionName, criteria, 1);
   };
   localDB.prototype.update = function(collectionName, action, criteria) {
     var actions, c, collection, key, value, _i, _len;
