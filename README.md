@@ -7,15 +7,11 @@ localDB is designed for web applications, mobile apps or game engines which may 
 
 # How does it work?
 
----
-
 localDB uses localStorage or sessionStorage to store data in modern browser. The data will stay consistent even after the browser is closed.
 
 localDB does not support IE 6 && 7 currently with userData behavior.
 
 # Installation
-
----
 
 ```bash
 $ bower install localdb
@@ -35,8 +31,6 @@ seajs.use('./dist/localdb.min.js', function(localDB){
 ```
 
 # How To Use
-
----
 
 #### Data Structure
 
