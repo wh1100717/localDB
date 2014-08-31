@@ -94,7 +94,7 @@ define(function(require, exports, module) {
   localDB = localDB || function(dbName, storageType) {
     ls = storageType;
     this.db = dbPrefix + dbName;
-    if (ls.getItem(this.db) != null) {
+    if (ls.getItem(this.db) == null) {
       ls.setItem(this.db, "_");
     }
     this.length = function() {
@@ -109,12 +109,21 @@ define(function(require, exports, module) {
     }
   };
   localDB.prototype.drop = function(collectionName) {
-    var i, _i, _ref;
+    var i, j, keys, _i, _len;
     collectionName = collectionName != null ? "_" + collectionName : "";
-    for (i = _i = 0, _ref = ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      if (ls.key(i).indexOf(this.db + collectionName) === 0) {
-        ls.removeItem(ls.key(i));
+    keys = (function() {
+      var _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        if (ls.key(i).indexOf(this.db + collectionName) === 0) {
+          _results.push(ls.key(i));
+        }
       }
+      return _results;
+    }).call(this);
+    for (_i = 0, _len = keys.length; _i < _len; _i++) {
+      j = keys[_i];
+      ls.removeItem(j);
     }
   };
   localDB.prototype.collections = function() {
@@ -130,15 +139,6 @@ define(function(require, exports, module) {
     } else {
       return [];
     }
-  };
-  localDB.prototype.clear = function() {
-    var i, _i, _ref;
-    for (i = _i = 0, _ref = ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      if (ls.key(i).indexOf("" + this.db + "_") === 0) {
-        ls.removeItem(ls.key(i));
-      }
-    }
-    return this;
   };
   localDB.prototype.insert = function(collectionName, rowData) {
     var collection;

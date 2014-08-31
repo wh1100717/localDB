@@ -7,18 +7,16 @@
         <script src="sea.js"></script>
         <script>
             seajs.use('./src/localdb.js', function(localDB){
-
-
                 console.log("Create new db:")
                 //you can switch the storage type by using sessionStorage or localStorage
-                abc = new localDB("abc", localStorage)
+                abc = (new localDB("abc", localStorage))
                 console.log(abc)
              
                 console.log("Show Collections:")
                 console.log(abc.collections())
              
-                console.log("Clear collecionts:")
-                console.log(abc.clear())
+                console.log("Delete collecionts:")
+                console.log(abc.drop())
              
                 console.log("Insert data in Collection 1")
                 abc.insert("collection1", {a:1,b:2,c:3})

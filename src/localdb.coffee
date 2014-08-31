@@ -51,7 +51,7 @@ define (require, exports, module) ->
     localDB = localDB or (dbName, storageType)->
         ls = storageType
         @db = dbPrefix+dbName
-        ls.setItem(@db, "_") if ls.getItem(@db)?
+        ls.setItem(@db, "_") if not ls.getItem(@db)?
         @length = -> @collections().length
         return
 
@@ -59,12 +59,11 @@ define (require, exports, module) ->
 
     localDB.prototype.drop = (collectionName)->
         collectionName = if collectionName? then "_#{collectionName}" else ""
-        ls.removeItem(ls.key(i)) for i in [0...ls.length] when ls.key(i).indexOf(@db + collectionName) is 0
+        keys = (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf(@db + collectionName) is 0)
+        ls.removeItem(j) for j in keys
         return
 
     localDB.prototype.collections = -> if @db? then (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf("#{@db}_") is 0) else []
-
-    localDB.prototype.clear = -> ls.removeItem(ls.key(i)) for i in [0...ls.length] when ls.key(i).indexOf("#{@db}_") is 0;@
 
     localDB.prototype.insert = (collectionName, rowData) ->
         collectionName = "#{@db}_#{collectionName}"
