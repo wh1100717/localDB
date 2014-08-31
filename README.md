@@ -85,7 +85,7 @@ db.drop("collection1")
 
 #### Query Collections
 
-use `db.collections()` to query collections under db.
+use `db.collections()` to query collections of db.
 
 ```javascript
 var db = new localDB("foo", localStorage)
@@ -103,7 +103,12 @@ db.insert("collection1", {a:1, b:2, c:3})
 
 #### Query data by criteria
 
-use `db.find(collectionName, criteria, projection, limit)` to find the data in specific collection.
+use `db.find(collectionName, options)` to find the data in specific collection.
+
+options:
+*   criteria：  Query Criteria like `where` in MYSQL
+*   projection: like `SELECT` in MYSQL 
+*   limit:  just limit.....
 
 There are six criteria operations currently:
 
@@ -116,50 +121,72 @@ There are six criteria operations currently:
 ```javascript
 var db = new localDB("foo", localStorage)
 // to find the data contain key `a`(whose value is greater than 3 and less then 10) and key `b`(whose key equals to 4) and limit is 4.
-db.find("collection1", {
-    a: {$gt: 3, $lt: 10},
-    b: 4
-}, {
-    a:1,
-    b:1,
-    c:0
-}, 4)
+db.find("collection1",{
+    criteria: {
+        a: {$gt: 3, $lt: 10},
+        b: 4
+    },
+    projection: {
+        a: 1,
+        b: 1,
+        c: 0
+    },
+    limit: 4
+})
 ```
 
 #### Query only one piece of data by criteria
 
-use `db.findOne(collectionName, criteria, projection)` to find only one piece of data in specific collection.
+use `db.findOne(collectionName, options)` to find only one piece of data in specific collection.
+
+options:
+*   criteria：  Query Criteria like `where` in MYSQL
+*   projection: like `SELECT` in MYSQL 
 
 ```
 var db = new localDB("foo", localStorage)
-db.findOne("collection1", {
-    a: {$gt: 3, $lt: 10},
-    b: 4
+db.findOne("collection1",{
+    criteria: {
+        a: {$gt: 3, $lt: 10},
+        b: 4
+    }
 })
 ```
 
 #### Update data by criteria
 
-use `db.update(collectionName, action, criteria)` to update the data in specific collection.
+use `db.update(collectionName, options)` to update the data in specific collection.
+
+options:
+*   action:     Update action
+*   criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript
 var db = new localDB("foo", localStorage)
 // to update the key `b` as 4 and key `c` as 5 of the data limited with criteria
 db.update("collection1", {
-    $set: {b:4, c:5}
-},{
-    a: {$gt: 3, $lt: 10}
+    action: {
+        $set: {b:4, c:5}
+    },
+    criteria: {
+        a: {$gt: 3, $lt: 10}
+    }
 })
 ```
 
 #### Delete data by criteria
 
-use `db.remove(collectionName, criteria)` to delete data in specific collection.
+use `db.remove(collectionName, options)` to delete data in specific collection.
+
+options:
+*   criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript
 var db = new localDB("foo", localStorage)
-db.delete("collection1", {
-    a: {$gt:3 , $lt: 10, $ne: 5}
+db.remove("colelction1",{
+    criteira: {
+        a: {$gt:3 , $lt: 10, $ne: 5}
+    }
 })
 ```
 
