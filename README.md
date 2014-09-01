@@ -190,5 +190,20 @@ db.remove("colelction1",{
 })
 ```
 
+# Todo List
+*   [ ] BSON _ID generator support
+*   [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
+    *   [ ] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
+    *   [ ] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
+*   [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+    *   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
+    *   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)
+    *   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)
+    *   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)
+    *   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)
+    *   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)
+    *   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)
+    *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
 
 
+    
