@@ -45,6 +45,9 @@ define(function(require, exports, module) {
     var c_key, c_value, condition, key;
     for (key in criteria) {
       condition = criteria[key];
+      if (obj[key] == null) {
+        return false;
+      }
       if (isObject(condition)) {
         for (c_key in condition) {
           c_value = condition[c_key];
@@ -71,6 +74,11 @@ define(function(require, exports, module) {
               break;
             case "$ne":
               if (obj[key] === c_value) {
+                return false;
+              }
+              break;
+            default:
+              if (!criteriaCheck(obj[key], JSON.parse("{\"" + c_key + "\": " + (JSON.stringify(c_value)) + "}"))) {
                 return false;
               }
           }
@@ -103,8 +111,12 @@ define(function(require, exports, module) {
   localDB.prototype.serialize = function(collectionName, collection) {
     return ls.setItem("" + this.db + "_" + collectionName, stringify(collection));
   };
-  localDB.prototype.deserialize = function(collectionName) {
-    return parse(ls.getItem("" + this.db + "_" + collectionName));
+  localDB.prototype.deserialize = function(collectionName, sort) {
+    var collection;
+    if (sort == null) {
+      sort = {};
+    }
+    return collection = parse(ls.getItem("" + this.db + "_" + collectionName));
   };
   localDB.prototype.drop = function(collectionName) {
     var i, j, keys, _i, _len;
@@ -154,7 +166,7 @@ define(function(require, exports, module) {
     projection = options.projection != null ? options.projection : {};
     limit = options.limit != null ? options.limit : -1;
     data = [];
-    _ref = this.deserialize(collectionName);
+    _ref = this.deserialize(collectionName, options.sort);
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       c = _ref[_i];
       if (!(criteriaCheck(c, criteria))) {

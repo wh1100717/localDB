@@ -27,6 +27,7 @@ define (require, exports, module) ->
 
     criteriaCheck = (obj, criteria) ->
         for key, condition of criteria
+            return false if not obj[key]?
             if isObject(condition)
                 for c_key, c_value of condition
                     switch c_key
@@ -35,6 +36,7 @@ define (require, exports, module) ->
                         when "$lt" then return false if obj[key] >= c_value
                         when "$lte" then return false if obj[key] > c_value
                         when "$ne" then return false if obj[key] is c_value
+                        else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
             else
                 return false if obj[key] isnt condition
         return true
@@ -51,7 +53,9 @@ define (require, exports, module) ->
 
     localDB.prototype.serialize = (collectionName, collection) -> ls.setItem "#{@db}_#{collectionName}", stringify(collection)
 
-    localDB.prototype.deserialize = (collectionName) -> parse(ls.getItem("#{@db}_#{collectionName}"))
+    localDB.prototype.deserialize = (collectionName, sort = {}) ->
+        collection = parse(ls.getItem("#{@db}_#{collectionName}"))
+
 
     localDB.prototype.drop = (collectionName)->
         collectionName = if collectionName? then "_#{collectionName}" else ""
@@ -72,7 +76,7 @@ define (require, exports, module) ->
         projection = if options.projection? then options.projection else {}
         limit = if options.limit? then options.limit else -1
         data = []
-        for c in @deserialize(collectionName) when criteriaCheck(c, criteria)
+        for c in @deserialize(collectionName, options.sort) when criteriaCheck(c, criteria)
             break if limit is 0
             limit = limit - 1
             data.push c

@@ -19,7 +19,7 @@
                 console.log(abc.drop())
              
                 console.log("Insert data in Collection 1")
-                abc.insert("collection1", {a:1,b:2,c:3})
+                abc.insert("collection1", {a:1,b:2,c:3,d:{e:4,f:5}})
                 abc.insert("collection1", {a:2,b:2,c:3})
                 abc.insert("collection1", {a:3,b:2,c:3})
                 abc.insert("collection1", {a:4,b:2,c:3})
@@ -34,6 +34,13 @@
                 abc.insert("collection2", {a:1,b:2,c:3})
 
                 console.log("Query data by criteria")
+                console.log(abc.find("collection1",{
+                    criteria: {
+                        d: {
+                            e: {$gt:3, $lt: 5}
+                        }
+                    }
+                }))
                 console.log(abc.find("collection1",{
                     criteria: {
                         a:{$gt:3,$lt:10},
