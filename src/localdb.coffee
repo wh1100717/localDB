@@ -7,9 +7,7 @@
 ###
 
 define (require, exports, module) ->
-
     'use strict'
-    ls = window.localStorage
     dbPrefix = "ldb_"
 
     #Utils
@@ -42,72 +40,76 @@ define (require, exports, module) ->
         return true
     #Utils End
 
-    localDB = localDB or (dbName, storageType)->
-        ls = storageType
-        @db = dbPrefix + dbName
-        ls.setItem(@db, "_") if not ls.getItem(@db)?
-        @length = -> @collections().length
+    LocalDB = (dbName, engine = localStorage) ->
+        @ls = engine
+        @name = dbPrefix + dbName
         return
 
-    localDB.isSupport = -> if localStorage? then true else false
+    LocalDB.isSupport = -> if localStorage? then true else false
 
-    localDB.prototype.serialize = (collectionName, collection) -> ls.setItem "#{@db}_#{collectionName}", stringify(collection)
+    LocalDB.prototype.collections = -> (@ls.key(i) for i in [0...@ls.length] when @ls.key(i).indexOf("#{@name}_") is 0)
 
-    localDB.prototype.deserialize = (collectionName, sort = {}) ->
-        collection = parse(ls.getItem("#{@db}_#{collectionName}"))
-
-
-    localDB.prototype.drop = (collectionName)->
+    LocalDB.prototype.drop = (collectionName) ->
         collectionName = if collectionName? then "_#{collectionName}" else ""
-        keys = (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf(@db + collectionName) is 0)
-        ls.removeItem(j) for j in keys
+        keys = (@ls.key(i) for i in [0...@ls.length] when @ls.key(i).indexOf(@name + collectionName) is 0)
+        @ls.removeItem(j) for j in keys
         return
 
-    localDB.prototype.collections = -> if @db? then (ls.key(i) for i in [0...ls.length] when ls.key(i).indexOf("#{@db}_") is 0) else []
+    LocalDB.prototype.collection = (collectionName) -> new Collection(collectionName, @)
 
-    localDB.prototype.insert = (collectionName, rowData) ->
-        collection = @deserialize(collectionName)
-        collection.push rowData
-        @serialize(collectionName, collection)
-        return @
+    Collection = (collectionName, db) ->
+        @name = "#{db.name}_#{collectionName}"
+        @ls = db.ls
+        @deserialize()
+        return
 
-    localDB.prototype.find = (collectionName, options = {}) ->
+    Collection.prototype.deserialize = -> @data = parse(@ls.getItem(@name))
+
+    Collection.prototype.serialize = -> @ls.setItem @name, stringify(@data)
+
+    Collection.prototype.drop = -> @ls.removeItem(@name)
+
+    Collection.prototype.insert = (rowData) ->
+        @deserialize()
+        @data.push rowData
+        @serialize()
+
+    Collection.prototype.update = (action, options) ->
+        criteria = if options.criteria? then options.criteria else {}
+        @deserialize()
+        for d in @data when criteriaCheck(d, criteria)
+            actions = action.$set
+            for key, value of actions
+                d[key] = value
+        @serialize()
+
+    Collection.prototype.remove = (options = {}) ->
+        criteria = if options.criteria? then options.criteria else {}
+        @data = (d for d in @data when not criteriaCheck(d, criteria))
+        @serialize()
+
+    Collection.prototype.find = (options = {}) ->
         criteria = if options.criteria? then options.criteria else {}
         projection = if options.projection? then options.projection else {}
         limit = if options.limit? then options.limit else -1
-        data = []
-        for c in @deserialize(collectionName, options.sort) when criteriaCheck(c, criteria)
-            break if limit is 0
-            limit = limit - 1
-            data.push c
-        return data if JSON.stringify(projection) is '{}'
+        @deserialize()
+        console.log @data
         result = []
-        for d in data
-            r = {}
+        for d in @data when criteriaCheck(d, criteria)
+            break if limit is 0
+            limt = limit - 1
+            result.push d
+        return result if JSON.stringify(projection) is "{}"
+        pResult = []
+        for d in result
+            p = {}
             for key, value of projection
-                r[key] = d[key] if value is 1
-            result.push r
-        return result
+                p[key] = d[key] if value is 1
+            pResult.push p
+        return pResult
 
-    localDB.prototype.findOne = (collectionName, options = {}) ->
+    Collection.prototype.findOne = (options = {}) ->
         options.limit = 1
-        @find(collectionName, options)
+        @find(options)        
 
-    localDB.prototype.update = (collectionName, options = {}) ->
-        action = options.action
-        criteria = if options.criteria? then options.criteria else {}
-        collection = @deserialize(collectionName)
-        for c in collection when criteriaCheck(c, criteria)
-            actions = action.$set
-            for key, value of actions
-                c[key] = value
-        @serialize(collectionName, collection)
-
-    localDB.prototype.remove = (collectionName, options = {}) ->
-        criteria = if options.criteria? then options.criteria else {}
-        @serialize(collectionName, (c for c in @deserialize(collectionName) when not criteriaCheck(c, criteria)))
-
-    module.exports = localDB
-
-    return
-
+    module.exports = LocalDB

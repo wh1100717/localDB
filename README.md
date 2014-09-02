@@ -24,8 +24,8 @@ localDB uses seajs (commonJS) as the module loader. Therefore, [seajs](https://g
 To import localdb module with seajs, the example code is shown below:
 
 ```javascript
-seajs.use('./dist/localdb.min.js', function(localDB){
-    // localDB could be used here.
+seajs.use('./dist/localdb.min.js', function(LocalDB){
+    // LocalDB could be used here.
     ...
 })
 ```
@@ -33,8 +33,6 @@ seajs.use('./dist/localdb.min.js', function(localDB){
 # How To Use
 
 #### Data Structure
-
-A db only contains `_`, only used for finding the collection keys.
 
 A collection is stored as a key, which contains a JSON encoded string, in localStorage. 
 
@@ -47,63 +45,75 @@ A collection is stored as a key, which contains a JSON encoded string, in localS
 
 #### Check Browser Compatibility
 
-use `localDB.isSupport()` to check whether the browser support localDB or not.
+use `LocalDB.isSupport()` to check whether the browser support LocalDB or not.
 
 ```javascript
-if(!localDB.isSupport()){
-    alert("Your browser does not support localDB, pls use modern brower!")
+if(!LocalDB.isSupport()){
+    alert("Your browser does not support LocalDB, pls use modern brower!")
 }
 ```
 
 #### Load Database
 
-use `new localDB(dbName, engineType)` to load a db. you can specify the type of engine with `localStorage` or `sessionStorage`.
+use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of engine with `localStorage` or `sessionStorage`.
 
 ```javascript
 //localStorage would save the foo db even after browser closed.
 //sessionStorage would only save the foo db while the brower stay open.
-var db = new localDB("foo", localStorage)
+//localStorage by default
+var db = new LocalDB("foo", sessionStorage)
 ```
 
 #### Delete Database
 
 use `db.drop()` to delete database
 
-```javascript
-var db = new localDB("foo", localStorage)
-db.drop()
+#### Get Collections
+
+use `db.collections()` to get collections
+
+#### Get Collection
+
+use `db.collection(collectionName)` to get a collection
+
+```
+var collection = db.collection("bar")
 ```
 
 #### Delete Collection
 
-use `db.drop(collectionName)` to delete collection
+use `db.drop(collectionName)` or `collection.drop()` to delete collection
 
 ```javascript
-var db = new localDB("foo", localStorage)
-db.drop("collection1")
+db.drop("bar")
 ```
 
-#### Query Collections
-
-use `db.collections()` to query collections of db.
+or
 
 ```javascript
-var db = new localDB("foo", localStorage)
-db.collections()
+var collection = db.collection("bar")
+collection.drop()
 ```
 
 #### Insert Data
 
-use `db.insert(collectionName, data)` to insert data into specific collection.
+use `collection.insert(data)` to insert data into specific collection.
 
-```javascript
-var db = new localDB("foo", localStorage)
-db.insert("collection1", {a:1, b:2, c:3})
+```
+collection.insert({
+    a: 1,
+    b: 2,
+    c: 3,
+    d: {
+        e: 4,
+        f: 5
+    }
+})
 ```
 
-#### Query data by criteria
+#### Query Data
 
-use `db.find(collectionName, options)` to find the data in specific collection.
+use `collection.find(options)` to find the data in specific collection.
 
 options:
 *   criteria：  Query Criteria like `where` in MYSQL
@@ -119,9 +129,7 @@ There are six criteria operations currently:
 *   $ne: not equal to (!=)
 
 ```javascript
-var db = new localDB("foo", localStorage)
-// to find the data contain key `a`(whose value is greater than 3 and less then 10) and key `b`(whose key equals to 4) and limit is 4.
-db.find("collection1",{
+collection.find({
     criteria: {
         a: {$gt: 3, $lt: 10},
         b: 4
@@ -135,55 +143,41 @@ db.find("collection1",{
 })
 ```
 
-#### Query only one piece of data by criteria
+#### Query one row
 
-use `db.findOne(collectionName, options)` to find only one piece of data in specific collection.
+use `collection.findOne(options)`, same as `collection.fine()` except return one item, not a list.
 
-options:
-*   criteria：  Query Criteria like `where` in MYSQL
-*   projection: like `SELECT` in MYSQL 
-
-```
-var db = new localDB("foo", localStorage)
-db.findOne("collection1",{
-    criteria: {
-        a: {$gt: 3, $lt: 10},
-        b: 4
-    }
-})
-```
 
 #### Update data by criteria
 
-use `db.update(collectionName, options)` to update the data in specific collection.
+use `collection.update(actions, options)` to update the data in specific collection.
+
+actions:
+*   $set: set key with value....
 
 options:
-*   action:     Update action
 *   criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript
-var db = new localDB("foo", localStorage)
-// to update the key `b` as 4 and key `c` as 5 of the data limited with criteria
-db.update("collection1", {
-    action: {
-        $set: {b:4, c:5}
-    },
+collection.update({
+    $set: {b: 4,c: 5}
+}, {
     criteria: {
-        a: {$gt: 3, $lt: 10}
+        a: {$gt: 3, $lt: 10},
+        d: {e: 4}
     }
-})
+});
 ```
 
 #### Delete data by criteria
 
-use `db.remove(collectionName, options)` to delete data in specific collection.
+use `collection.remove(options)` to delete data in specific collection.
 
 options:
 *   criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript
-var db = new localDB("foo", localStorage)
-db.remove("colelction1",{
+collection.remove({
     criteira: {
         a: {$gt:3 , $lt: 10, $ne: 5}
     }
