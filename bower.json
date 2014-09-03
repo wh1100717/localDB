@@ -6,7 +6,7 @@
     "Wang Hao <eric.3126@hotmail.com>"
   ],
   "description": "local database using localStorage",
-  "main": "dist/localdb.js",
+  "main": "dist/localdb/0.0.1/src/localdb.js",
   "keywords": [
     "localdb",
     "localstorage"
