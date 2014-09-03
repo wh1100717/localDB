@@ -15,8 +15,20 @@ stringify = (obj) -> if obj? and isArray(obj) then JSON.stringify(obj) else "[]"
 
 criteriaCheck = (obj, criteria) ->
     for key, condition of criteria
-        return false if not obj[key]?
-        (if obj[key] is condition then continue else return false) if not isObject(condition)
+        (if obj[key]? and obj[key] is condition then continue else return false) if isString(condition) or isNumber(condition)
+        flag = true
+        switch key
+            when "$and" then return false for c in condition when not criteriaCheck(obj, c)
+            when "$not" then return false if criteriaCheck(obj, condition)
+            when "$nor" then return false for c in condition when criteriaCheck(obj, c)
+            when "$or"
+                f = false
+                for c in condition when criteriaCheck(obj, c)
+                    f = true
+                    break
+                return false if not f
+            else flag = false
+        continue if flag
         for c_key, c_value of condition
             switch c_key
                 when "$gt" then return false if obj[key] <= c_value

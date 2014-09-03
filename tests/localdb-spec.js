@@ -218,7 +218,7 @@ describe('LocalDB', function() {
     });
     return expect(data.length).to.be(1 || 0);
   });
-  it('in test', function() {
+  it('$in', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
       criteria: {
@@ -234,7 +234,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  return it('not in test', function() {
+  it('$nin', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
       criteria: {
@@ -249,5 +249,80 @@ describe('LocalDB', function() {
       _results.push(expect(d.a).not.to.be.within(3, 5));
     }
     return _results;
+  });
+  it('$and', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        $and: [
+          {
+            b: 4
+          }, {
+            a: 5
+          }
+        ]
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(d.b).to.be(4));
+    }
+    return _results;
+  });
+  it('$not', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        $not: {
+          b: 4
+        }
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(d.b).not.to.be(4));
+    }
+    return _results;
+  });
+  it('$nor', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        $nor: [
+          {
+            b: 4
+          }, {
+            a: 1
+          }, {
+            a: 2
+          }
+        ]
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      expect(d.b).not.to.be(4);
+      expect(d.a).not.to.be(1);
+      _results.push(expect(d.a).not.to.be(2));
+    }
+    return _results;
+  });
+  return it('$or', function() {
+    var data;
+    data = collection.find({
+      criteria: {
+        $or: [
+          {
+            a: 1
+          }, {
+            a: 2
+          }
+        ]
+      }
+    });
+    return console.log(data);
   });
 });

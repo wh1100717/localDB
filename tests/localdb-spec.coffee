@@ -74,17 +74,51 @@ describe 'LocalDB', ->
             }
         }
         expect(data.length).to.be(1 or 0)
-    it 'in test', ->
+    it '$in', ->
         data = collection.find {
             criteria: {
                 a: {$in: [3,4,5]}
             }
         }
         expect(d.a).to.be.within(3, 5) for d in data
-    it 'not in test', ->
+    it '$nin', ->
         data = collection.find {
             criteria: {
                 a: {$nin: [3,4,5]}
             }
         }
         expect(d.a).not.to.be.within(3, 5) for d in data
+    it '$and', ->
+        data = collection.find {
+            criteria: {
+                $and: [{b:4},{a:5}]
+            }
+        }
+        expect(d.b).to.be(4) for d in data
+    it '$not', ->
+        data = collection.find {
+            criteria: {
+                $not: {
+                    b:4
+                }
+            }
+        }
+        expect(d.b).not.to.be(4) for d in data
+    it '$nor', ->
+        data = collection.find {
+            criteria: {
+                $nor: [{b:4},{a:1},{a:2}]
+            }
+        }
+        for d in data
+            expect(d.b).not.to.be(4)
+            expect(d.a).not.to.be(1)
+            expect(d.a).not.to.be(2)
+    it '$or', ->
+        data = collection.find {
+            criteria: {
+                $or: [{a:1},{a:2}]
+            }
+        }
+        console.log data
+        

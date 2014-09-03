@@ -209,10 +209,10 @@ collection.remove({
         *   [X] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
         *   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
     *   Logical
-        *   [ ] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
-        *   [ ] [$and](http://docs.mongodb.org/manual/reference/operator/query/and/#op._S_and)
-        *   [ ] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
-        *   [ ] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
+        *   [X] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
+        *   [X] [$and](http://docs.mongodb.org/manual/reference/operator/query/and/#op._S_and)
+        *   [X] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
+        *   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
     *   Element
         *   [ ] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
         *   [ ] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
