@@ -1,5 +1,6 @@
-localDB
-=======
+# localDB
+
+---
 
 [![spm package][spm-image]][spm-url]
 [![MIT License][license-image]][license-url]
@@ -10,21 +11,21 @@ localDB provide simple MongoDB-like API for modern browser with localStorage/ses
 
 localDB is designed for web applications, mobile apps or game engines which may store data consistently in browser.
 
-# How does it work?
+## How does it work?
 
 localDB uses localStorage or sessionStorage to store data in modern browser. The data will stay consistent even after the browser is closed.
 
 localDB does not support IE 6 && 7 currently with userData behavior.
 
-# Installation
+## Installation
 
-#### By Bower
+##### By Bower
 
 ```bash
 $ bower install localdb
 ```
 
-#### By SPM
+##### By SPM
 
 ```bash
 $ spm install localdb
@@ -42,9 +43,9 @@ seajs.use('./dist/localdb/0.0.1/src/localdb.js', function(LocalDB){
 })
 ```
 
-# How To Use
+## How To Use
 
-#### Data Structure
+##### Data Structure
 
 A collection is stored as a key, which contains a JSON encoded string, in localStorage. 
 
@@ -55,7 +56,7 @@ A collection is stored as a key, which contains a JSON encoded string, in localS
     ...
 ```
 
-#### Check Browser Compatibility
+##### Check Browser Compatibility
 
 use `LocalDB.isSupport()` to check whether the browser support LocalDB or not.
 
@@ -65,7 +66,7 @@ if(!LocalDB.isSupport()){
 }
 ```
 
-#### Load Database
+##### Load Database
 
 use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of engine with `localStorage` or `sessionStorage`.
 
@@ -76,15 +77,15 @@ use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of 
 var db = new LocalDB("foo", sessionStorage)
 ```
 
-#### Delete Database
+##### Delete Database
 
 use `db.drop()` to delete database
 
-#### Get Collections
+##### Get Collections
 
 use `db.collections()` to get collections
 
-#### Get Collection
+##### Get Collection
 
 use `db.collection(collectionName)` to get a collection
 
@@ -92,7 +93,7 @@ use `db.collection(collectionName)` to get a collection
 var collection = db.collection("bar")
 ```
 
-#### Delete Collection
+##### Delete Collection
 
 use `db.drop(collectionName)` or `collection.drop()` to delete collection
 
@@ -107,7 +108,7 @@ var collection = db.collection("bar")
 collection.drop()
 ```
 
-#### Insert Data
+##### Insert Data
 
 use `collection.insert(data)` to insert data into specific collection.
 
@@ -123,7 +124,7 @@ collection.insert({
 })
 ```
 
-#### Query Data
+##### Query Data
 
 use `collection.find(options)` to find the data in specific collection.
 
@@ -155,12 +156,12 @@ collection.find({
 })
 ```
 
-#### Query one row
+##### Query one row
 
 use `collection.findOne(options)`, same as `collection.fine()` except return one item, not a list.
 
 
-#### Update data by criteria
+##### Update data by criteria
 
 use `collection.update(actions, options)` to update the data in specific collection.
 
@@ -181,7 +182,7 @@ collection.update({
 });
 ```
 
-#### Delete data by criteria
+##### Delete data by criteria
 
 use `collection.remove(options)` to delete data in specific collection.
 
@@ -196,7 +197,7 @@ collection.remove({
 })
 ```
 
-# Todo List
+## Todo List
 *   [ ] BSON _ID generator support
 *   [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
     *   [ ] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
