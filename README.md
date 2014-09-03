@@ -13,18 +13,24 @@ localDB does not support IE 6 && 7 currently with userData behavior.
 
 # Installation
 
+#### By Bower
+
 ```bash
 $ bower install localdb
 ```
 
-TODO: using spm to install localDB
+#### By SPM
+
+```bash
+$ spm install localdb
+```
 
 localDB uses seajs (commonJS) as the module loader. Therefore, [seajs](https://github.com/seajs/seajs) should be installed and used first. 
 
 To import localdb module with seajs, the example code is shown below:
 
 ```javascript
-seajs.use('./dist/localdb.min.js', function(LocalDB){
+seajs.use('./dist/localdb/0.0.1/src/localdb.js', function(LocalDB){
     // LocalDB could be used here.
     ...
 })
