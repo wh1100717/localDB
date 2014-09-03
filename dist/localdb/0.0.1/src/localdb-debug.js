@@ -38,18 +38,58 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
     }
   };
   criteriaCheck = function(obj, criteria) {
-    var c_key, c_value, condition, key, _ref, _ref1;
+    var c, c_key, c_value, condition, f, flag, key, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
     for (key in criteria) {
       condition = criteria[key];
-      if (obj[key] == null) {
-        return false;
-      }
-      if (!isObject(condition)) {
-        if (obj[key] === condition) {
+      if (isString(condition) || isNumber(condition)) {
+        if ((obj[key] != null) && obj[key] === condition) {
           continue;
         } else {
           return false;
         }
+      }
+      flag = true;
+      switch (key) {
+        case "$and":
+          for (_i = 0, _len = condition.length; _i < _len; _i++) {
+            c = condition[_i];
+            if (!criteriaCheck(obj, c)) {
+              return false;
+            }
+          }
+          break;
+        case "$not":
+          if (criteriaCheck(obj, condition)) {
+            return false;
+          }
+          break;
+        case "$nor":
+          for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
+            c = condition[_j];
+            if (criteriaCheck(obj, c)) {
+              return false;
+            }
+          }
+          break;
+        case "$or":
+          f = false;
+          for (_k = 0, _len2 = condition.length; _k < _len2; _k++) {
+            c = condition[_k];
+            if (!(criteriaCheck(obj, c))) {
+              continue;
+            }
+            f = true;
+            break;
+          }
+          if (!f) {
+            return false;
+          }
+          break;
+        default:
+          flag = false;
+      }
+      if (flag) {
+        continue;
       }
       for (c_key in condition) {
         c_value = condition[c_key];
@@ -86,6 +126,16 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
             break;
           case "$nin":
             if (_ref1 = obj[key], __indexOf.call(c_value, _ref1) >= 0) {
+              return false;
+            }
+            break;
+          case "$exist":
+            if (c_value !== (obj[key] != null)) {
+              return false;
+            }
+            break;
+          case "$type":
+            if (!isType(obj[key], c_value)) {
               return false;
             }
             break;

@@ -214,8 +214,9 @@ collection.remove({
         *   [X] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
         *   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
     *   Element
-        *   [ ] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
-        *   [ ] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
+        *   [X] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
+        *   [X] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
+            Note: It is different from the $type API in MongoDB. It is really easy to determine the type of element in javascript. and u can just use {$type: type}(support type input string: `string` | `object` | `function` | `array` | `number`)
     *   Evaluation
         *   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
         *   [ ] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)

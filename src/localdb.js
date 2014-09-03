@@ -134,6 +134,16 @@ criteriaCheck = function(obj, criteria) {
             return false;
           }
           break;
+        case "$exist":
+          if (c_value !== (obj[key] != null)) {
+            return false;
+          }
+          break;
+        case "$type":
+          if (!isType(obj[key], c_value)) {
+            return false;
+          }
+          break;
         default:
           if (!criteriaCheck(obj[key], JSON.parse("{\"" + c_key + "\": " + (JSON.stringify(c_value)) + "}"))) {
             return false;

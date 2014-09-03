@@ -38,6 +38,8 @@ criteriaCheck = (obj, criteria) ->
                 when "$ne" then return false if obj[key] is c_value
                 when "$in" then return false if obj[key] not in c_value
                 when "$nin" then return false if obj[key] in c_value
+                when "$exist" then return false if c_value isnt obj[key]?
+                when "$type" then return false if not isType(obj[key], c_value)
                 else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
     return true
 #Utils End

@@ -25,7 +25,7 @@ describe 'LocalDB', ->
         expect(collection.find().length).to.be(0)
     collection = db.collection("collection_bar")
     it 'Insert Data', ->
-        collection.insert({a:1,b:2,c:3,d:{e:4,f:5}})
+        collection.insert({a:1,b:2,c:3,d:{e:"4",f:5}})
         collection.insert({a:2,b:2,c:3,d:{e:4,f:5}})
         collection.insert({a:3,b:2,c:3,d:{e:4,f:5}})
         collection.insert({a:4,b:2,c:3,d:{e:4,f:5}})
@@ -120,5 +120,27 @@ describe 'LocalDB', ->
                 $or: [{a:1},{a:2}]
             }
         }
-        console.log data
-        
+        expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":4,"f":5}},{"a":2,"b":2,"c":3,"d":{"e":4,"f":5}}])
+    it '$exist', ->
+        data = collection.find {
+            criteria: {
+                a: {$exist: false}
+            }
+        }
+        expect(d.a?).not.to.be.ok() for d in data
+        data = collection.find {
+            criteria: {
+                a: {$exist: true}
+            }
+        }
+        expect(d.a?).to.be.ok() for d in data
+
+    it '$exist', ->
+        data = collection.find {
+            criteria: {
+                a: {$type: "number"},
+                b: {$type: "number"},
+                d: {$type: "object", e: {$type: "string"}}
+            }
+        }
+        expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":"4","f":5}}])

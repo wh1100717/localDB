@@ -46,7 +46,7 @@ describe('LocalDB', function() {
       b: 2,
       c: 3,
       d: {
-        e: 4,
+        e: "4",
         f: 5
       }
     });
@@ -310,7 +310,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  return it('$or', function() {
+  it('$or', function() {
     var data;
     data = collection.find({
       criteria: {
@@ -323,6 +323,81 @@ describe('LocalDB', function() {
         ]
       }
     });
-    return console.log(data);
+    return expect(data).to.be.eql([
+      {
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": {
+          "e": 4,
+          "f": 5
+        }
+      }, {
+        "a": 2,
+        "b": 2,
+        "c": 3,
+        "d": {
+          "e": 4,
+          "f": 5
+        }
+      }
+    ]);
+  });
+  it('$exist', function() {
+    var d, data, _i, _j, _len, _len1, _results;
+    data = collection.find({
+      criteria: {
+        a: {
+          $exist: false
+        }
+      }
+    });
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      expect(d.a != null).not.to.be.ok();
+    }
+    data = collection.find({
+      criteria: {
+        a: {
+          $exist: true
+        }
+      }
+    });
+    _results = [];
+    for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
+      d = data[_j];
+      _results.push(expect(d.a != null).to.be.ok());
+    }
+    return _results;
+  });
+  return it('$exist', function() {
+    var data;
+    data = collection.find({
+      criteria: {
+        a: {
+          $type: "number"
+        },
+        b: {
+          $type: "number"
+        },
+        d: {
+          $type: "object",
+          e: {
+            $type: "string"
+          }
+        }
+      }
+    });
+    return expect(data).to.be.eql([
+      {
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": {
+          "e": "4",
+          "f": 5
+        }
+      }
+    ]);
   });
 });
