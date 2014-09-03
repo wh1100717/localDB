@@ -1,6 +1,8 @@
 localDB
 =======
 
+[![spm package](http://spmjs.io/badge/localdb)](http://spmjs.io/package/localdb)
+
 localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.
 
 localDB is designed for web applications, mobile apps or game engines which may store data consistently in browser.
@@ -25,7 +27,8 @@ $ bower install localdb
 $ spm install localdb
 ```
 
-localDB uses seajs (commonJS) as the module loader. Therefore, [seajs](https://github.com/seajs/seajs) should be installed and used first. 
+localDB uses seajs (commonJS) as the module loader.
+Therefore, [seajs](https://github.com/seajs/seajs) should be installed and used first. 
 
 To import localdb module with seajs, the example code is shown below:
 
