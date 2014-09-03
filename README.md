@@ -200,18 +200,65 @@ collection.remove({
 ## Todo List
 *   [ ] BSON _ID generator support
 *   [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
-    *   [ ] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
-    *   [ ] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
-*   [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
-    *   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
-    *   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)
-    *   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)
-    *   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)
-    *   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)
-    *   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)
-    *   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)
-    *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
+    *   Comparison
+        *   [X] [$gt](http://docs.mongodb.org/manual/reference/operator/query/gt/#op._S_gt)
+        *   [X] [$gte](http://docs.mongodb.org/manual/reference/operator/query/gte/#op._S_gte)
+        *   [X] [$lt](http://docs.mongodb.org/manual/reference/operator/query/lt/#op._S_lt)
+        *   [X] [$lte](http://docs.mongodb.org/manual/reference/operator/query/lte/#op._S_lte)
+        *   [X] [$ne](http://docs.mongodb.org/manual/reference/operator/query/ne/#op._S_ne)
+        *   [X] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
+        *   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
+    *   Logical
+        *   [ ] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
+        *   [ ] [$and](http://docs.mongodb.org/manual/reference/operator/query/and/#op._S_and)
+        *   [ ] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
+        *   [ ] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
+    *   Element
+        *   [ ] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
+        *   [ ] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
+    *   Evaluation
+        *   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
+        *   [ ] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)
+        *   [ ] [$text](http://docs.mongodb.org/manual/reference/operator/query/text/#op._S_text)
+        *   [ ] [$where](http://docs.mongodb.org/manual/reference/operator/query/where/#op._S_where)
+    *   Array
+        *   [ ] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)
+        *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/query/elemMatch/#op._S_elemMatch)
+        *   [ ] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)
+    *   Projection Operators
+        *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)
+        *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)
+        *   [ ] [$meta](http://docs.mongodb.org/manual/reference/operator/projection/meta/#proj._S_meta)
+        *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)
 
+*   [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+    *   Fields
+        *   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
+        *   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)
+        *   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)
+        *   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)
+        *   [X] [$set](http://docs.mongodb.org/manual/reference/operator/update/set/#up._S_set)
+        *   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)
+        *   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)
+        *   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)
+        *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
+    *   Array
+        *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)
+        *   [ ] [$addToSet](http://docs.mongodb.org/manual/reference/operator/update/addToSet/#up._S_addToSet)
+        *   [ ] [$pop](http://docs.mongodb.org/manual/reference/operator/update/pop/#up._S_pop)
+        *   [ ] [$pullAll](http://docs.mongodb.org/manual/reference/operator/update/pullAll/#up._S_pullAll)
+        *   [ ] [$pull](http://docs.mongodb.org/manual/reference/operator/update/pull/#up._S_pull)
+        *   [ ] [$pushAll](http://docs.mongodb.org/manual/reference/operator/update/pushAll/#up._S_pushAll)
+        *   [ ] [$push](http://docs.mongodb.org/manual/reference/operator/update/push/#up._S_push)
+    *   Modifiers
+        *   [ ] [$each](http://docs.mongodb.org/manual/reference/operator/update/each/#up._S_each)
+        *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/update/slice/#up._S_slice)
+        *   [ ] [$sort](http://docs.mongodb.org/manual/reference/operator/update/sort/#up._S_sort)
+        *   [ ] [$position](http://docs.mongodb.org/manual/reference/operator/update/position/#up._S_position)
+    *   Bitwise
+        *   [ ] [$bit](http://docs.mongodb.org/manual/reference/operator/update/bit/#up._S_bit)
+    *   Isolation
+        *   [ ] [$isolated](http://docs.mongodb.org/manual/reference/operator/update/isolated/#up._S_isolated)
 
 [spm-image]: http://spmjs.io/badge/localdb
 [spm-url]: http://spmjs.io/package/localdb

@@ -207,7 +207,7 @@ describe('LocalDB', function() {
     });
     return expect(data).to.be.a("array");
   });
-  return it('Fine One Data', function() {
+  it('Fine One Data', function() {
     var data;
     data = collection.findOne({
       criteria: {
@@ -216,7 +216,38 @@ describe('LocalDB', function() {
         }
       }
     });
-    console.log(data);
     return expect(data.length).to.be(1 || 0);
+  });
+  it('in test', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        a: {
+          $in: [3, 4, 5]
+        }
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(d.a).to.be.within(3, 5));
+    }
+    return _results;
+  });
+  return it('not in test', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        a: {
+          $nin: [3, 4, 5]
+        }
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(d.a).not.to.be.within(3, 5));
+    }
+    return _results;
   });
 });

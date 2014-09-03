@@ -73,5 +73,18 @@ describe 'LocalDB', ->
                 a:{$lt:3}
             }
         }
-        console.log data
         expect(data.length).to.be(1 or 0)
+    it 'in test', ->
+        data = collection.find {
+            criteria: {
+                a: {$in: [3,4,5]}
+            }
+        }
+        expect(d.a).to.be.within(3, 5) for d in data
+    it 'not in test', ->
+        data = collection.find {
+            criteria: {
+                a: {$nin: [3,4,5]}
+            }
+        }
+        expect(d.a).not.to.be.within(3, 5) for d in data

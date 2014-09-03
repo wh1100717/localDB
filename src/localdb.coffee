@@ -16,17 +16,17 @@ stringify = (obj) -> if obj? and isArray(obj) then JSON.stringify(obj) else "[]"
 criteriaCheck = (obj, criteria) ->
     for key, condition of criteria
         return false if not obj[key]?
-        if isObject(condition)
-            for c_key, c_value of condition
-                switch c_key
-                    when "$gt" then return false if obj[key] <= c_value
-                    when "$gte" then return false if obj[key] < c_value
-                    when "$lt" then return false if obj[key] >= c_value
-                    when "$lte" then return false if obj[key] > c_value
-                    when "$ne" then return false if obj[key] is c_value
-                    else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
-        else
-            return false if obj[key] isnt condition
+        (if obj[key] is condition then continue else return false) if not isObject(condition)
+        for c_key, c_value of condition
+            switch c_key
+                when "$gt" then return false if obj[key] <= c_value
+                when "$gte" then return false if obj[key] < c_value
+                when "$lt" then return false if obj[key] >= c_value
+                when "$lte" then return false if obj[key] > c_value
+                when "$ne" then return false if obj[key] is c_value
+                when "$in" then return false if obj[key] not in c_value
+                when "$nin" then return false if obj[key] in c_value
+                else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
     return true
 #Utils End
 
