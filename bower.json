@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "homepage": "https://github.com/wh1100717/localDB",
   "authors": [
-    "Wang Hao <eric.3126@hotmail.com>"
+    "wh1100717<me@emptystack.net>"
   ],
   "description": "local database using localStorage",
   "main": "dist/localdb/0.0.1/src/localdb.js",

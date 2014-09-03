@@ -8,7 +8,9 @@
   ],
   "homepage": "https://github.com/wh1100717/localDB",
   "bugs": "https://github.com/wh1100717/localDB/issues",
-  "author": "wh1100717<me@emptystack.net>",
+  "authors": [
+    "wh1100717<me@emptystack.net>"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/wh1100717/localDB.git"
