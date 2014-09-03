@@ -1,7 +1,8 @@
 localDB
 =======
 
-[![spm package](http://spmjs.io/badge/localdb)](http://spmjs.io/package/localdb)
+[![spm package][spm-image]][spm-url]
+[![MIT License][license-image]][license-url]
 
 localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.
 
@@ -209,4 +210,7 @@ collection.remove({
     *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
 
 
-    
+[spm-image]: http://spmjs.io/badge/localdb
+[spm-url]: http://spmjs.io/package/localdb
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
