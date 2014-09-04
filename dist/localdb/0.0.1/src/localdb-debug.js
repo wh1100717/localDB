@@ -255,6 +255,7 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
       options = {};
     }
     criteria = options.criteria != null ? options.criteria : {};
+    this.deserialize();
     this.data = (function() {
       var _i, _len, _ref, _results;
       _ref = this.data;
