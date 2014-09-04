@@ -1,4 +1,4 @@
-# localDB
+#localDB
 
 ---
 
@@ -11,21 +11,21 @@ localDB provide simple MongoDB-like API for modern browser with localStorage/ses
 
 localDB is designed for web applications, mobile apps or game engines which may store data consistently in browser.
 
-## How does it work?
+##How does it work?
 
 localDB uses localStorage or sessionStorage to store data in modern browser. The data will stay consistent even after the browser is closed.
 
 localDB does not support IE 6 && 7 currently with userData behavior.
 
-## Installation
+##Installation
 
-##### By Bower
+#####By Bower
 
 ```bash
 $ bower install localdb
 ```
 
-##### By SPM
+#####By SPM
 
 ```bash
 $ spm install localdb
@@ -43,9 +43,9 @@ seajs.use('./dist/localdb/0.0.1/src/localdb.js', function(LocalDB){
 })
 ```
 
-## How To Use
+##How To Use
 
-##### Data Structure
+#####Data Structure
 
 A collection is stored as a key, which contains a JSON encoded string, in localStorage. 
 
@@ -56,7 +56,7 @@ A collection is stored as a key, which contains a JSON encoded string, in localS
     ...
 ```
 
-##### Check Browser Compatibility
+#####Check Browser Compatibility
 
 use `LocalDB.isSupport()` to check whether the browser support LocalDB or not.
 
@@ -66,7 +66,7 @@ if(!LocalDB.isSupport()){
 }
 ```
 
-##### Load Database
+#####Load Database
 
 use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of engine with `localStorage` or `sessionStorage`.
 
@@ -77,15 +77,15 @@ use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of 
 var db = new LocalDB("foo", sessionStorage)
 ```
 
-##### Delete Database
+#####Delete Database
 
 use `db.drop()` to delete database
 
-##### Get Collections
+#####Get Collections
 
 use `db.collections()` to get collections
 
-##### Get Collection
+#####Get Collection
 
 use `db.collection(collectionName)` to get a collection
 
@@ -93,7 +93,7 @@ use `db.collection(collectionName)` to get a collection
 var collection = db.collection("bar")
 ```
 
-##### Delete Collection
+#####Delete Collection
 
 use `db.drop(collectionName)` or `collection.drop()` to delete collection
 
@@ -108,7 +108,7 @@ var collection = db.collection("bar")
 collection.drop()
 ```
 
-##### Insert Data
+#####Insert Data
 
 use `collection.insert(data)` to insert data into specific collection.
 
@@ -124,7 +124,7 @@ collection.insert({
 })
 ```
 
-##### Query Data
+#####Query Data
 
 use `collection.find(options)` to find the data in specific collection.
 
@@ -133,7 +133,7 @@ options:
 *   projection: like `SELECT` in MYSQL 
 *   limit:  just limit.....
 
-Criteria operations are listed below [Feature](## Feature):
+Criteria operations are listed below [Feature](##Feature):
 
 
 ```javascript
@@ -151,12 +151,12 @@ collection.find({
 })
 ```
 
-##### Query one row
+#####Query one row
 
 use `collection.findOne(options)`, same as `collection.fine()` except return one item, not a list.
 
 
-##### Update data by criteria
+#####Update data by criteria
 
 use `collection.update(actions, options)` to update the data in specific collection.
 
@@ -177,7 +177,7 @@ collection.update({
 });
 ```
 
-##### Delete data by criteria
+#####Delete data by criteria
 
 use `collection.remove(options)` to delete data in specific collection.
 
@@ -192,13 +192,13 @@ collection.remove({
 })
 ```
 
-## Feature
+##Feature
 
-### [ ] BSON _ID generator support
+###[ ] BSON _ID generator support
 
-### [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
+###[ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
 
-##### Comparison
+#####Comparison
 
 *   [X] [$gt](http://docs.mongodb.org/manual/reference/operator/query/gt/#op._S_gt)
     Matches values that are greater than the value specified in the query.
@@ -215,7 +215,7 @@ collection.remove({
 *   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
     Matches values that do not exist in an array specified to the query.    
 
-##### Logical
+#####Logical
 
 *   [X] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
     Joins query clauses with a logical **OR** returns all documents that match the conditions of either clause.
@@ -226,7 +226,7 @@ collection.remove({
 *   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
     Joins query clauses with a logical **NOR** returns all documents that fail to match both clauses.
 
-##### Element
+#####Element
 
 *   [X] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
     Matches documents that have the specified field.
@@ -237,7 +237,7 @@ collection.remove({
     >It is really easy to determine the type of element in javascript. and u can just use **{$type: type}**
     >support type input string: `string` | `object` | `function` | `array` | `number`
 
-##### Evaluation
+#####Evaluation
 
 *   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
     Performs a modulo operation on the value of a field and selects documents with a specified result.
@@ -248,7 +248,7 @@ collection.remove({
 *   [ ] [$where](http://docs.mongodb.org/manual/reference/operator/query/where/#op._S_where)
     Matches documents that satisfy a JavaScript expression.
 
-##### Array
+#####Array
 
 *   [ ] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)
     Matches arrays that contain all elements specified in the query.
@@ -257,7 +257,7 @@ collection.remove({
 *   [ ] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)
     Selects documents if the array field is a specified size.
 
-##### Projection Operators
+#####Projection Operators
 
 *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)
     Projects the first element in an array that matches the query condition.
@@ -268,9 +268,9 @@ collection.remove({
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)
     Limits the number of elements projected from an array. Supports skip and limit slices.
 
-### [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+###[ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
 
-##### Fields
+#####Fields
 
 *   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
     Increments the value of the field by the specified amount.
@@ -291,7 +291,7 @@ collection.remove({
 *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
     Sets the value of a field to current date, either as a Date or a Timestamp.
 
-##### Array
+#####Array
 *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)
     Acts as a placeholder to update the first element that matches the query condition in an update.
 *   [ ] [$addToSet](http://docs.mongodb.org/manual/reference/operator/update/addToSet/#up._S_addToSet)
@@ -307,7 +307,7 @@ collection.remove({
 *   [ ] [$push](http://docs.mongodb.org/manual/reference/operator/update/push/#up._S_push)
     Adds an item to an array.
 
-##### Modifiers
+#####Modifiers
 *   [ ] [$each](http://docs.mongodb.org/manual/reference/operator/update/each/#up._S_each)
     Modifies the **$push** and **$addToSet** operators to append multiple items for array updates.
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/update/slice/#up._S_slice)
@@ -317,12 +317,12 @@ collection.remove({
 *   [ ] [$position](http://docs.mongodb.org/manual/reference/operator/update/position/#up._S_position)
     Modifies the **$push** operator to specify the position in the array to add elements.
 
-##### Bitwise
+#####Bitwise
 
 *   [ ] [$bit](http://docs.mongodb.org/manual/reference/operator/update/bit/#up._S_bit)
     Performs bitwise **AND**, **OR**, and **XOR** updates of integer values.
 
-##### Isolation
+#####Isolation
        
 *   [ ] [$isolated](http://docs.mongodb.org/manual/reference/operator/update/isolated/#up._S_isolated)
     Modifies behavior of multi-updates to increase the isolation of the operation.
