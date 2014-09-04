@@ -197,69 +197,140 @@ collection.remove({
 })
 ```
 
-## Todo List
-*   [ ] BSON _ID generator support
-*   [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
-    *   Comparison
-        *   [X] [$gt](http://docs.mongodb.org/manual/reference/operator/query/gt/#op._S_gt)
-        *   [X] [$gte](http://docs.mongodb.org/manual/reference/operator/query/gte/#op._S_gte)
-        *   [X] [$lt](http://docs.mongodb.org/manual/reference/operator/query/lt/#op._S_lt)
-        *   [X] [$lte](http://docs.mongodb.org/manual/reference/operator/query/lte/#op._S_lte)
-        *   [X] [$ne](http://docs.mongodb.org/manual/reference/operator/query/ne/#op._S_ne)
-        *   [X] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
-        *   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
-    *   Logical
-        *   [X] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
-        *   [X] [$and](http://docs.mongodb.org/manual/reference/operator/query/and/#op._S_and)
-        *   [X] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
-        *   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
-    *   Element
-        *   [X] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
-        *   [X] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
-            Note: It is different from the $type API in MongoDB. It is really easy to determine the type of element in javascript. and u can just use {$type: type}(support type input string: `string` | `object` | `function` | `array` | `number`)
-    *   Evaluation
-        *   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
-        *   [ ] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)
-        *   [ ] [$text](http://docs.mongodb.org/manual/reference/operator/query/text/#op._S_text)
-        *   [ ] [$where](http://docs.mongodb.org/manual/reference/operator/query/where/#op._S_where)
-    *   Array
-        *   [ ] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)
-        *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/query/elemMatch/#op._S_elemMatch)
-        *   [ ] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)
-    *   Projection Operators
-        *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)
-        *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)
-        *   [ ] [$meta](http://docs.mongodb.org/manual/reference/operator/projection/meta/#proj._S_meta)
-        *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)
+## Feature
 
-*   [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
-    *   Fields
-        *   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
-        *   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)
-        *   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)
-        *   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)
-        *   [X] [$set](http://docs.mongodb.org/manual/reference/operator/update/set/#up._S_set)
-        *   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)
-        *   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)
-        *   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)
-        *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
-    *   Array
-        *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)
-        *   [ ] [$addToSet](http://docs.mongodb.org/manual/reference/operator/update/addToSet/#up._S_addToSet)
-        *   [ ] [$pop](http://docs.mongodb.org/manual/reference/operator/update/pop/#up._S_pop)
-        *   [ ] [$pullAll](http://docs.mongodb.org/manual/reference/operator/update/pullAll/#up._S_pullAll)
-        *   [ ] [$pull](http://docs.mongodb.org/manual/reference/operator/update/pull/#up._S_pull)
-        *   [ ] [$pushAll](http://docs.mongodb.org/manual/reference/operator/update/pushAll/#up._S_pushAll)
-        *   [ ] [$push](http://docs.mongodb.org/manual/reference/operator/update/push/#up._S_push)
-    *   Modifiers
-        *   [ ] [$each](http://docs.mongodb.org/manual/reference/operator/update/each/#up._S_each)
-        *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/update/slice/#up._S_slice)
-        *   [ ] [$sort](http://docs.mongodb.org/manual/reference/operator/update/sort/#up._S_sort)
-        *   [ ] [$position](http://docs.mongodb.org/manual/reference/operator/update/position/#up._S_position)
-    *   Bitwise
-        *   [ ] [$bit](http://docs.mongodb.org/manual/reference/operator/update/bit/#up._S_bit)
-    *   Isolation
-        *   [ ] [$isolated](http://docs.mongodb.org/manual/reference/operator/update/isolated/#up._S_isolated)
+### [ ] BSON _ID generator support
+
+### [ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
+
+##### Comparison
+
+*   [X] [$gt](http://docs.mongodb.org/manual/reference/operator/query/gt/#op._S_gt)
+    Matches values that are greater than the value specified in the query.
+*   [X] [$gte](http://docs.mongodb.org/manual/reference/operator/query/gte/#op._S_gte)
+    Matches values that are greater than or equal to the value specified in the query.
+*   [X] [$lt](http://docs.mongodb.org/manual/reference/operator/query/lt/#op._S_lt)
+    Matches values that are less than the value specified in the query.
+*   [X] [$lte](http://docs.mongodb.org/manual/reference/operator/query/lte/#op._S_lte)
+    Matches values that are less than or equal to the value specified in the query.
+*   [X] [$ne](http://docs.mongodb.org/manual/reference/operator/query/ne/#op._S_ne)
+    Matches all values that are not equal to the value specified in the query.
+*   [X] [$in](http://docs.mongodb.org/manual/reference/operator/query/in/#op._S_in)
+    Matches any of the values that exist in an array specified in the query.
+*   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)
+    Matches values that do not exist in an array specified to the query.    
+
+##### Logical
+
+*   [X] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)
+    Joins query clauses with a logical **OR** returns all documents that match the conditions of either clause.
+*   [X] [$and](http://docs.mongodb.org/manual/reference/operator/query/and/#op._S_and)
+    Joins query clauses with a logical **AND** returns all documents that match the conditions of both clauses.
+*   [X] [$not](http://docs.mongodb.org/manual/reference/operator/query/not/#op._S_not)
+    Inverts the effect of a query expression and returns documents that do not match the query expression.
+*   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)
+    Joins query clauses with a logical **NOR** returns all documents that fail to match both clauses.
+
+##### Element
+
+*   [X] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)
+    Matches documents that have the specified field.
+*   [X] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)
+    Selects documents if a field is of the specified type.
+    >Note: 
+    >It is different from the **$type** API in MongoDB.
+    >It is really easy to determine the type of element in javascript. and u can just use **{$type: type}**
+    >support type input string: `string` | `object` | `function` | `array` | `number`
+
+##### Evaluation
+
+*   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
+    Performs a modulo operation on the value of a field and selects documents with a specified result.
+*   [ ] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)
+    Selects documents where values match a specified regular expression.
+*   [ ] [$text](http://docs.mongodb.org/manual/reference/operator/query/text/#op._S_text)
+    Performs text search.
+*   [ ] [$where](http://docs.mongodb.org/manual/reference/operator/query/where/#op._S_where)
+    Matches documents that satisfy a JavaScript expression.
+
+##### Array
+
+*   [ ] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)
+    Matches arrays that contain all elements specified in the query.
+*   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/query/elemMatch/#op._S_elemMatch)
+    Selects documents if element in the array field matches all the specified **$elemMatch** condition.
+*   [ ] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)
+    Selects documents if the array field is a specified size.
+
+##### Projection Operators
+
+*   [ ] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)
+    Projects the first element in an array that matches the query condition.
+*   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)
+    Projects only the first element from an array that matches the specified **$elemMatch** condition.
+*   [ ] [$meta](http://docs.mongodb.org/manual/reference/operator/projection/meta/#proj._S_meta)
+    Projects the document’s score assigned during **$text** operation.
+*   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)
+    Limits the number of elements projected from an array. Supports skip and limit slices.
+
+### [ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+
+##### Fields
+
+*   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)
+    Increments the value of the field by the specified amount.
+*   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)
+    Multiplies the value of the field by the specified amount.
+*   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)
+    Renames a field.
+*   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)
+    Sets the value of a field upon document creation during an upsert. Has no effect on update operations that modify existing documents.
+*   [X] [$set](http://docs.mongodb.org/manual/reference/operator/update/set/#up._S_set)
+    Sets the value of a field in a document.
+*   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)
+    Removes the specified field from a document.
+*   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)
+    Only updates the field if the specified value is less than the existing field value.
+*   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)
+    Only updates the field if the specified value is greater than the existing field value.
+*   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)
+    Sets the value of a field to current date, either as a Date or a Timestamp.
+
+##### Array
+*   [ ] [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)
+    Acts as a placeholder to update the first element that matches the query condition in an update.
+*   [ ] [$addToSet](http://docs.mongodb.org/manual/reference/operator/update/addToSet/#up._S_addToSet)
+    Adds elements to an array only if they do not already exist in the set.
+*   [ ] [$pop](http://docs.mongodb.org/manual/reference/operator/update/pop/#up._S_pop)
+    Removes the first or last item of an array.
+*   [ ] [$pullAll](http://docs.mongodb.org/manual/reference/operator/update/pullAll/#up._S_pullAll)
+    Removes all matching values from an array.
+*   [ ] [$pull](http://docs.mongodb.org/manual/reference/operator/update/pull/#up._S_pull)
+    Removes all array elements that match a specified query.
+*   [ ] [$pushAll](http://docs.mongodb.org/manual/reference/operator/update/pushAll/#up._S_pushAll)
+    Deprecated. Adds several items to an array.
+*   [ ] [$push](http://docs.mongodb.org/manual/reference/operator/update/push/#up._S_push)
+    Adds an item to an array.
+
+##### Modifiers
+*   [ ] [$each](http://docs.mongodb.org/manual/reference/operator/update/each/#up._S_each)
+    Modifies the **$push** and **$addToSet** operators to append multiple items for array updates.
+*   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/update/slice/#up._S_slice)
+    Modifies the **$push** operator to limit the size of updated arrays.
+*   [ ] [$sort](http://docs.mongodb.org/manual/reference/operator/update/sort/#up._S_sort)
+    Modifies the **$push** operator to reorder documents stored in an array.
+*   [ ] [$position](http://docs.mongodb.org/manual/reference/operator/update/position/#up._S_position)
+    Modifies the **$push** operator to specify the position in the array to add elements.
+
+##### Bitwise
+
+*   [ ] [$bit](http://docs.mongodb.org/manual/reference/operator/update/bit/#up._S_bit)
+    Performs bitwise **AND**, **OR**, and **XOR** updates of integer values.
+
+##### Isolation
+       
+*   [ ] [$isolated](http://docs.mongodb.org/manual/reference/operator/update/isolated/#up._S_isolated)
+    Modifies behavior of multi-updates to increase the isolation of the operation.
 
 [spm-image]: http://spmjs.io/badge/localdb
 [spm-url]: http://spmjs.io/package/localdb
