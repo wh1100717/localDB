@@ -133,7 +133,7 @@ options:
 *   projection: like `SELECT` in MYSQL 
 *   limit:  just limit.....
 
-Criteria operations are listed below [Feature](##Feature):
+Criteria operations are listed below [Feature](#feature):
 
 
 ```javascript
