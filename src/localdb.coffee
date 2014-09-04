@@ -94,6 +94,7 @@ Collection.prototype.update = (action, options) ->
 
 Collection.prototype.remove = (options = {}) ->
     criteria = if options.criteria? then options.criteria else {}
+    @deserialize()
     @data = (d for d in @data when not criteriaCheck(d, criteria))
     @serialize()
 
