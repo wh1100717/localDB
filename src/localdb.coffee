@@ -8,6 +8,7 @@ isString = _isType("string")
 isArray = _isType("array")
 isFunction = _isType("function")
 isNumber = _isType("number")
+isRegex = _isType("regexp")
 
 parse = (str) -> if str? and isString(str) then JSON.parse(str) else []
 
@@ -40,6 +41,8 @@ criteriaCheck = (obj, criteria) ->
                 when "$nin" then return false if obj[key] in c_value
                 when "$exist" then return false if c_value isnt obj[key]?
                 when "$type" then return false if not isType(obj[key], c_value)
+                when "$mod" then return false if obj[key] % c_value[0] isnt c_value[1]
+                when "$regex" then return false if not (if isRegex(c_value) then c_value else new RegExp(c_value)).test(obj[key])
                 else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
     return true
 #Utils End

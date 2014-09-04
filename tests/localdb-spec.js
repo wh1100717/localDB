@@ -370,7 +370,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  return it('$exist', function() {
+  it('$exist', function() {
     var data;
     data = collection.find({
       criteria: {
@@ -399,5 +399,47 @@ describe('LocalDB', function() {
         }
       }
     ]);
+  });
+  it('$mod', function() {
+    var d, data, _i, _len, _results;
+    data = collection.find({
+      criteria: {
+        a: {
+          $mod: [4, 0]
+        }
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(d.a % 4).to.be(0));
+    }
+    return _results;
+  });
+  return it('$regex', function() {
+    var d, data, _i, _len, _results;
+    collection.insert({
+      a: 15,
+      b: 2,
+      c: 3,
+      d: {
+        e: 4,
+        f: 5
+      },
+      g: "Hello World"
+    });
+    data = collection.find({
+      criteria: {
+        g: {
+          $regex: 'ello'
+        }
+      }
+    });
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      _results.push(expect(/ello/.test(d.g)).to.be.ok());
+    }
+    return _results;
   });
 });

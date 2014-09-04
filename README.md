@@ -239,9 +239,9 @@ collection.remove({
 
 #####Evaluation
 
-*   [ ] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
+*   [X] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)
     Performs a modulo operation on the value of a field and selects documents with a specified result.
-*   [ ] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)
+*   [X] [$regex](http://docs.mongodb.org/manual/reference/operator/query/regex/#op._S_regex)
     Selects documents where values match a specified regular expression.
 *   [ ] [$text](http://docs.mongodb.org/manual/reference/operator/query/text/#op._S_text)
     Performs text search.

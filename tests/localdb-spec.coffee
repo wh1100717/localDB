@@ -144,3 +144,33 @@ describe 'LocalDB', ->
             }
         }
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":"4","f":5}}])
+    it '$mod', ->
+        data = collection.find {
+            criteria: {
+                a: {$mod: [4, 0]}
+            }
+        }
+        expect(d.a % 4).to.be(0) for d in data
+    it '$regex', ->
+        collection.insert({a:15,b:2,c:3,d:{e:4,f:5},g:"Hello World"})
+        data = collection.find {
+            criteria: {
+                g: {$regex: 'ello'}
+            }
+        }
+        expect(/ello/.test(d.g)).to.be.ok() for d in data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
