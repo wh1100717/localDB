@@ -3,12 +3,12 @@ dbPrefix = "ldb_"
 #Utils
 _isType = (type) -> (obj) -> {}.toString.call(obj) is "[object #{type.toLowerCase().replace(/\w/, (w) -> w.toUpperCase())}]"
 isType = (ele, type) -> _isType(type)(ele)
-isObject = _isType("object")
-isString = _isType("string")
-isArray = _isType("array")
-isFunction = _isType("function")
-isNumber = _isType("number")
-isRegex = _isType("regexp")
+isObject = _isType("Object")
+isString = _isType("String")
+isArray = _isType("Array")
+isFunction = _isType("Function")
+isNumber = _isType("Number")
+isRegex = (obj) -> {}.toString.call(obj) is "[object RegExp]"
 
 parse = (str) -> if str? and isString(str) then JSON.parse(str) else []
 

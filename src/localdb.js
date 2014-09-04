@@ -16,17 +16,19 @@ isType = function(ele, type) {
   return _isType(type)(ele);
 };
 
-isObject = _isType("object");
+isObject = _isType("Object");
 
-isString = _isType("string");
+isString = _isType("String");
 
-isArray = _isType("array");
+isArray = _isType("Array");
 
-isFunction = _isType("function");
+isFunction = _isType("Function");
 
-isNumber = _isType("number");
+isNumber = _isType("Number");
 
-isRegex = _isType("regexp");
+isRegex = function(obj) {
+  return {}.toString.call(obj) === "[object RegExp]";
+};
 
 parse = function(str) {
   if ((str != null) && isString(str)) {

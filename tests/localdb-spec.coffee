@@ -159,19 +159,12 @@ describe 'LocalDB', ->
             }
         }
         expect(/ello/.test(d.g)).to.be.ok() for d in data
-        # 奇怪的问题，spm test 对正则的处理是直接转成{}，故无法测试
-        # g = /ello/
-        # console.log g
-        # criteria = {g: /ello/}
-        # console.log criteria
-        # console.log criteria.g
-        # data = collection.find {
-        #     criteria: {
-        #         g: /ello/
-        #     }
-        # }
-        # console.log data
-        # expect(/ello/.test(d.g)).to.be.ok() for d in data
+        data = collection.find {
+            criteria: {
+                g: /ello/
+            }
+        }
+        expect(/ello/.test(d.g)).to.be.ok() for d in data
 
 
 

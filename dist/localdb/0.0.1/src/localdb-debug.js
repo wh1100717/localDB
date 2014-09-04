@@ -18,12 +18,14 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
   isType = function(ele, type) {
     return _isType(type)(ele);
   };
-  isObject = _isType("object");
-  isString = _isType("string");
-  isArray = _isType("array");
-  isFunction = _isType("function");
-  isNumber = _isType("number");
-  isRegex = _isType("regexp");
+  isObject = _isType("Object");
+  isString = _isType("String");
+  isArray = _isType("Array");
+  isFunction = _isType("Function");
+  isNumber = _isType("Number");
+  isRegex = function(obj) {
+    return {}.toString.call(obj) === "[object RegExp]";
+  };
   parse = function(str) {
     if ((str != null) && isString(str)) {
       return JSON.parse(str);

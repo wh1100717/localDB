@@ -417,7 +417,7 @@ describe('LocalDB', function() {
     return _results;
   });
   return it('$regex', function() {
-    var d, data, _i, _len, _results;
+    var d, data, _i, _j, _len, _len1, _results;
     collection.insert({
       a: 15,
       b: 2,
@@ -435,9 +435,18 @@ describe('LocalDB', function() {
         }
       }
     });
-    _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
+      expect(/ello/.test(d.g)).to.be.ok();
+    }
+    data = collection.find({
+      criteria: {
+        g: /ello/
+      }
+    });
+    _results = [];
+    for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
+      d = data[_j];
       _results.push(expect(/ello/.test(d.g)).to.be.ok());
     }
     return _results;
