@@ -9,7 +9,7 @@ isArray = _isType("array")
 isFunction = _isType("function")
 isNumber = _isType("number")
 
-parse = (str)-> if str? and isString(str) then JSON.parse(str) else []
+parse = (str) -> if str? and isString(str) then JSON.parse(str) else []
 
 stringify = (obj) -> if obj? and isArray(obj) then JSON.stringify(obj) else "[]"
 
@@ -113,6 +113,6 @@ Collection.prototype.find = (options = {}) ->
 
 Collection.prototype.findOne = (options = {}) ->
     options.limit = 1
-    @find(options)        
+    @find(options)
 
 module.exports = LocalDB
