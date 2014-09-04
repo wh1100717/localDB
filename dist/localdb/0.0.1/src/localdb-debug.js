@@ -49,6 +49,13 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
           return false;
         }
       }
+      if (isRegex(condition)) {
+        if (condition.test(obj[key])) {
+          continue;
+        } else {
+          return false;
+        }
+      }
       flag = true;
       switch (key) {
         case "$and":
@@ -146,7 +153,7 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
             }
             break;
           case "$regex":
-            if (!(isRegex(c_value) ? c_value : new RegExp(c_value)).test(obj[key])) {
+            if (!(new RegExp(c_value)).test(obj[key])) {
               return false;
             }
             break;

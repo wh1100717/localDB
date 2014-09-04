@@ -17,6 +17,7 @@ stringify = (obj) -> if obj? and isArray(obj) then JSON.stringify(obj) else "[]"
 criteriaCheck = (obj, criteria) ->
     for key, condition of criteria
         (if obj[key]? and obj[key] is condition then continue else return false) if isString(condition) or isNumber(condition)
+        (if condition.test(obj[key]) then continue else return false) if isRegex(condition)
         flag = true
         switch key
             when "$and" then return false for c in condition when not criteriaCheck(obj, c)
@@ -29,6 +30,7 @@ criteriaCheck = (obj, criteria) ->
                     break
                 return false if not f
             else flag = false
+
         continue if flag
         for c_key, c_value of condition
             switch c_key
@@ -42,7 +44,7 @@ criteriaCheck = (obj, criteria) ->
                 when "$exist" then return false if c_value isnt obj[key]?
                 when "$type" then return false if not isType(obj[key], c_value)
                 when "$mod" then return false if obj[key] % c_value[0] isnt c_value[1]
-                when "$regex" then return false if not (if isRegex(c_value) then c_value else new RegExp(c_value)).test(obj[key])
+                when "$regex" then return false if not (new RegExp(c_value)).test(obj[key])
                 else return false if not criteriaCheck(obj[key], JSON.parse("{\"#{c_key}\": #{JSON.stringify(c_value)}}"))
     return true
 #Utils End
