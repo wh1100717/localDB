@@ -194,9 +194,9 @@ collection.remove({
 
 ##Feature
 
-###[ ] BSON _ID generator support
+###BSON _ID generator support(TODO)
 
-###[ ] [Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
+###[Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
 
 #####Comparison
 
@@ -269,7 +269,7 @@ collection.remove({
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)<br>
     Limits the number of elements projected from an array. Supports skip and limit slices.
 
-###[ ] [Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+###[Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
 
 #####Fields
 
