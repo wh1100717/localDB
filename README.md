@@ -133,13 +133,8 @@ options:
 *   projection: like `SELECT` in MYSQL 
 *   limit:  just limit.....
 
-There are six criteria operations currently:
+Criteria operations are listed below [Feature](## Feature):
 
-*   $gt: greater than (>)
-*   $gte: greater than or equal to (>=)
-*   $lt: less than (<)
-*   $lte: less than or equal to (<=)
-*   $ne: not equal to (!=)
 
 ```javascript
 collection.find({
