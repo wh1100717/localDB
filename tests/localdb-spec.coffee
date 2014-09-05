@@ -187,6 +187,3 @@ describe 'LocalDB', ->
 
 
 
-
-
-
