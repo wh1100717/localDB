@@ -17,11 +17,11 @@ Utils.isObject = _isType("object");
 
 Utils.isString = _isType("string");
 
+Utils.isNumber = _isType("number");
+
 Utils.isArray = _isType("array");
 
 Utils.isFunction = _isType("function");
-
-Utils.isNumber = _isType("number");
 
 Utils.isRegex = _isType("regexp");
 
@@ -34,7 +34,7 @@ Utils.parse = function(str) {
 };
 
 Utils.stringify = function(obj) {
-  if ((obj != null) && Utils.isArray(obj)) {
+  if ((obj != null) && (Utils.isArray(obj) || Utils.isObject(obj))) {
     return JSON.stringify(obj);
   } else {
     return "[]";
