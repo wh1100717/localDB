@@ -21,14 +21,6 @@ describe('LocalDB', function() {
     return expect(db.drop()).to.be.ok();
   });
   db = new LocalDB("db_foo");
-  it('Get Collections', function() {
-    return expect(db.collections()).to.be.a("array");
-  });
-  it('Get Collection', function() {
-    var collection;
-    collection = db.collection("collection_bar");
-    return expect(collection).to.be.a("object");
-  });
   it('Drop Collection By DB', function() {
     db.drop("collection_bar");
     return expect(collection.find().length).to.be(0);
@@ -169,6 +161,16 @@ describe('LocalDB', function() {
     });
     return expect(collection.find().length).to.be(14);
   });
+  it('Get Collections', function() {
+    var collections;
+    collections = db.collections();
+    console.log(collections);
+    return expect(db.collections()).to.be.a("array");
+  });
+  it('Get Collection', function() {
+    collection = db.collection("collection_bar");
+    return expect(collection).to.be.a("object");
+  });
   it('Update Data', function() {
     collection.update({
       $set: {
@@ -205,6 +207,7 @@ describe('LocalDB', function() {
       },
       limit: 4
     });
+    console.log(data);
     return expect(data).to.be.a("array");
   });
   it('Fine One Data', function() {
@@ -216,6 +219,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     return expect(data.length).to.be(1 || 0);
   });
   it('$in', function() {
@@ -227,6 +231,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -243,6 +248,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -263,6 +269,7 @@ describe('LocalDB', function() {
         ]
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -279,6 +286,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -301,6 +309,7 @@ describe('LocalDB', function() {
         ]
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -323,6 +332,7 @@ describe('LocalDB', function() {
         ]
       }
     });
+    console.log(data);
     return expect(data).to.be.eql([
       {
         "a": 1,
@@ -352,6 +362,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
       expect(d.a != null).not.to.be.ok();
@@ -363,6 +374,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     _results = [];
     for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
       d = data[_j];
@@ -388,6 +400,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     return expect(data).to.be.eql([
       {
         "a": 1,
@@ -409,6 +422,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -435,6 +449,7 @@ describe('LocalDB', function() {
         }
       }
     });
+    console.log(data);
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
       expect(/ello/.test(d.g)).to.be.ok();
@@ -444,6 +459,7 @@ describe('LocalDB', function() {
         g: /ello/
       }
     });
+    console.log(data);
     _results = [];
     for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
       d = data[_j];

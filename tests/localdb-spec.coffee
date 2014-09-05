@@ -11,11 +11,6 @@ describe 'LocalDB', ->
         db = new LocalDB("db_foo")
         expect(db.drop()).to.be.ok()
     db = new LocalDB("db_foo")
-    it 'Get Collections', ->
-        expect(db.collections()).to.be.a("array")
-    it 'Get Collection', ->
-        collection = db.collection("collection_bar")
-        expect(collection).to.be.a("object")
     it 'Drop Collection By DB', ->
         db.drop("collection_bar")
         expect(collection.find().length).to.be(0)
@@ -40,6 +35,13 @@ describe 'LocalDB', ->
         collection.insert({a:14,b:2,c:3,d:{e:4,f:5}})
         collection.insert({a:15,b:2,c:3,d:{e:4,f:5}})
         expect(collection.find().length).to.be(14)
+    it 'Get Collections', ->
+        collections = db.collections()
+        console.log collections
+        expect(db.collections()).to.be.a("array")
+    it 'Get Collection', ->
+        collection = db.collection("collection_bar")
+        expect(collection).to.be.a("object")
     it 'Update Data', ->
         collection.update {
             $set: {b:4, c:5}
@@ -66,6 +68,7 @@ describe 'LocalDB', ->
             },
             limit: 4
         }
+        console.log data
         expect(data).to.be.a("array")
     it 'Fine One Data', ->
         data = collection.findOne {
@@ -73,6 +76,7 @@ describe 'LocalDB', ->
                 a:{$lt:3}
             }
         }
+        console.log data
         expect(data.length).to.be(1 or 0)
     it '$in', ->
         data = collection.find {
@@ -80,6 +84,7 @@ describe 'LocalDB', ->
                 a: {$in: [3,4,5]}
             }
         }
+        console.log data
         expect(d.a).to.be.within(3, 5) for d in data
     it '$nin', ->
         data = collection.find {
@@ -87,6 +92,7 @@ describe 'LocalDB', ->
                 a: {$nin: [3,4,5]}
             }
         }
+        console.log data
         expect(d.a).not.to.be.within(3, 5) for d in data
     it '$and', ->
         data = collection.find {
@@ -94,6 +100,7 @@ describe 'LocalDB', ->
                 $and: [{b:4},{a:5}]
             }
         }
+        console.log data
         expect(d.b).to.be(4) for d in data
     it '$not', ->
         data = collection.find {
@@ -103,6 +110,7 @@ describe 'LocalDB', ->
                 }
             }
         }
+        console.log data
         expect(d.b).not.to.be(4) for d in data
     it '$nor', ->
         data = collection.find {
@@ -110,6 +118,7 @@ describe 'LocalDB', ->
                 $nor: [{b:4},{a:1},{a:2}]
             }
         }
+        console.log data
         for d in data
             expect(d.b).not.to.be(4)
             expect(d.a).not.to.be(1)
@@ -120,6 +129,7 @@ describe 'LocalDB', ->
                 $or: [{a:1},{a:2}]
             }
         }
+        console.log data
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":4,"f":5}},{"a":2,"b":2,"c":3,"d":{"e":4,"f":5}}])
     it '$exist', ->
         data = collection.find {
@@ -127,12 +137,14 @@ describe 'LocalDB', ->
                 a: {$exist: false}
             }
         }
+        console.log data
         expect(d.a?).not.to.be.ok() for d in data
         data = collection.find {
             criteria: {
                 a: {$exist: true}
             }
         }
+        console.log data
         expect(d.a?).to.be.ok() for d in data
 
     it '$exist', ->
@@ -143,6 +155,7 @@ describe 'LocalDB', ->
                 d: {$type: "object", e: {$type: "string"}}
             }
         }
+        console.log data
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":"4","f":5}}])
     it '$mod', ->
         data = collection.find {
@@ -150,6 +163,7 @@ describe 'LocalDB', ->
                 a: {$mod: [4, 0]}
             }
         }
+        console.log data
         expect(d.a % 4).to.be(0) for d in data
     it '$regex', ->
         collection.insert({a:15,b:2,c:3,d:{e:4,f:5},g:"Hello World"})
@@ -158,12 +172,14 @@ describe 'LocalDB', ->
                 g: {$regex: 'ello'}
             }
         }
+        console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
         data = collection.find {
             criteria: {
                 g: /ello/
             }
         }
+        console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
 
 
