@@ -1,3 +1,4 @@
+'use strict'
 expect = require('expect.js')
 LocalDB = require('../src/localdb.js')
 

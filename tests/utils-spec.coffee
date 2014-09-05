@@ -1,3 +1,4 @@
+'use strict'
 expect = require('expect.js')
 Utils = require('../src/lib/utils.js')
 

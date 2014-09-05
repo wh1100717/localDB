@@ -1,3 +1,5 @@
+'use strict'
+
 Utils = require('./lib/utils')
 Collection = require('./lib/collection')
 

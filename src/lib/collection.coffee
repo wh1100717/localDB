@@ -1,3 +1,5 @@
+'use strict'
+
 Utils = require('./utils')
 Criteria = require('./criteria')
 

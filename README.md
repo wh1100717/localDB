@@ -3,9 +3,9 @@
 ---
 
 [![spm package][spm-image]][spm-url]
-[![MIT License][license-image]][license-url]
 [![Build Status][build-image]][build-url]
 [![Coverage Status][coverage-image]][coverage-url]
+[![MIT License][license-image]][license-url]
 
 localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.
 
