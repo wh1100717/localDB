@@ -10,22 +10,18 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
   dbPrefix = "ldb_";
   _isType = function(type) {
     return function(obj) {
-      return {}.toString.call(obj) === ("[object " + (type.toLowerCase().replace(/\w/, function(w) {
-        return w.toUpperCase();
-      })) + "]");
+      return {}.toString.call(obj).toLowerCase() === ("[object " + type + "]").toLowerCase();
     };
   };
   isType = function(ele, type) {
     return _isType(type)(ele);
   };
-  isObject = _isType("Object");
-  isString = _isType("String");
-  isArray = _isType("Array");
-  isFunction = _isType("Function");
-  isNumber = _isType("Number");
-  isRegex = function(obj) {
-    return {}.toString.call(obj) === "[object RegExp]";
-  };
+  isObject = _isType("object");
+  isString = _isType("string");
+  isArray = _isType("array");
+  isFunction = _isType("function");
+  isNumber = _isType("number");
+  isRegex = _isType("regexp");
   parse = function(str) {
     if ((str != null) && isString(str)) {
       return JSON.parse(str);

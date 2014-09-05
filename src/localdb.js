@@ -6,9 +6,7 @@ dbPrefix = "ldb_";
 
 _isType = function(type) {
   return function(obj) {
-    return {}.toString.call(obj) === ("[object " + (type.toLowerCase().replace(/\w/, function(w) {
-      return w.toUpperCase();
-    })) + "]");
+    return {}.toString.call(obj).toLowerCase() === ("[object " + type + "]").toLowerCase();
   };
 };
 
@@ -16,19 +14,17 @@ isType = function(ele, type) {
   return _isType(type)(ele);
 };
 
-isObject = _isType("Object");
+isObject = _isType("object");
 
-isString = _isType("String");
+isString = _isType("string");
 
-isArray = _isType("Array");
+isArray = _isType("array");
 
-isFunction = _isType("Function");
+isFunction = _isType("function");
 
-isNumber = _isType("Number");
+isNumber = _isType("number");
 
-isRegex = function(obj) {
-  return {}.toString.call(obj) === "[object RegExp]";
-};
+isRegex = _isType("regexp");
 
 parse = function(str) {
   if ((str != null) && isString(str)) {
