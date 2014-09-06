@@ -7,6 +7,10 @@ expect = require('expect.js');
 Utils = require('../src/lib/utils.js');
 
 describe('Utils', function() {
+  it('isType', function() {
+    expect(Utils.isType(new Object(), "object")).to.be.ok();
+    return expect(Utils.isType(new String("abc"), "object")).not.to.be.ok();
+  });
   it('isObject', function() {
     expect(Utils.isObject(new Object())).to.be.ok();
     expect(Utils.isObject({})).to.be.ok();
