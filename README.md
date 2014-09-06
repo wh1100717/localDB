@@ -255,7 +255,7 @@ collection.remove({
     Matches arrays that contain all elements specified in the query.
 *   [X] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/query/elemMatch/#op._S_elemMatch)<br>
     Selects documents if element in the array field matches all the specified **$elemMatch** condition.
-*   [ ] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)<br>
+*   [X] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)<br>
     Selects documents if the array field is a specified size.
 
 #####Projection Operators
