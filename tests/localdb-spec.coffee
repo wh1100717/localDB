@@ -198,7 +198,7 @@ describe 'LocalDB', ->
         }
         expect(1 in d.i[0]).to.be.ok() for d in data
         expect(2 in d.i[0]).to.be.ok() for d in data
-    it '$all', ->
+    it '$elemMatch', ->
         collection.insert({ _id: 1, results: [ { product: "abc", score: 10 }, { product: "xyz", score: 5 } ] })
         collection.insert({ _id: 2, results: [ { product: "abc", score: 8 }, { product: "xyz", score: 7 } ] })
         collection.insert({ _id: 3, results: [ { product: "abc", score: 7 }, { product: "xyz", score: 8 } ] })
@@ -206,6 +206,11 @@ describe 'LocalDB', ->
             criteria: { results: { $elemMatch: { product: "xyz", score: { $gte: 8 } } } }
         }
         console.log data
-
-
+        expect(data).to.be.eql([{"_id":3,"results":[{"product":"abc","score":7},{"product":"xyz","score":8}]}])
+    it '$size', ->
+        data = collection.find {
+            criteria: {results: {$size: 2}}
+        }
+        console.log data
+        expect(data.length).to.be(3)
 

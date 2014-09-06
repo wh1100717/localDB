@@ -324,6 +324,14 @@ define("localdb/0.0.1/src/lib/criteria-debug", [], function(require, exports, mo
           return false;
         }
         break;
+      case "$size":
+        if (!Utils.isArray(obj)) {
+          return false;
+        }
+        if (obj.length !== arrayCondition) {
+          return false;
+        }
+        break;
       default:
         return void 0;
     }
@@ -402,7 +410,7 @@ define("localdb/0.0.1/src/lib/criteria-debug", [], function(require, exports, mo
     var arrayCheckResult, condition, key, logicCheckResult;
     for (key in criteria) {
       condition = criteria[key];
-      if (Utils.isNumber(condition)) {
+      if (Utils.isNumber(condition) && key !== "$size") {
         if (numberCheck(obj[key], condition)) {
           continue;
         } else {

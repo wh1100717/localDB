@@ -122,6 +122,14 @@ arrayCheck = function(obj, arrayKey, arrayCondition) {
         return false;
       }
       break;
+    case "$size":
+      if (!Utils.isArray(obj)) {
+        return false;
+      }
+      if (obj.length !== arrayCondition) {
+        return false;
+      }
+      break;
     default:
       return void 0;
   }
@@ -203,7 +211,7 @@ Criteria.check = function(obj, criteria) {
   var arrayCheckResult, condition, key, logicCheckResult;
   for (key in criteria) {
     condition = criteria[key];
-    if (Utils.isNumber(condition)) {
+    if (Utils.isNumber(condition) && key !== "$size") {
       if (numberCheck(obj[key], condition)) {
         continue;
       } else {

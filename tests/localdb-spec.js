@@ -511,7 +511,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  return it('$all', function() {
+  it('$elemMatch', function() {
     var data;
     collection.insert({
       _id: 1,
@@ -561,6 +561,32 @@ describe('LocalDB', function() {
         }
       }
     });
-    return console.log(data);
+    console.log(data);
+    return expect(data).to.be.eql([
+      {
+        "_id": 3,
+        "results": [
+          {
+            "product": "abc",
+            "score": 7
+          }, {
+            "product": "xyz",
+            "score": 8
+          }
+        ]
+      }
+    ]);
+  });
+  return it('$size', function() {
+    var data;
+    data = collection.find({
+      criteria: {
+        results: {
+          $size: 2
+        }
+      }
+    });
+    console.log(data);
+    return expect(data.length).to.be(3);
   });
 });

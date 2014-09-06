@@ -34,6 +34,9 @@ arrayCheck = (obj, arrayKey, arrayCondition) ->
         when "$elemMatch"
             return false if not Utils.isArray(obj)
             return false if not (-> return true for d in obj when Criteria.check(d, arrayCondition))()
+        when "$size"
+            return false if not Utils.isArray(obj)
+            return false if obj.length isnt arrayCondition
         else return undefined
     return true
 
@@ -60,7 +63,7 @@ Criteria = {}
 Criteria.check = (obj, criteria) ->
     for key, condition of criteria
         # Number Check
-        (if numberCheck(obj[key], condition) then continue else return false) if Utils.isNumber(condition)
+        (if numberCheck(obj[key], condition) then continue else return false) if Utils.isNumber(condition) and key isnt "$size"
         # String Check
         (if stringCheck(obj[key], condition) then continue else return false) if Utils.isString(condition)
         # Regex Check
