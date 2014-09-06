@@ -31,6 +31,9 @@ arrayCheck = (obj, arrayKey, arrayCondition) ->
         when "$all"
             return false if not Utils.isArray(obj)
             return false for c in arrayCondition when not (-> return true for d in obj when if Utils.isArray(c) then arrayCheck(d, arrayKey, c) else d is c)()
+        when "$elemMatch"
+            return false if not Utils.isArray(obj)
+            return false if not (-> return true for d in obj when Criteria.check(d, arrayCondition))()
         else return undefined
     return true
 

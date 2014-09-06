@@ -308,6 +308,22 @@ define("localdb/0.0.1/src/lib/criteria-debug", [], function(require, exports, mo
           }
         }
         break;
+      case "$elemMatch":
+        if (!Utils.isArray(obj)) {
+          return false;
+        }
+        if (!(function() {
+          var d, _j, _len1;
+          for (_j = 0, _len1 = obj.length; _j < _len1; _j++) {
+            d = obj[_j];
+            if (Criteria.check(d, arrayCondition)) {
+              return true;
+            }
+          }
+        })()) {
+          return false;
+        }
+        break;
       default:
         return void 0;
     }

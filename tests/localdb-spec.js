@@ -469,7 +469,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  return it('$all', function() {
+  it('$all', function() {
     var d, data, _i, _j, _k, _l, _len, _len1, _len2, _len3, _results;
     collection.insert({
       a: 1,
@@ -510,5 +510,57 @@ describe('LocalDB', function() {
       _results.push(expect(__indexOf.call(d.i[0], 2) >= 0).to.be.ok());
     }
     return _results;
+  });
+  return it('$all', function() {
+    var data;
+    collection.insert({
+      _id: 1,
+      results: [
+        {
+          product: "abc",
+          score: 10
+        }, {
+          product: "xyz",
+          score: 5
+        }
+      ]
+    });
+    collection.insert({
+      _id: 2,
+      results: [
+        {
+          product: "abc",
+          score: 8
+        }, {
+          product: "xyz",
+          score: 7
+        }
+      ]
+    });
+    collection.insert({
+      _id: 3,
+      results: [
+        {
+          product: "abc",
+          score: 7
+        }, {
+          product: "xyz",
+          score: 8
+        }
+      ]
+    });
+    data = collection.find({
+      criteria: {
+        results: {
+          $elemMatch: {
+            product: "xyz",
+            score: {
+              $gte: 8
+            }
+          }
+        }
+      }
+    });
+    return console.log(data);
   });
 });
