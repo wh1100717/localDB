@@ -26,6 +26,15 @@ logicCheck = (obj, logicKey, logicCondition) ->
         else return undefined
     return true
 
+arrayCheck = (obj, arrayKey, arrayCondition) ->
+    switch arrayKey
+        when "$all"
+            return false if not Utils.isArray(obj)
+            return false for c in arrayCondition when not (-> return true for d in obj when if Utils.isArray(c) then arrayCheck(d, arrayKey, c) else d is c)()
+        else return undefined
+    return true
+
+
 cmpCheck = (obj, key, cmpCondition) ->
     for c_key, c_value of cmpCondition
         switch c_key
@@ -56,6 +65,9 @@ Criteria.check = (obj, criteria) ->
         # Logic Check
         logicCheckResult = logicCheck(obj, key, condition)
         (if logicCheckResult then continue else return false) if logicCheckResult?
+        # Array Check
+        arrayCheckResult = arrayCheck(obj, key, condition)
+        (if arrayCheckResult then continue else return false) if arrayCheckResult?
         # Other Check (Comparison | Element | Evaluation)
         if cmpCheck(obj, key, condition) then continue else return false
     return true

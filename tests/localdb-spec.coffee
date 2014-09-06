@@ -182,8 +182,22 @@ describe 'LocalDB', ->
         }
         console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
-
-
+    it '$all', ->
+        collection.insert({a:1,b:2,c:3,h:[1,2,3,4],i:[[1,2,3],[1,2,4]]})
+        data = collection.find {
+            criteria: {
+                h: {$all: [1,2]}
+            }
+        }
+        expect(1 in d.h).to.be.ok() for d in data
+        expect(2 in d.h).to.be.ok() for d in data
+        data = collection.find {
+            criteria: {
+                i: {$all: [[1,2]]}
+            }
+        }
+        expect(1 in d.i[0]).to.be.ok() for d in data
+        expect(2 in d.i[0]).to.be.ok() for d in data
 
 
 

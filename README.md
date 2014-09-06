@@ -251,7 +251,7 @@ collection.remove({
 
 #####Array
 
-*   [ ] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)<br>
+*   [X] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)<br>
     Matches arrays that contain all elements specified in the query.
 *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/query/elemMatch/#op._S_elemMatch)<br>
     Selects documents if element in the array field matches all the specified **$elemMatch** condition.
