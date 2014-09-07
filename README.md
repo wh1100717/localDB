@@ -275,7 +275,7 @@ collection.remove({
 
 #####Fields
 
-*   [ ] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)<br>
+*   [X] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)<br>
     Increments the value of the field by the specified amount.
 *   [ ] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)<br>
     Multiplies the value of the field by the specified amount.
