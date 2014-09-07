@@ -132,23 +132,23 @@ describe 'LocalDB', ->
         }
         console.log data
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":4,"f":5}},{"a":2,"b":2,"c":3,"d":{"e":4,"f":5}}])
-    it '$exist', ->
+    it '$exists', ->
         data = collection.find {
             criteria: {
-                a: {$exist: false}
+                a: {$exists: false}
             }
         }
         console.log data
         expect(d.a?).not.to.be.ok() for d in data
         data = collection.find {
             criteria: {
-                a: {$exist: true}
+                a: {$exists: true}
             }
         }
         console.log data
         expect(d.a?).to.be.ok() for d in data
 
-    it '$exist', ->
+    it '$exists', ->
         data = collection.find {
             criteria: {
                 a: {$type: "number"},

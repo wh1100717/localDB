@@ -230,7 +230,7 @@ collection.remove({
 
 #####Element
 
-*   [X] [$exits](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)<br>
+*   [X] [$exists](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)<br>
     Matches documents that have the specified field.
 *   [X] [$type](http://docs.mongodb.org/manual/reference/operator/query/type/#op._S_type)<br>
     Selects documents if a field is of the specified type.

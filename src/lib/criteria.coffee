@@ -51,7 +51,7 @@ cmpCheck = (obj, key, cmpCondition) ->
             when "$ne" then return false if obj[key] is c_value
             when "$in" then return false if obj[key] not in c_value
             when "$nin" then return false if obj[key] in c_value
-            when "$exist" then return false if c_value isnt obj[key]?
+            when "$exists" then return false if c_value isnt obj[key]?
             when "$type" then return false if not Utils.isType(obj[key], c_value)
             when "$mod" then return false if obj[key] % c_value[0] isnt c_value[1]
             when "$regex" then return false if not (new RegExp(c_value)).test(obj[key])

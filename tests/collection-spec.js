@@ -200,7 +200,6 @@ describe('Collection', function() {
     return expect(data.length).to.be(1 || 0);
   });
   it('Collection remove', function() {
-    console.log(collection.find());
     collection.remove({
       criteria: {
         a: 99
@@ -214,7 +213,6 @@ describe('Collection', function() {
         }
       }
     });
-    console.log(collection.find());
     collection.remove(null);
     return expect(collection.find().length).to.be(0);
   });

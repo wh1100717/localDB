@@ -176,7 +176,7 @@ cmpCheck = function(obj, key, cmpCondition) {
           return false;
         }
         break;
-      case "$exist":
+      case "$exists":
         if (c_value !== (obj[key] != null)) {
           return false;
         }
