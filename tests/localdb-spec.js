@@ -433,7 +433,7 @@ describe('LocalDB', function() {
     return _results;
   });
   it('$regex', function() {
-    var d, data, _i, _j, _len, _len1, _results;
+    var d, data, _i, _j, _len, _len1;
     collection.insert({
       a: 15,
       b: 2,
@@ -462,12 +462,26 @@ describe('LocalDB', function() {
       }
     });
     console.log(data);
-    _results = [];
     for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
       d = data[_j];
-      _results.push(expect(/ello/.test(d.g)).to.be.ok());
+      expect(/ello/.test(d.g)).to.be.ok();
     }
-    return _results;
+    collection.insert({
+      a: 15,
+      b: 2,
+      c: 3,
+      d: {
+        e: 4,
+        f: 5
+      },
+      g: ["Hello World"]
+    });
+    data = collection.find({
+      criteria: {
+        g: /ello/
+      }
+    });
+    return console.log(data);
   });
   it('$all', function() {
     var d, data, _i, _j, _k, _l, _len, _len1, _len2, _len3, _results;
@@ -589,7 +603,7 @@ describe('LocalDB', function() {
     console.log(data);
     return expect(data.length).to.be(3);
   });
-  return it('projection $', function() {
+  it('projection $', function() {
     var data;
     collection.insert({
       "_id": 1,
@@ -630,6 +644,41 @@ describe('LocalDB', function() {
       },
       projection: {
         "grades.$": 1
+      }
+    });
+    return console.log(data);
+  });
+  return it('projection $elemMatch', function() {
+    var data;
+    collection.insert({
+      _id: 1,
+      zipcode: "63109",
+      students: [
+        {
+          name: "john",
+          school: 102,
+          age: 10
+        }, {
+          name: "jess",
+          school: 102,
+          age: 11
+        }, {
+          name: "jeff",
+          school: 108,
+          age: 15
+        }
+      ]
+    });
+    data = collection.find({
+      criteria: {
+        zipcode: "63109"
+      },
+      projection: {
+        students: {
+          $elemMatch: {
+            school: 102
+          }
+        }
       }
     });
     return console.log(data);

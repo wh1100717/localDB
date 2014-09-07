@@ -264,7 +264,7 @@ collection.remove({
 
 *   [X] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)<br>
     Projects the first element in an array that matches the query condition.
-*   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)<br>
+*   [X] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)<br>
     Projects only the first element from an array that matches the specified **$elemMatch** condition.
 *   [ ] [$meta](http://docs.mongodb.org/manual/reference/operator/projection/meta/#proj._S_meta)<br>
     Projects the document’s score assigned during **$text** operation.

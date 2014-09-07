@@ -182,6 +182,14 @@ describe 'LocalDB', ->
         }
         console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
+        collection.insert({a:15,b:2,c:3,d:{e:4,f:5},g:["Hello World"]})
+        data = collection.find {
+            criteria: {
+                g: /ello/
+            }
+        }
+        console.log data
+
     it '$all', ->
         collection.insert({a:1,b:2,c:3,h:[1,2,3,4],i:[[1,2,3],[1,2,4]]})
         data = collection.find {
@@ -225,8 +233,21 @@ describe 'LocalDB', ->
             projection: {"grades.$": 1}
         }
         console.log data
-
-
+    it 'projection $elemMatch', ->
+        collection.insert  {
+            _id: 1,
+            zipcode: "63109",
+            students: [
+                { name: "john", school: 102, age: 10 },
+                { name: "jess", school: 102, age: 11 },
+                { name: "jeff", school: 108, age: 15 }
+            ]
+        }
+        data = collection.find {
+            criteria: {zipcode: "63109"},
+            projection: { students: { $elemMatch: { school: 102 } } }
+        }
+        console.log data
 
 
 
