@@ -2,6 +2,7 @@
 
 Utils = require('./utils')
 Criteria = require('./criteria')
+Projection = require('./projection')
 
 Collection = (collectionName, db) ->
     @name = "#{db.name}_#{collectionName}"
@@ -45,14 +46,7 @@ Collection.prototype.find = (options = {}) ->
         break if limit is 0
         limit = limit - 1
         result.push d
-    return result if JSON.stringify(projection) is "{}"
-    pResult = []
-    for d in result
-        p = {}
-        for key, value of projection
-            p[key] = d[key] if value is 1
-        pResult.push p
-    return pResult
+    return Projection.generate(result, projection)
 
 Collection.prototype.findOne = (options = {}) ->
     options.limit = 1

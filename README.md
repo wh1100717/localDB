@@ -7,6 +7,8 @@
 [![Coverage Status][coverage-image]][coverage-url]
 [![MIT License][license-image]][license-url]
 
+**Still Unstable - Under Developemnt**
+
 localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.
 
 localDB is designed for web applications, mobile apps or game engines which may store data consistently in browser.

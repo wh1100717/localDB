@@ -69,14 +69,13 @@ describe 'Collection', ->
     it 'Collection remove', ->
         console.log collection.find()
         collection.remove({
-            criteira:{
+            criteria:{
                 a:99
             }
-            })
+        })
         collection.remove({
-            criteira: {
-                a: {$gt:3 , $lt: 10},
-
+            criteria: {
+                a: {$gt:3 , $lt: 10}
             }
         })
         console.log collection.find()

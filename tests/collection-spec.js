@@ -202,12 +202,12 @@ describe('Collection', function() {
   it('Collection remove', function() {
     console.log(collection.find());
     collection.remove({
-      criteira: {
+      criteria: {
         a: 99
       }
     });
     collection.remove({
-      criteira: {
+      criteria: {
         a: {
           $gt: 3,
           $lt: 10
