@@ -248,6 +248,21 @@ describe 'LocalDB', ->
             projection: { students: { $elemMatch: { school: 102 } } }
         }
         console.log data
+    it 'update $inc', ->
+        collection.insert {
+            age: 1
+        }
+        console.log collection.find(criteria:{age: {$exists:true}})
+        collection.update {
+            $set: {age: 10},
+            $inc: {age: 2}
+        }
+        console.log collection.find(criteria:{age: {$exists:true}})
+        collection.update {
+            age: 100,
+            $inc: {age: 2}
+        }
+        console.log collection.find(criteria:{age: {$exists:true}})
 
 
 

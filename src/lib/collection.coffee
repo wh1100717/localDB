@@ -3,6 +3,7 @@
 Utils = require('./utils')
 Criteria = require('./criteria')
 Projection = require('./projection')
+Update = require('./update')
 
 Collection = (collectionName, db) ->
     @name = "#{db.name}_#{collectionName}"
@@ -21,13 +22,10 @@ Collection.prototype.insert = (rowData) ->
     @data.push rowData
     @serialize()
 
-Collection.prototype.update = (action, options) ->
+Collection.prototype.update = (actions, options = {}) ->
     criteria = if options.criteria? then options.criteria else {}
     @deserialize()
-    for d in @data when Criteria.check(d, criteria)
-        actions = action.$set
-        for key, value of actions
-            d[key] = value
+    @data = Update(@data, actions, criteria)
     @serialize()
 
 Collection.prototype.remove = (options = {}) ->

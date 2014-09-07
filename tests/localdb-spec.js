@@ -648,7 +648,7 @@ describe('LocalDB', function() {
     });
     return console.log(data);
   });
-  return it('projection $elemMatch', function() {
+  it('projection $elemMatch', function() {
     var data;
     collection.insert({
       _id: 1,
@@ -682,5 +682,45 @@ describe('LocalDB', function() {
       }
     });
     return console.log(data);
+  });
+  return it('update $inc', function() {
+    collection.insert({
+      age: 1
+    });
+    console.log(collection.find({
+      criteria: {
+        age: {
+          $exists: true
+        }
+      }
+    }));
+    collection.update({
+      $set: {
+        age: 10
+      },
+      $inc: {
+        age: 2
+      }
+    });
+    console.log(collection.find({
+      criteria: {
+        age: {
+          $exists: true
+        }
+      }
+    }));
+    collection.update({
+      age: 100,
+      $inc: {
+        age: 2
+      }
+    });
+    return console.log(collection.find({
+      criteria: {
+        age: {
+          $exists: true
+        }
+      }
+    }));
   });
 });
