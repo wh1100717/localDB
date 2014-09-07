@@ -262,7 +262,7 @@ collection.remove({
 
 #####Projection Operators
 
-*   [ ] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)<br>
+*   [X] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)<br>
     Projects the first element in an array that matches the query condition.
 *   [ ] [$elemMatch](http://docs.mongodb.org/manual/reference/operator/projection/elemMatch/#proj._S_elemMatch)<br>
     Projects only the first element from an array that matches the specified **$elemMatch** condition.
