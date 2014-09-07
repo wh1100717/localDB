@@ -200,21 +200,19 @@ describe('Collection', function() {
     return expect(data.length).to.be(1 || 0);
   });
   it('Collection remove', function() {
-    console.log(collection.find());
     collection.remove({
-      criteira: {
+      criteria: {
         a: 99
       }
     });
     collection.remove({
-      criteira: {
+      criteria: {
         a: {
           $gt: 3,
           $lt: 10
         }
       }
     });
-    console.log(collection.find());
     collection.remove(null);
     return expect(collection.find().length).to.be(0);
   });

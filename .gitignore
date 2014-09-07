@@ -21,3 +21,5 @@ node_modules
 _site
 sea-modules
 .cache
+bower_components
+spm_modules

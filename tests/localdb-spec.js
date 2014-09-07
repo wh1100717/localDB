@@ -355,12 +355,12 @@ describe('LocalDB', function() {
       }
     ]);
   });
-  it('$exist', function() {
+  it('$exists', function() {
     var d, data, _i, _j, _len, _len1, _results;
     data = collection.find({
       criteria: {
         a: {
-          $exist: false
+          $exists: false
         }
       }
     });
@@ -372,7 +372,7 @@ describe('LocalDB', function() {
     data = collection.find({
       criteria: {
         a: {
-          $exist: true
+          $exists: true
         }
       }
     });
@@ -384,7 +384,7 @@ describe('LocalDB', function() {
     }
     return _results;
   });
-  it('$exist', function() {
+  it('$exists', function() {
     var data;
     data = collection.find({
       criteria: {
