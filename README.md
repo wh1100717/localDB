@@ -285,7 +285,7 @@ collection.remove({
     Sets the value of a field upon document creation during an upsert. Has no effect on update operations that modify existing documents.
 *   [X] [$set](http://docs.mongodb.org/manual/reference/operator/update/set/#up._S_set)<br>
     Sets the value of a field in a document.
-*   [ ] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)<br>
+*   [X] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)<br>
     Removes the specified field from a document.
 *   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)<br>
     Only updates the field if the specified value is less than the existing field value.
