@@ -749,7 +749,7 @@ describe('LocalDB', function() {
       }
     }));
   });
-  return it('update $rename', function() {
+  it('update $rename', function() {
     collection.insert({
       "_id": 1,
       "alias": ["The American Cincinnatus", "The American Fabius"],
@@ -775,6 +775,30 @@ describe('LocalDB', function() {
     return console.log(collection.find({
       criteria: {
         name: {
+          $exists: true
+        }
+      }
+    }));
+  });
+  return it('update $unset', function() {
+    collection.insert({
+      "_id": 1,
+      "alias": ["The American Cincinnatus", "The American Fabius"],
+      "mobile1": "555-555-5555",
+      "nmae": {
+        "first": "george",
+        "last": "washington"
+      }
+    });
+    collection.update({
+      $unset: {
+        alias: "",
+        nmae: ""
+      }
+    });
+    return console.log(collection.find({
+      criteria: {
+        mobile1: {
           $exists: true
         }
       }

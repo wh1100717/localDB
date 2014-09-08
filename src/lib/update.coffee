@@ -22,6 +22,10 @@ generate = (data, action, value, criteria) ->
                 for d in data when Criteria.check(d, criteria) and d[k]?
                     d[v] = d[k]
                     delete d[k]
+        when "$unset"
+            for k of value
+                for d in data when Criteria.check(d, criteria) and d[k]?
+                    delete d[k]
         else
             for d in data when Criteria.check(d, criteria) and d[action]?
                 d[action] = value

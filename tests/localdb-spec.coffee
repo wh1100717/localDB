@@ -280,5 +280,15 @@ describe 'LocalDB', ->
         }
         console.log collection.find {criteria: {nmae: {$exists: true}}}
         console.log collection.find {criteria: {name: {$exists: true}}}
-
+    it 'update $unset', ->
+        collection.insert {
+            "_id": 1,
+            "alias": [ "The American Cincinnatus", "The American Fabius" ],
+            "mobile1": "555-555-5555",
+            "nmae": { "first" : "george", "last" : "washington" }
+        }
+        collection.update {
+            $unset: {alias:"",nmae:""}
+        }
+        console.log collection.find {criteria: {mobile1: {$exists: true}}}
 
