@@ -17,6 +17,11 @@ generate = (data, action, value, criteria) ->
             for k,v of value
                 for d in data when Criteria.check(d, criteria) and Utils.isNumber(d[k])
                     d[k] = d[k] * v
+        when "$rename"
+            for k,v of value
+                for d in data when Criteria.check(d, criteria) and d[k]?
+                    d[v] = d[k]
+                    delete d[k]
         else
             for d in data when Criteria.check(d, criteria) and d[action]?
                 d[action] = value

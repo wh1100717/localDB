@@ -511,7 +511,7 @@ define("localdb/0.0.1/src/lib/update-debug", [], function(require, exports, modu
   Criteria = require("localdb/0.0.1/src/lib/criteria-debug");
   Utils = require("localdb/0.0.1/src/lib/utils-debug");
   generate = function(data, action, value, criteria) {
-    var d, k, v, _i, _j, _k, _l, _len, _len1, _len2, _len3;
+    var d, k, v, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
     switch (action) {
       case "$inc":
         for (k in value) {
@@ -546,9 +546,22 @@ define("localdb/0.0.1/src/lib/update-debug", [], function(require, exports, modu
           }
         }
         break;
+      case "$rename":
+        for (k in value) {
+          v = value[k];
+          for (_l = 0, _len3 = data.length; _l < _len3; _l++) {
+            d = data[_l];
+            if (!(Criteria.check(d, criteria) && (d[k] != null))) {
+              continue;
+            }
+            d[v] = d[k];
+            delete d[k];
+          }
+        }
+        break;
       default:
-        for (_l = 0, _len3 = data.length; _l < _len3; _l++) {
-          d = data[_l];
+        for (_m = 0, _len4 = data.length; _m < _len4; _m++) {
+          d = data[_m];
           if (Criteria.check(d, criteria) && (d[action] != null)) {
             d[action] = value;
           }

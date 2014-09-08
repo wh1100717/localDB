@@ -723,7 +723,7 @@ describe('LocalDB', function() {
       }
     }));
   });
-  return it('update $mul', function() {
+  it('update $mul', function() {
     collection.insert({
       _id: 1,
       item: "ABC",
@@ -744,6 +744,37 @@ describe('LocalDB', function() {
     return console.log(collection.find({
       criteria: {
         price: {
+          $exists: true
+        }
+      }
+    }));
+  });
+  return it('update $rename', function() {
+    collection.insert({
+      "_id": 1,
+      "alias": ["The American Cincinnatus", "The American Fabius"],
+      "mobile": "555-555-5555",
+      "nmae": {
+        "first": "george",
+        "last": "washington"
+      }
+    });
+    collection.update({
+      $rename: {
+        "nmae": "name",
+        "alias": "nickname"
+      }
+    });
+    console.log(collection.find({
+      criteria: {
+        nmae: {
+          $exists: true
+        }
+      }
+    }));
+    return console.log(collection.find({
+      criteria: {
+        name: {
           $exists: true
         }
       }

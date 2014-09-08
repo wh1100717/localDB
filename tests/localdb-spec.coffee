@@ -268,6 +268,17 @@ describe 'LocalDB', ->
         console.log collection.find {criteria: {price: {$exists: true}}}
         collection.update {$mul: {price: 1.25}}
         console.log collection.find {criteria: {price: {$exists: true}}}
-        
+    it 'update $rename', ->
+        collection.insert {
+            "_id": 1,
+            "alias": [ "The American Cincinnatus", "The American Fabius" ],
+            "mobile": "555-555-5555",
+            "nmae": { "first" : "george", "last" : "washington" }
+        }
+        collection.update {
+            $rename: {"nmae":"name","alias":"nickname"}
+        }
+        console.log collection.find {criteria: {nmae: {$exists: true}}}
+        console.log collection.find {criteria: {name: {$exists: true}}}
 
 

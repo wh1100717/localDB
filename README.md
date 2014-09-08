@@ -279,7 +279,7 @@ collection.remove({
     Increments the value of the field by the specified amount.
 *   [X] [$mul](http://docs.mongodb.org/manual/reference/operator/update/mul/#up._S_mul)<br>
     Multiplies the value of the field by the specified amount.
-*   [ ] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)<br>
+*   [X] [$rename](http://docs.mongodb.org/manual/reference/operator/update/rename/#up._S_rename)<br>
     Renames a field.
 *   [ ] [$setOnInsert](http://docs.mongodb.org/manual/reference/operator/update/setOnInsert/#up._S_setOnInsert)<br>
     Sets the value of a field upon document creation during an upsert. Has no effect on update operations that modify existing documents.
