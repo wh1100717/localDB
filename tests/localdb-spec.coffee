@@ -252,17 +252,22 @@ describe 'LocalDB', ->
         collection.insert {
             age: 1
         }
-        console.log collection.find(criteria:{age: {$exists:true}})
+        console.log collection.find {criteria:{age: {$exists:true}}}
         collection.update {
             $set: {age: 10},
             $inc: {age: 2}
         }
-        console.log collection.find(criteria:{age: {$exists:true}})
+        console.log collection.find {criteria:{age: {$exists:true}}}
         collection.update {
             age: 100,
             $inc: {age: 2}
         }
-        console.log collection.find(criteria:{age: {$exists:true}})
-
+        console.log collection.find {criteria:{age: {$exists:true}}}
+    it 'update $mul', ->
+        collection.insert { _id: 1, item: "ABC", price: 10.99 }
+        console.log collection.find {criteria: {price: {$exists: true}}}
+        collection.update {$mul: {price: 1.25}}
+        console.log collection.find {criteria: {price: {$exists: true}}}
+        
 
 

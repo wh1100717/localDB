@@ -683,7 +683,7 @@ describe('LocalDB', function() {
     });
     return console.log(data);
   });
-  return it('update $inc', function() {
+  it('update $inc', function() {
     collection.insert({
       age: 1
     });
@@ -718,6 +718,32 @@ describe('LocalDB', function() {
     return console.log(collection.find({
       criteria: {
         age: {
+          $exists: true
+        }
+      }
+    }));
+  });
+  return it('update $mul', function() {
+    collection.insert({
+      _id: 1,
+      item: "ABC",
+      price: 10.99
+    });
+    console.log(collection.find({
+      criteria: {
+        price: {
+          $exists: true
+        }
+      }
+    }));
+    collection.update({
+      $mul: {
+        price: 1.25
+      }
+    });
+    return console.log(collection.find({
+      criteria: {
+        price: {
           $exists: true
         }
       }
