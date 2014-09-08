@@ -780,7 +780,7 @@ describe('LocalDB', function() {
       }
     }));
   });
-  return it('update $unset', function() {
+  it('update $unset', function() {
     collection.insert({
       "_id": 1,
       "alias": ["The American Cincinnatus", "The American Fabius"],
@@ -799,6 +799,28 @@ describe('LocalDB', function() {
     return console.log(collection.find({
       criteria: {
         mobile1: {
+          $exists: true
+        }
+      }
+    }));
+  });
+  return it('update $min && $max', function() {
+    collection.insert({
+      _id: 1,
+      highScore: 800,
+      lowScore: 200
+    });
+    collection.update({
+      $min: {
+        lowScore: 150
+      },
+      $max: {
+        highScore: 1000
+      }
+    });
+    return console.log(collection.find({
+      criteria: {
+        highScore: {
           $exists: true
         }
       }

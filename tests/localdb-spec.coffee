@@ -291,4 +291,16 @@ describe 'LocalDB', ->
             $unset: {alias:"",nmae:""}
         }
         console.log collection.find {criteria: {mobile1: {$exists: true}}}
+    it 'update $min && $max', ->
+        collection.insert { _id: 1, highScore: 800, lowScore: 200 }
+        collection.update {
+            $min: { lowScore: 150 },
+            $max: { highScore: 1000 }
+        }
+        console.log collection.find {criteria: {highScore: {$exists: true}}}
+
+
+
+
+
 

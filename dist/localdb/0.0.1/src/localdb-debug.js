@@ -511,7 +511,7 @@ define("localdb/0.0.1/src/lib/update-debug", [], function(require, exports, modu
   Criteria = require("localdb/0.0.1/src/lib/criteria-debug");
   Utils = require("localdb/0.0.1/src/lib/utils-debug");
   generate = function(data, action, value, criteria) {
-    var d, k, v, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n;
+    var d, k, v, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _m, _n, _o, _p;
     switch (action) {
       case "$inc":
         for (k in value) {
@@ -569,9 +569,31 @@ define("localdb/0.0.1/src/lib/update-debug", [], function(require, exports, modu
           }
         }
         break;
+      case "$min":
+        for (k in value) {
+          v = value[k];
+          for (_n = 0, _len5 = data.length; _n < _len5; _n++) {
+            d = data[_n];
+            if (Criteria.check(d, criteria) && Utils.isNumber(d[k])) {
+              d[k] = Math.min(d[k], v);
+            }
+          }
+        }
+        break;
+      case "$max":
+        for (k in value) {
+          v = value[k];
+          for (_o = 0, _len6 = data.length; _o < _len6; _o++) {
+            d = data[_o];
+            if (Criteria.check(d, criteria) && Utils.isNumber(d[k])) {
+              d[k] = Math.max(d[k], v);
+            }
+          }
+        }
+        break;
       default:
-        for (_n = 0, _len5 = data.length; _n < _len5; _n++) {
-          d = data[_n];
+        for (_p = 0, _len7 = data.length; _p < _len7; _p++) {
+          d = data[_p];
           if (Criteria.check(d, criteria) && (d[action] != null)) {
             d[action] = value;
           }

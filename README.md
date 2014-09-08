@@ -287,9 +287,9 @@ collection.remove({
     Sets the value of a field in a document.
 *   [X] [$unset](http://docs.mongodb.org/manual/reference/operator/update/unset/#up._S_unset)<br>
     Removes the specified field from a document.
-*   [ ] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)<br>
+*   [X] [$min](http://docs.mongodb.org/manual/reference/operator/update/min/#up._S_min)<br>
     Only updates the field if the specified value is less than the existing field value.
-*   [ ] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)<br>
+*   [X] [$max](http://docs.mongodb.org/manual/reference/operator/update/max/#up._S_max)<br>
     Only updates the field if the specified value is greater than the existing field value.
 *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)<br>
     Sets the value of a field to current date, either as a Date or a Timestamp.
