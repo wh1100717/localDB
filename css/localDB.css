@@ -27,9 +27,7 @@ nav {
 
 /* 头部 */
 header {
-	position: relative;
-	top: 50px;
-	padding: 30px 15px;
+	padding: 130px 0 80px 0;
 	color: #ECF0F1;
 	text-align: center;
 	text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
@@ -52,7 +50,7 @@ header .logo {
 
 header .lead {
 	margin: 0px auto 30px;
-	font-size: 20px;
+	font-size: 30px;
 	color: #FFF;
 }
 
@@ -81,13 +79,46 @@ header .version a:hover {
     border-color: #FFF;
 }
 
+.post-header {
+	padding-top: 110px;
+	padding-bottom: 60px;
+	color: #ECF0F1;
+	text-align: left;
+	text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+	background-color: #27AE60;
+	background-image: linear-gradient(to bottom, #27AE60 0px, #2ECC71 100%);
+	background-repeat: repeat-x;
+}
+
 /* 内容 */
 section {
-	height: 1000px;
-	border-bottom: 1px solid #E5E5E5;
+	padding-top: 100px;
+	padding-bottom: 100px;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #555;
+	text-align: center;
+	background-color: #fff;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+section .title {
+	margin-bottom: 30px;
+	font-size: 40px;
+	font-weight: 400;
+	color: #333;
+}
+
+section .lead {
+	max-width: 80%;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 /* 底部 */
 footer {
-	height: 300px;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	color: #777;
+	text-align: center;
 }

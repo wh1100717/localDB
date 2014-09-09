@@ -6,6 +6,8 @@
 	
 	{{ content }}
 
+	{% include foot.html %}
+
 	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script>
@@ -13,7 +15,7 @@
 			var top = document.documentElement.scrollTop || document.body.scrollTop;
 			var height = document.getElementsByTagName("header")[0].offsetHeight;
 			var nav = document.getElementsByTagName("nav")[0];
-			if(top >= height) {
+			if(top >= height - 50) {
 				nav.style.backgroundColor = "rgba(39,174,96,.9)";
 				$(".navbar-brand").css("color", "#FFF");
 				$(".link").css("color", "#FFF");
