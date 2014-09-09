@@ -28,6 +28,7 @@ nav {
 /* 头部 */
 header {
 	position: relative;
+	top: 50px;
 	padding: 30px 15px;
 	color: #ECF0F1;
 	text-align: center;

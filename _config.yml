@@ -2,5 +2,6 @@ encoding: utf-8
 name: localDB
 markdown: redcarpet
 pygments: true
-baseurl: /localDB
+baseurl: /
+url: /
 relative_permalinks: false

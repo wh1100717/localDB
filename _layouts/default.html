@@ -13,7 +13,6 @@
 			var top = document.documentElement.scrollTop || document.body.scrollTop;
 			var height = document.getElementsByTagName("header")[0].offsetHeight;
 			var nav = document.getElementsByTagName("nav")[0];
-			nav.style.top = top + "px";
 			if(top >= height) {
 				nav.style.backgroundColor = "rgba(39,174,96,.9)";
 				$(".navbar-brand").css("color", "#FFF");
