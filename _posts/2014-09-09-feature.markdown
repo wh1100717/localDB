@@ -4,8 +4,6 @@ title: "Feature"
 permalink: /feature/
 ---
 
-##Feature
-
 ###BSON _ID generator support(TODO)
 
 ###[Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
