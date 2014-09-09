@@ -35,17 +35,4 @@ generateItem = (item, projection) ->
             result[key] = item[key] if value is 1
     return result
 
-        # for key, value of projection
-        #     if key.indexOf(".$") isnt -1
-        #         key = key.split(".")[0]
-        #         console.log key
-        #         continue if not Utils.isArray(d[key]) or d[key].length is 0
-        #         p[key] = [d[key][0]]
-        #     else if key.indexOf("$elemMatch") is 0
-        #         continue if not Utils.isArray()
-        #     else
-        #         #这里不使用deepcopy是否会造成问题？
-        #         p[key] = d[key] if value is 1
-
-
 module.exports = Projection
