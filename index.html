@@ -1,60 +1,25 @@
-<!doctype html>
-<html>
-<head>
-	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="localDB.css">
-	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-</head>
-<body>
-	<nav class="collapse navbar-collapse bs-navbar-collapse">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#"> localDB </a>
-			</div>
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"> stared </a></li>
-				<li><a href="#"> document </a></li>
-				<li><a href="#"> about </a></li>
-			</ul>
-		</div>
-	</nav>
-	<header>
-		<div class="container">
-			<span class="logo"> localDB </span>
-			<p class="lead">localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.</p>
-			<p class="lead">
-				<a class="btn btn-outline-inverse btn-lg" href="#"> Download </a>
-			</p>
-			<p class="version">
-				<a href="https://github.com/wh1100717/localDB">GitHub</a>
-				&nbsp|&nbsp Version 0.0.1
-			</p>
-		</div>
-	</header>
-	<section>
-		<div class="container"></div>
-	</section>
-	<footer>
-		<div class="container"></div>
-	</footer>
-	<script>
-		window.onscroll = function() {
-			var t = document.documentElement.scrollTop || document.body.scrollTop;
-			var height = document.getElementsByTagName("header")[0].offsetHeight;
-			var nav = document.getElementsByTagName("nav")[0];
-			var top = parseInt(height) - 50;
-			nav.style.top = t + "px";
-			/*
-			if(t >= height) {
-				nav.style.backgroundColor = "#27AE60";
-				nav.style.boxShadow = "0 1px 4px rgba(0,0,0,.3)";
-			} else {
-				nav.style.backgroundColor = "rgba(255,255,255,.9)";
-				nav.style.boxShadow = "0 0 0 transparent";
-			}
-			*/
-		};
-	</script>
-</body>
-</html>
+---
+layout: default
+title: localDB
+overview: true
+---
+
+<header>
+	<div class="container">
+		<span class="logo animated flipInY"> localDB </span>
+		<p class="lead">localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.</p>
+		<p class="lead">
+			<a class="btn btn-outline-inverse btn-lg" href="#"> Download </a>
+		</p>
+		<p class="version">
+			<a href="https://github.com/wh1100717/localDB">GitHub</a>
+			&nbsp|&nbsp Version 0.0.1
+		</p>
+	</div>
+</header>
+<section>
+	<div class="container"></div>
+</section>
+<footer>
+	<div class="container"></div>
+</footer>
