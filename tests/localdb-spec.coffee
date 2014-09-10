@@ -106,8 +106,8 @@ describe 'LocalDB', ->
     it '$not', ->
         data = collection.find {
             criteria: {
-                $not: {
-                    b:4
+                b: {
+                    $not: 4
                 }
             }
         }

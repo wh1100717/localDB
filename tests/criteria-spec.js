@@ -493,29 +493,13 @@ describe('Criteria', function() {
       }
     };
     criteria = {
-      "$not": {
-        "a": {
-          "$lt": 6
-        }
-      }
-    };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    criteria = {
       "a": {
         "$not": {
           "$lt": 0
         }
       }
     };
+    console.log(Criteria.check(obj, criteria));
     expect(Criteria.check(obj, criteria)).to.be.ok();
     obj = {
       "a": 5,
@@ -750,6 +734,19 @@ describe('Criteria', function() {
       }
     };
     expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    obj = {
+      "a": [1, 2, 3, 4],
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    criteria = {
+      "a": /\d/
+    };
+    expect(Criteria.check(obj.criteria)).to.be.ok();
     obj = {
       "a": ['1', '2', '3', '4'],
       "b": 4,

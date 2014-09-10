@@ -41,36 +41,43 @@ regexCheck = function(obj, regexCondition) {
   return false;
 };
 
-logicCheck = function(obj, logicKey, logicCondition) {
-  var c, _i, _j, _len, _len1;
-  switch (logicKey) {
+logicCheck = function(data, key, condition) {
+  var c, k, v, _i, _j, _len, _len1;
+  for (k in condition) {
+    v = condition[k];
+    if (k === "$not") {
+      if (Criteria.check(data, new function() {
+        return this[key] = v;
+      })) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  switch (key) {
     case "$and":
-      for (_i = 0, _len = logicCondition.length; _i < _len; _i++) {
-        c = logicCondition[_i];
-        if (!Criteria.check(obj, c)) {
+      for (_i = 0, _len = condition.length; _i < _len; _i++) {
+        c = condition[_i];
+        if (!Criteria.check(data, c)) {
           return false;
         }
       }
       break;
     case "$nor":
-      for (_j = 0, _len1 = logicCondition.length; _j < _len1; _j++) {
-        c = logicCondition[_j];
-        if (Criteria.check(obj, c)) {
+      for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
+        c = condition[_j];
+        if (Criteria.check(data, c)) {
           return false;
         }
-      }
-      break;
-    case "$not":
-      if (Criteria.check(obj, logicCondition)) {
-        return false;
       }
       break;
     case "$or":
       if (!(function() {
         var _k, _len2;
-        for (_k = 0, _len2 = logicCondition.length; _k < _len2; _k++) {
-          c = logicCondition[_k];
-          if (Criteria.check(obj, c)) {
+        for (_k = 0, _len2 = condition.length; _k < _len2; _k++) {
+          c = condition[_k];
+          if (Criteria.check(data, c)) {
             return true;
           }
         }
@@ -137,7 +144,7 @@ arrayCheck = function(obj, arrayKey, arrayCondition) {
 };
 
 cmpCheck = function(obj, key, cmpCondition) {
-  var c_key, c_value, _ref, _ref1;
+  var c_key, c_v, c_value, flag, _i, _len, _ref;
   for (c_key in cmpCondition) {
     c_value = cmpCondition[c_key];
     switch (c_key) {
@@ -167,12 +174,23 @@ cmpCheck = function(obj, key, cmpCondition) {
         }
         break;
       case "$in":
-        if (_ref = obj[key], __indexOf.call(c_value, _ref) < 0) {
+        flag = true;
+        for (_i = 0, _len = c_value.length; _i < _len; _i++) {
+          c_v = c_value[_i];
+          if (Utils.isRegex(c_v) && c_v.test(obj[key])) {
+            flag = false;
+            break;
+          } else if (obj[key] === c_v) {
+            flag = false;
+            break;
+          }
+        }
+        if (flag) {
           return false;
         }
         break;
       case "$nin":
-        if (_ref1 = obj[key], __indexOf.call(c_value, _ref1) >= 0) {
+        if (_ref = obj[key], __indexOf.call(c_value, _ref) >= 0) {
           return false;
         }
         break;
@@ -207,32 +225,59 @@ cmpCheck = function(obj, key, cmpCondition) {
 
 Criteria = {};
 
-Criteria.check = function(obj, criteria) {
+Criteria.check = function(data, criteria) {
   var arrayCheckResult, condition, key, logicCheckResult;
   for (key in criteria) {
     condition = criteria[key];
+
+    /* Number Check
+     *  criteria: {a: 1}
+     *  data: [{a: 1, b: 2, c: 3}] or [{a:[1,2,3]}]
+     */
     if (Utils.isNumber(condition) && key !== "$size") {
-      if (numberCheck(obj[key], condition)) {
+      if (numberCheck(data[key], condition)) {
         continue;
       } else {
         return false;
       }
     }
+
+    /* String Check
+     *  criteria: {a: "abc"}
+     *  data: [{a: "abc", b: 2, c: 3}] or [{a: ["abc","bcd","edf"], b: 2, c: 3}]
+     */
     if (Utils.isString(condition)) {
-      if (stringCheck(obj[key], condition)) {
+      if (stringCheck(data[key], condition)) {
         continue;
       } else {
         return false;
       }
     }
+
+    /* Regex Check
+     *  criteria: {a: /abc+/}
+     *  data: [{a: "abcabc"}] or [{a: ["abcabc", "aaa", "bbb"]}]
+     */
     if (Utils.isRegex(condition)) {
-      if (regexCheck(obj[key], condition)) {
+      if (regexCheck(data[key], condition)) {
         continue;
       } else {
         return false;
       }
     }
-    logicCheckResult = logicCheck(obj, key, condition);
+
+    /* Logic Check
+     *  $and criteria: {$and: [{a: 1}, {b: 2}]}
+     *  data: [{a:1, b:2, c:3}]
+     *  $or criteria: {$or: [{a: 1}, {b: 2}]}
+     *  data: [{a:1, b:3, c:4}] or [{a:2, b:2, c:3}]
+     *  $nor criteria: {$nor: [{a: 1}, {b: 2}]}
+     *  data: [{a:2, b:3, c:4}]
+     *  TODO $not criteria: {a: {$not: {$gt: 10}}} //a is field
+     *  data: [{a:5, b:3, c:4}] 
+     *  TO DISCUSS : Should we add feature to support {$not: {a: 10}} kind of criteria?
+     */
+    logicCheckResult = logicCheck(data, key, condition);
     if (logicCheckResult != null) {
       if (logicCheckResult) {
         continue;
@@ -240,7 +285,12 @@ Criteria.check = function(obj, criteria) {
         return false;
       }
     }
-    arrayCheckResult = arrayCheck(obj, key, condition);
+
+    /* Array Check
+     *  $all criteria: {a: [1,2,3]}
+     *  data: [{a: [1,2,3,4,5], b: 1}] or [{a: [[1,2,3],[1,2,4]]}]
+     */
+    arrayCheckResult = arrayCheck(data, key, condition);
     if (arrayCheckResult != null) {
       if (arrayCheckResult) {
         continue;
@@ -248,7 +298,7 @@ Criteria.check = function(obj, criteria) {
         return false;
       }
     }
-    if (cmpCheck(obj, key, condition)) {
+    if (cmpCheck(data, key, condition)) {
       continue;
     } else {
       return false;

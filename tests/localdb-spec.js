@@ -283,8 +283,8 @@ describe('LocalDB', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
       criteria: {
-        $not: {
-          b: 4
+        b: {
+          $not: 4
         }
       }
     });
