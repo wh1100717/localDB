@@ -4,11 +4,13 @@ title: "Feature"
 permalink: /feature/
 ---
 
-###BSON _ID generator support(TODO)
+<h3 id="BSON_IDGeneratorSupport"> BSON _ID generator support(TODO) </h3>
 
-###[Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
+<h3 id="queryOperators"> 
+    <a href="http://docs.mongodb.org/manual/reference/operator/query/"> Query Operators </a>
+</h3>
 
-#####Comparison
+<h5 id="comparison"> Comparison </h5>
 
 *   [X] [$gt](http://docs.mongodb.org/manual/reference/operator/query/gt/#op._S_gt)<br>
     Matches values that are greater than the value specified in the query.
@@ -25,7 +27,7 @@ permalink: /feature/
 *   [X] [$nin](http://docs.mongodb.org/manual/reference/operator/query/nin/#op._S_nin)<br>
     Matches values that do not exist in an array specified to the query.    
 
-#####Logical
+<h5 id="logical"> Logical </h5>
 
 *   [X] [$or](http://docs.mongodb.org/manual/reference/operator/query/or/#op._S_or)<br>
     Joins query clauses with a logical **OR** returns all documents that match the conditions of either clause.
@@ -36,7 +38,7 @@ permalink: /feature/
 *   [X] [$nor](http://docs.mongodb.org/manual/reference/operator/query/nor/#op._S_nor)<br>
     Joins query clauses with a logical **NOR** returns all documents that fail to match both clauses.
 
-#####Element
+<h5 id="element"> Element </h5>
 
 *   [X] [$exists](http://docs.mongodb.org/manual/reference/operator/query/exists/#op._S_exists)<br>
     Matches documents that have the specified field.
@@ -48,7 +50,7 @@ permalink: /feature/
 >It is really easy to determine the type of element in javascript.<br>
 >Support type input string: `string` | `object` | `function` | `array` | `number`
 
-#####Evaluation
+<h5 id="evaluation"> Evaluation </h5>
 
 *   [X] [$mod](http://docs.mongodb.org/manual/reference/operator/query/mod/#op._S_mod)<br>
     Performs a modulo operation on the value of a field and selects documents with a specified result.
@@ -59,7 +61,7 @@ permalink: /feature/
 *   [ ] [$where](http://docs.mongodb.org/manual/reference/operator/query/where/#op._S_where)<br>
     Matches documents that satisfy a JavaScript expression.
 
-#####Array
+<h5 id="array"> Array </h5>
 
 *   [X] [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)<br>
     Matches arrays that contain all elements specified in the query.
@@ -68,7 +70,7 @@ permalink: /feature/
 *   [X] [$size](http://docs.mongodb.org/manual/reference/operator/query/size/#op._S_size)<br>
     Selects documents if the array field is a specified size.
 
-#####Projection Operators
+<h5 id="projectionOperators"> Projection Operators </h5>
 
 *   [X] [$](http://docs.mongodb.org/manual/reference/operator/projection/positional/#proj._S_)<br>
     Projects the first element in an array that matches the query condition.
@@ -79,9 +81,11 @@ permalink: /feature/
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)<br>
     Limits the number of elements projected from an array. Supports skip and limit slices.
 
-###[Update Operators](http://docs.mongodb.org/manual/reference/operator/update/)
+<h3 id="updateOperators"> 
+    <a href="http://docs.mongodb.org/manual/reference/operator/update/"> Update Operators </a>
+</h3>
 
-#####Fields
+<h5 id="fields"> Fields </h5>
 
 *   [X] [$inc](http://docs.mongodb.org/manual/reference/operator/update/inc/#up._S_inc)<br>
     Increments the value of the field by the specified amount.
@@ -102,7 +106,7 @@ permalink: /feature/
 *   [ ] [$currentDate](http://docs.mongodb.org/manual/reference/operator/update/currentDate/#up._S_currentDate)<br>
     Sets the value of a field to current date, either as a Date or a Timestamp.
 
-#####Array
+<h5 id="array"> Array </h5>
 *   [ ] [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)<br>
     Acts as a placeholder to update the first element that matches the query condition in an update.
 *   [ ] [$addToSet](http://docs.mongodb.org/manual/reference/operator/update/addToSet/#up._S_addToSet)<br>
@@ -118,7 +122,7 @@ permalink: /feature/
 *   [ ] [$push](http://docs.mongodb.org/manual/reference/operator/update/push/#up._S_push)<br>
     Adds an item to an array.
 
-#####Modifiers
+<h5 id="modifiers"> Modifiers </h5>
 *   [ ] [$each](http://docs.mongodb.org/manual/reference/operator/update/each/#up._S_each)<br>
     Modifies the **$push** and **$addToSet** operators to append multiple items for array updates.
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/update/slice/#up._S_slice)<br>
@@ -128,21 +132,12 @@ permalink: /feature/
 *   [ ] [$position](http://docs.mongodb.org/manual/reference/operator/update/position/#up._S_position)<br>
     Modifies the **$push** operator to specify the position in the array to add elements.
 
-#####Bitwise
+<h5 id="bitwise"> Bitwise </h5>
 
 *   [ ] [$bit](http://docs.mongodb.org/manual/reference/operator/update/bit/#up._S_bit)<br>
     Performs bitwise **AND**, **OR**, and **XOR** updates of integer values.
 
-#####Isolation
+<h5 id="isolation"> Isolation </h5>
        
 *   [ ] [$isolated](http://docs.mongodb.org/manual/reference/operator/update/isolated/#up._S_isolated)<br>
     Modifies behavior of multi-updates to increase the isolation of the operation.
-
-[spm-image]: http://spmjs.io/badge/localdb
-[spm-url]: http://spmjs.io/package/localdb
-[build-image]: https://api.travis-ci.org/wh1100717/localDB.svg?branch=master
-[build-url]: https://travis-ci.org/wh1100717/localDB
-[coverage-image]: https://img.shields.io/coveralls/wh1100717/localDB.svg
-[coverage-url]: https://coveralls.io/r/wh1100717/localDB?branch=master
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
-[license-url]: LICENSE

@@ -6,13 +6,13 @@ permalink: gettingStarted/
 
 <h2 id="installation"> Installation </h2>
 
-#####By Bower
+<h5 id="byBower"> By Bower </h5>
 
 ```bash
 $ bower install localdb
 ```
 
-#####By SPM
+<h5 id="bySPM"> By SPM </h5>
 
 ```bash
 $ spm install localdb
@@ -30,9 +30,9 @@ seajs.use('./dist/localdb/0.0.1/src/localdb.js', function(LocalDB){
 })
 ```
 
-##How To Use
+<h2 id="howToUse"> How To Use </h2>
 
-#####Data Structure
+<h5 id="dateStructure"> Data Structure </h5>
 
 A collection is stored as a key, which contains a JSON encoded string, in localStorage. 
 
@@ -43,7 +43,7 @@ A collection is stored as a key, which contains a JSON encoded string, in localS
     ...
 ```
 
-#####Check Browser Compatibility
+<h5 id="checkBrowserCompatibility"> Check Browser Compatibility </h5>
 
 use `LocalDB.isSupport()` to check whether the browser support LocalDB or not.
 
@@ -53,7 +53,7 @@ if(!LocalDB.isSupport()){
 }
 ```
 
-#####Load Database
+<h5 id="loadDatabase"> Load Database </h5>
 
 use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of engine with `localStorage` or `sessionStorage`.
 
@@ -64,15 +64,15 @@ use `new LocalDB(dbName, engineType)` to load a db. you can specify the type of 
 var db = new LocalDB("foo", sessionStorage)
 ```
 
-#####Delete Database
+<h5 id="deleteDatabase"> Delete Database </h5>
 
 use `db.drop()` to delete database
 
-#####Get Collections
+<h5 id="getCollections"> Get Collections </h5>
 
 use `db.collections()` to get collections
 
-#####Get Collection
+<h5 id="getCollection"> Get Collection </h5>
 
 use `db.collection(collectionName)` to get a collection
 
@@ -80,7 +80,7 @@ use `db.collection(collectionName)` to get a collection
 var collection = db.collection("bar")
 ```
 
-#####Delete Collection
+<h5 id="deleteCollection"> Delete Collection </h5>
 
 use `db.drop(collectionName)` or `collection.drop()` to delete collection
 
@@ -95,7 +95,7 @@ var collection = db.collection("bar")
 collection.drop()
 ```
 
-#####Insert Data
+<h5 id="insertData"> Insert Data </h5>
 
 use `collection.insert(data)` to insert data into specific collection.
 
@@ -111,7 +111,7 @@ collection.insert({
 })
 ```
 
-#####Query Data
+<h5 id="queryData"> Query Data </h5>
 
 use `collection.find(options)` to find the data in specific collection.
 
@@ -139,12 +139,12 @@ collection.find({
 })
 ```
 
-#####Query one row
+<h5 id="queryOneRow"> Query one row </h5>
 
 use `collection.findOne(options)`, same as `collection.fine()` except return one item, not a list.
 
 
-#####Update data by criteria
+<h5 id="updateDataByCriteria"> Update data by criteria </h5>
 
 use `collection.update(actions, options)` to update the data in specific collection.
 
@@ -167,7 +167,7 @@ collection.update({
 });
 ```
 
-#####Delete data by criteria
+<h5 id="deleteDataByCriteria"> Delete data by criteria </h5>
 
 use `collection.remove(options)` to delete data in specific collection.
 
