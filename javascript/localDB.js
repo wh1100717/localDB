@@ -45,3 +45,21 @@ $(".navbar-header").mouseover(function() {
 $(".navbar-header").mouseout(function() {
 	$(".navbar-brand").removeClass("animated tada");
 });
+
+//侧边栏效果
+var children = false;
+$(".sidenav").children("li").click(function() {
+	if(children) {
+		$(".sidenav").children(".active").removeClass("active");
+	} else {
+		$(".active").removeClass("active");
+	}
+	$(this).addClass("active");
+	children = false;
+});
+$(".sidenav").find("ul").children("li").click(function() {
+	$(".active").removeClass("active");
+	$(this).addClass("active");
+	$(this).parents("li").addClass("active");
+	children = true;
+});

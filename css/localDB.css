@@ -7,7 +7,7 @@ body {
 nav {
 	position: relative;
 	top: 0;
-	background: #FFF;/*F #27AE60 */
+	background: #FFF;/* #27AE60 */
 	z-index: 1;
 }
 
@@ -168,7 +168,7 @@ aside.affix {
 	margin-bottom: 20px;
 }
 
-aside .nav li a {
+aside .nav li>a {
 	display: block;
 	padding: 4px 20px;
 	font-size: 13px;
@@ -176,7 +176,7 @@ aside .nav li a {
 	color: #999;
 }
 
-aside .nav .nav li a {
+aside .nav .nav li>a {
 	padding-top: 1px;
 	padding-bottom: 1px;
 	padding-left: 30px;
@@ -184,11 +184,39 @@ aside .nav .nav li a {
 	font-weight: 400;
 }
 
-aside .nav li a:hover,
-aside .nav .nav li a:hover {
+aside .nav li>a:hover,
+aside .nav .nav li>a:hover {
 	color: #2ECC71;
 	background: transparent;
 	border-left: 1px solid #2ECC71;
+}
+
+aside .nav .active>a {
+	font-weight: 700;
+	color: #27AE60;
+	background: transparent;
+	border-left: 2px solid #27AE60;
+}
+
+aside .nav .active>a:hover {
+	font-weight: 700;
+	color: #27AE60;
+	background: transparent;
+	border-left: 2px solid #27AE60;
+}
+
+aside .nav .nav .active>a {
+	font-weight: 500;
+	color: #27AE60;
+	background: transparent;
+	border-left: 2px solid #27AE60;
+}
+
+aside .nav .nav .active>a:hover {
+	font-weight: 500;
+	color: #27AE60;
+	background: transparent;
+	border-left: 2px solid #27AE60;
 }
 
 /* 文章 */

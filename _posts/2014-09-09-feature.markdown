@@ -4,11 +4,11 @@ title: "Feature"
 permalink: /feature/
 ---
 
-<h3 id="BSON_IDGeneratorSupport"> BSON _ID generator support(TODO) </h3>
+<h2 id="BSON_IDGeneratorSupport"> BSON _ID generator support(TODO) </h2>
 
-<h3 id="queryOperators"> 
+<h2 id="queryOperators"> 
     <a href="http://docs.mongodb.org/manual/reference/operator/query/"> Query Operators </a>
-</h3>
+</h2>
 
 <h5 id="comparison"> Comparison </h5>
 
@@ -81,9 +81,9 @@ permalink: /feature/
 *   [ ] [$slice](http://docs.mongodb.org/manual/reference/operator/projection/slice/#proj._S_slice)<br>
     Limits the number of elements projected from an array. Supports skip and limit slices.
 
-<h3 id="updateOperators"> 
+<h2 id="updateOperators"> 
     <a href="http://docs.mongodb.org/manual/reference/operator/update/"> Update Operators </a>
-</h3>
+</h2>
 
 <h5 id="fields"> Fields </h5>
 
