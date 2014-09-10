@@ -6,7 +6,7 @@ permalink: gettingStarted/
 
 <h2 id="installation"> Installation </h2>
 
-####By Bower
+#####By Bower
 
 ```bash
 $ bower install localdb
@@ -116,11 +116,12 @@ collection.insert({
 use `collection.find(options)` to find the data in specific collection.
 
 options:
+
 *   criteria：  Query Criteria like `where` in MYSQL
 *   projection: like `SELECT` in MYSQL 
 *   limit:  just limit.....
 
-Criteria operations are listed below [Feature](#feature):
+Criteria operations are listed below [Feature]({{ site.baseurl }}feature/):
 
 
 ```javascript
@@ -148,10 +149,12 @@ use `collection.findOne(options)`, same as `collection.fine()` except return one
 use `collection.update(actions, options)` to update the data in specific collection.
 
 actions:
-*   $set: set key with value....
+
+* $set: set key with value....
 
 options:
-*   criteria:   Query Criteria like `where` in MYSQL
+
+* criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript
 collection.update({
@@ -169,6 +172,7 @@ collection.update({
 use `collection.remove(options)` to delete data in specific collection.
 
 options:
+
 *   criteria:   Query Criteria like `where` in MYSQL
 
 ```javascript

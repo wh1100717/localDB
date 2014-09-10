@@ -124,6 +124,7 @@ section .lead {
 	text-align: left;
 }
 
+/* 测边栏 */
 aside {
 	padding-right: 20px;
 }
@@ -159,6 +160,101 @@ aside .nav .nav li a:hover {
 	color: #2ECC71;
 	background: transparent;
 	border-left: 1px solid #2ECC71;
+}
+
+/* 文章 */
+article {
+	background-color: #FFF;
+	overflow: hidden;
+	/* font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif; */
+	font-size: 16px;
+	line-height: 1.6;
+	word-wrap: break-word;
+}
+
+article p,
+article blockquote,
+article ul,
+article ol,article
+article dl,
+article table,
+article pre {
+	margin-top: 0;
+	margin-bottom: 16px;
+}
+
+article blockquote {
+	padding: 0 15px;
+	color: #777;
+	border-left: 4px solid #ddd;
+}
+
+article .highlight pre,
+article pre {
+	padding: 16px;
+	overflow: auto;
+	font-size: 85%;
+	line-height: 1.45;
+	background-color: #f7f7f7;
+	border-radius: 3px;
+}
+
+article .highlight pre {
+	margin-bottom: 0;
+	word-break: normal;
+}
+
+article pre {
+	word-wrap: normal;
+}
+
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+	position: relative;
+	margin-top: 1em;
+	/* margin-top: -50px; */
+	margin-bottom: 16px;
+	font-weight: bold;
+	line-height: 1.4;
+	border-top: 50px solid transparent;
+}
+
+article h1 {
+	padding-bottom: 0.3em;
+	font-size: 2.25em;
+	line-height: 1.2;
+	border-bottom: 1px solid #eee;
+}
+
+article h2 {
+	margin-top: -22px;
+	padding-bottom: 0.3em;
+	font-size: 1.75em;
+	line-height: 1.225;
+	border-bottom: 1px solid #eee;
+}
+
+article h3 {
+	margin-top: -26px;
+	font-size: 1.5em;
+	line-height: 1.43;
+}
+
+article h4 {
+	
+}
+
+article h5 {
+	margin-top: -34px;
+	font-size: 1em;
+}
+
+article h6 {
+	
 }
 
 /* 底部 */
