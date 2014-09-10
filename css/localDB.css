@@ -27,6 +27,7 @@ nav {
 
 /* 头部 */
 header {
+	position: relative;
 	padding: 130px 0 80px 0;
 	color: #ECF0F1;
 	text-align: center;
@@ -34,6 +35,35 @@ header {
 	background-color: #27AE60;
 	background-image: linear-gradient(to bottom, #27AE60 0px, #2ECC71 100%);
 	background-repeat: repeat-x;
+	overflow: hidden;
+}
+
+.fork {
+	position: absolute;
+	top: 97px;
+	right: -40px;
+	width: auto;
+	height: auto;
+	background: #C0392B;
+	        transform: rotate(45deg);
+	     -o-transform: rotate(45deg);	/* Opera */
+	    -ms-transform: rotate(45deg);	/* IE 9 */
+	   -moz-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);	/* Safari and Chrome */
+}
+
+.fork a {
+	display: block;
+	margin: 1.5px 0;
+	padding: 2px 40px;
+	color: #FFF;
+	font-weight: bold;
+	border-top: 1.5px solid #E67E22;
+	border-bottom: 1.5px solid #E67E22;
+}
+
+.fork a:hover {
+	text-decoration: none;
 }
 
 header .logo {
