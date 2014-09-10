@@ -4,7 +4,7 @@ window.onscroll = function() {
 	var height = document.getElementsByTagName("header")[0].offsetHeight;
 	var nav = document.getElementsByTagName("nav")[0];
 	if(top >= height - 50) {
-		nav.style.backgroundColor = "rgba(39,174,96,.9)";
+		nav.style.backgroundColor = "#27AE60";
 		$(".navbar-brand").css("color", "#FFF");
 		$(".link").css("color", "#FFF");
 		$(".link").mouseover(function() {
@@ -17,7 +17,7 @@ window.onscroll = function() {
 		$("aside").removeClass("affix-top");
 		$("aside").addClass("affix");
 	} else {
-		nav.style.backgroundColor = "rgba(255,255,255,.9)";
+		nav.style.backgroundColor = "#FFF";
 		$(".navbar-brand").css("color", "#27AE60");
 		$(".link").css("color", "#27AE60");
 		$(".link").mouseover(function() {
@@ -29,6 +29,12 @@ window.onscroll = function() {
 		//删除侧边栏的fixed效果
 		$("aside").removeClass("affix");
 		$("aside").addClass("affix-top");
+	}
+	//返回顶部按钮的效果
+	if(top >= 200) {
+		$("#goTop").css("display", "block");
+	} else {
+		$("#goTop").css("display", "none");
 	}
 };
 

@@ -7,8 +7,7 @@ body {
 nav {
 	position: relative;
 	top: 0;
-	background: rgba(255,255,255,.9);/*F #27AE60 */
-	box-shadow: 0 1px 4px rgba(0,0,0,.3);
+	background: #FFF;/*F #27AE60 */
 	z-index: 1;
 }
 
@@ -293,4 +292,19 @@ footer {
 	padding-bottom: 40px;
 	color: #777;
 	text-align: center;
+}
+
+/* 返回顶部 */
+.go-top {
+	display: none;
+	position: fixed;
+	bottom: 50px;
+	right: 100px;
+	color: #2ECC71;
+	border-color: #2ECC71;
+}
+
+.go-top:hover {
+	color: #FFF;
+	background-color: #2ECC71;
 }
