@@ -10,39 +10,6 @@
 
 	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<script>
-		window.onscroll = function() {
-			var top = document.documentElement.scrollTop || document.body.scrollTop;
-			var height = document.getElementsByTagName("header")[0].offsetHeight;
-			var nav = document.getElementsByTagName("nav")[0];
-			if(top >= height - 50) {
-				nav.style.backgroundColor = "rgba(39,174,96,.9)";
-				$(".navbar-brand").css("color", "#FFF");
-				$(".link").css("color", "#FFF");
-				$(".link").mouseover(function() {
-					$(this).css("color", "#FFF");
-				});
-				$(".link").mouseout(function() {
-					$(this).css("color", "#FFF");
-				});
-			} else {
-				nav.style.backgroundColor = "rgba(255,255,255,.9)";
-				$(".navbar-brand").css("color", "#27AE60");
-				$(".link").css("color", "#27AE60");
-				$(".link").mouseover(function() {
-					$(this).css("color", "#FFF");
-				});
-				$(".link").mouseout(function() {
-					$(this).css("color", "#27AE60");
-				});
-			}
-		};
-		$(".navbar-header").mouseover(function() {
-			$(".navbar-brand").addClass("animated tada");
-		});
-		$(".navbar-header").mouseout(function() {
-			$(".navbar-brand").removeClass("animated tada");
-		});
-	</script>
+	<script src="{{ site.baseurl }}javascript/localDB.js"></script>
 </body>
 </html>

@@ -4,9 +4,9 @@ title: "Getting started"
 permalink: gettingStarted/
 ---
 
-##Installation
+<h2 id="installation"> Installation </h2>
 
-#####By Bower
+####By Bower
 
 ```bash
 $ bower install localdb
