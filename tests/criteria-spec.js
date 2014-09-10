@@ -669,11 +669,9 @@ describe('Criteria', function() {
       }
     };
     criteria = {
-      "d.e": {
-        "$type": -1
-      }
+      "d.e": "4"
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    expect(Criteria.check(obj, criteria)).to.be.ok();
     obj = {
       "a": 0,
       "b": 5,

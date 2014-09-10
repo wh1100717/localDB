@@ -156,8 +156,8 @@ describe 'Criteria', ->
         criteria = {"a":{"$type":"eric"}}
         expect(Criteria.check(obj,criteria)).not.to.be.ok()
         obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
-        criteria = {"d.e":{"$type":-1}}
-        expect(Criteria.check(obj,criteria)).not.to.be.ok()
+        criteria = {"d.e":"4"}
+        expect(Criteria.check(obj,criteria)).to.be.ok()
 
         #mod
         obj = {"a":0,"b":5,"c":3,"d":{"e":"4","f":5}}

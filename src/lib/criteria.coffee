@@ -2,6 +2,8 @@
 
 Utils = require('./utils')
 
+dotCheck = (data, key, condition) -> Criteria.check(data[key.split(".")[0]], (new -> @[key.substr(key.indexOf('.') + 1)] = condition))
+
 numberCheck = (obj, numberConditon) ->
     return true if Utils.isNumber(obj) and obj is numberConditon
     return true if Utils.isArray(obj) and (numberConditon in obj)
@@ -73,7 +75,14 @@ cmpCheck = (obj, key, cmpCondition) ->
 Criteria = {}
 
 Criteria.check = (data, criteria) ->
+
     for key, condition of criteria
+        ### Dot Check
+         *  criteria: {"a.b.c": 1}
+         *  data: [{a:{b:{c:123}}}]
+         *  run Criteria.check({b:{c:123}}, {"b.c":1})
+        ###
+        (if dotCheck(data, key, condition) then continue else return false) if key.indexOf(".") isnt -1
         ### Number Check
          *  criteria: {a: 1}
          *  data: [{a: 1, b: 2, c: 3}] or [{a:[1,2,3]}]

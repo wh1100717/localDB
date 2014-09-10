@@ -1,4 +1,4 @@
-#localDB - **Still Unstable - Under Development**
+#localDB
 
 ---
 
@@ -6,6 +6,8 @@
 [![Build Status][build-image]][build-url]
 [![Coverage Status][coverage-image]][coverage-url]
 [![MIT License][license-image]][license-url]
+
+> **Still Unstable - Under Development**
 
 localDB provide simple MongoDB-like API for modern browser with localStorage/sessionStorage.
 
