@@ -345,8 +345,8 @@ footer {
 .go-top {
 	display: none;
 	position: fixed;
-	bottom: 50px;
-	right: 100px;
+	bottom: 0;
+	right: 0;
 	color: #2ECC71;
 	border-color: #2ECC71;
 }
@@ -354,4 +354,11 @@ footer {
 .go-top:hover {
 	color: #FFF;
 	background-color: #2ECC71;
+}
+
+@media screen and (min-width: 768px) {
+	.go-top {
+		bottom: 50px;
+		right: 100px;
+	}
 }
