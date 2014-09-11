@@ -11,8 +11,27 @@ nav {
 	z-index: 1;
 }
 
-.navbar-header a {
+.navbar-header a,
+.navbar-header button {
 	color: #27AE60;/* #FFF */
+}
+
+.navbar-brand-right {
+	float: right;
+	height: 50px;
+	padding: 15px;
+	font-size: 18px;
+	line-height: 20px;
+}
+
+.navbar-brand-right:hover,
+.navbar-brand-right:focus {
+    text-decoration: none;
+}
+
+.menu-nav {
+	display: none;
+	text-align: center;
 }
 
 .nav li a {

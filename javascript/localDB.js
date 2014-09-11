@@ -5,6 +5,7 @@ $(window).bind("scroll", function() {
 	if(top >= height - 50) {
 		$("nav").css("backgroundColor", "#27AE60");
 		$(".navbar-brand").css("color", "#FFF");
+		$(".navbar-brand-right").css("color", "#FFF");
 		$(".link").css("color", "#FFF");
 		$(".link").mouseover(function() {
 			$(this).css("color", "#FFF");
@@ -18,6 +19,7 @@ $(window).bind("scroll", function() {
 	} else {
 		$("nav").css("backgroundColor", "#FFF");
 		$(".navbar-brand").css("color", "#27AE60");
+		$(".navbar-brand-right").css("color", "#27AE60");
 		$(".link").css("color", "#27AE60");
 		$(".link").mouseover(function() {
 			$(this).css("color", "#FFF");
@@ -60,12 +62,23 @@ $(window).bind("scroll", function() {
 	}
 });
 
-//返回主页按钮的动态效果
-$(".navbar-header").mouseover(function() {
-	$(".navbar-brand").addClass("animated tada");
+//导航栏下拉隐藏
+$(".navbar-brand-right").click(function() {
+	$(".menu-nav").slideToggle("slow");
 });
-$(".navbar-header").mouseout(function() {
-	$(".navbar-brand").removeClass("animated tada");
+
+//返回主页按钮的动态效果
+$(".navbar-brand").mouseover(function() {
+	$(this).addClass("animated tada");
+});
+$(".navbar-brand").mouseout(function() {
+	$(this).removeClass("animated tada");
+});
+
+//返回顶部
+$("#goTop").click(function(){
+    $('body,html').animate({scrollTop:0}, 500);
+    return false;
 });
 
 //侧边栏效果
@@ -85,3 +98,4 @@ $(".sidenav").find("ul").children("li").click(function() {
 	$(this).parents("li").addClass("active");
 	children = true;
 });
+
