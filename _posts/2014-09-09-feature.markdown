@@ -95,7 +95,7 @@ permalink: /feature/
         Matches documents that satisfy a JavaScript expression.
     </input>
 
-<h5 id="array"> Array </h5>
+<h5 id="queryArray"> Array </h5>
 
 *   <input type="checkbox" checked disabled>
         [$all](http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all)<br>
@@ -172,7 +172,7 @@ permalink: /feature/
         Sets the value of a field to current date, either as a Date or a Timestamp.
     </input>
 
-<h5 id="array"> Array </h5>
+<h5 id="updateArray"> Array </h5>
 *   <input type="checkbox" disabled>
         [$](http://docs.mongodb.org/manual/reference/operator/update/positional/#up._S_)<br>
         Acts as a placeholder to update the first element that matches the query condition in an update.

@@ -1,10 +1,9 @@
-//通过滚动滚动条，改变导航栏的样式
-window.onscroll = function() {
-	var top = document.documentElement.scrollTop || document.body.scrollTop;
-	var height = document.getElementsByTagName("header")[0].offsetHeight;
-	var nav = document.getElementsByTagName("nav")[0];
+//通过滚动滚动条，改变样式
+$(window).bind("scroll", function() {
+	var top = $(window).scrollTop();
+	var height = $("header").outerHeight();
 	if(top >= height - 50) {
-		nav.style.backgroundColor = "#27AE60";
+		$("nav").css("backgroundColor", "#27AE60");
 		$(".navbar-brand").css("color", "#FFF");
 		$(".link").css("color", "#FFF");
 		$(".link").mouseover(function() {
@@ -17,7 +16,7 @@ window.onscroll = function() {
 		$("aside").removeClass("affix-top");
 		$("aside").addClass("affix");
 	} else {
-		nav.style.backgroundColor = "#FFF";
+		$("nav").css("backgroundColor", "#FFF");
 		$(".navbar-brand").css("color", "#27AE60");
 		$(".link").css("color", "#27AE60");
 		$(".link").mouseover(function() {
@@ -30,13 +29,36 @@ window.onscroll = function() {
 		$("aside").removeClass("affix");
 		$("aside").addClass("affix-top");
 	}
+
 	//返回顶部按钮的效果
 	if(top >= 200) {
 		$("#goTop").css("display", "block");
 	} else {
 		$("#goTop").css("display", "none");
 	}
-};
+
+	//侧边栏滚动效果
+	var point = $("article h1, article h2, article h3, article h4, article h5, article h6");
+	var arr = [];
+	for(var i = 0; i < point.length; i++) {
+		arr.push($(point[i]));
+	}
+	$(".active").removeClass("active");
+	for(var i = 0; i < arr.length; i++) {
+		var id = $(arr[i]).attr("id");
+		var pointH = Math.floor(arr[i].offset().top);
+		if(i < arr.length - 1) {
+			var pointNextH = Math.floor(arr[i+1].offset().top);
+			if(top >= pointH && top < pointNextH) {
+				$("[href=#" + id + "]").parents("li").addClass("active");
+			}
+		} else {
+			if(top >= pointH) {
+				$("[href=#" + id + "]").parents("li").addClass("active");
+			}
+		}
+	}
+});
 
 //返回主页按钮的动态效果
 $(".navbar-header").mouseover(function() {
