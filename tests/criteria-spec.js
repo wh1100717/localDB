@@ -13,7 +13,7 @@ Criteria = require('../src/lib/criteria');
 db = new LocalDB("foo");
 
 describe('Criteria', function() {
-  return it('Criteria check', function() {
+  it('Criteria Comparison gt', function() {
     var criteria, obj;
     obj = {
       "a": 1,
@@ -58,7 +58,10 @@ describe('Criteria', function() {
         "$gt": 1
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Comparison gte', function() {
+    var criteria, obj;
     obj = {
       "a": 1,
       "b": 4,
@@ -103,7 +106,10 @@ describe('Criteria', function() {
         "$gte": 1
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Comparisongte lt', function() {
+    var criteria, obj;
     obj = {
       "a": 10,
       "b": 4,
@@ -148,7 +154,10 @@ describe('Criteria', function() {
         "$lt": 10
       }
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Comparisonlte lte', function() {
+    var criteria, obj;
     obj = {
       "a": 10,
       "b": 4,
@@ -193,7 +202,10 @@ describe('Criteria', function() {
         "$lte": 10
       }
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Comparison ne', function() {
+    var criteria, obj;
     obj = {
       "a": 10,
       "b": 4,
@@ -223,7 +235,10 @@ describe('Criteria', function() {
         "$ne": 10
       }
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Comparison in', function() {
+    var criteria, obj;
     obj = {
       "a": 9,
       "b": 4,
@@ -253,7 +268,10 @@ describe('Criteria', function() {
         "$in": [10, 11, 12]
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Comparison nin', function() {
+    var criteria, obj;
     obj = {
       "a": 1,
       "b": 4,
@@ -298,7 +316,10 @@ describe('Criteria', function() {
         "$nin": ["1", "2", "3"]
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Logical or', function() {
+    var criteria, obj;
     obj = {
       "a": 1,
       "b": 4,
@@ -390,7 +411,10 @@ describe('Criteria', function() {
         }
       ]
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Logical and', function() {
+    var criteria, obj;
     obj = {
       "a": 1,
       "b": 4,
@@ -481,6 +505,26 @@ describe('Criteria', function() {
           }
         }
       ]
+    };
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Logical not', function() {
+    var criteria, obj;
+    obj = {
+      "a": 5,
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    criteria = {
+      "$not": {
+        "a": {
+          "$lt": 6
+        }
+      }
     };
     expect(Criteria.check(obj, criteria)).not.to.be.ok();
     obj = {
@@ -499,8 +543,10 @@ describe('Criteria', function() {
         }
       }
     };
-    console.log(Criteria.check(obj, criteria));
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Logical nor', function() {
+    var criteria, obj;
     obj = {
       "a": 5,
       "b": 4,
@@ -538,7 +584,10 @@ describe('Criteria', function() {
         }
       ]
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Element exists', function() {
+    var criteria, obj;
     obj = {
       "a": 5,
       "b": 4,
@@ -598,7 +647,10 @@ describe('Criteria', function() {
         "$exists": false
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Element type', function() {
+    var criteria, obj;
     obj = {
       "a": 5,
       "b": 4,
@@ -669,9 +721,14 @@ describe('Criteria', function() {
       }
     };
     criteria = {
-      "d.e": "4"
+      "d.e": {
+        "$type": -1
+      }
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Evaluation mod', function() {
+    var criteria, obj;
     obj = {
       "a": 0,
       "b": 5,
@@ -731,20 +788,10 @@ describe('Criteria', function() {
         "$mod": [2, 0]
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
-    obj = {
-      "a": [1, 2, 3, 4],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    criteria = {
-      "a": /\d/
-    };
-    expect(Criteria.check(obj.criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Evaluation regex', function() {
+    var criteria, obj;
     obj = {
       "a": ['1', '2', '3', '4'],
       "b": 4,
@@ -837,7 +884,10 @@ describe('Criteria', function() {
     criteria = {
       "a": /\b/
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  it('Criteria Array all', function() {
+    var criteria, obj;
     obj = [
       {
         "a": [1, 2, 3],
@@ -886,7 +936,10 @@ describe('Criteria', function() {
         "$all": [3, 2]
       }
     };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
+    return expect(Criteria.check(obj, criteria)).not.to.be.ok();
+  });
+  it('Criteria Array eleMatch', function() {
+    var criteria, obj;
     obj = [
       {
         "a": [
@@ -974,7 +1027,10 @@ describe('Criteria', function() {
         }
       }
     };
-    expect(Criteria.check(obj, criteria)).to.be.ok();
+    return expect(Criteria.check(obj, criteria)).to.be.ok();
+  });
+  return it('Criteria Array size', function() {
+    var criteria, obj;
     obj = [
       {
         "a": [1, 2, 3],
