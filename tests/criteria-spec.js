@@ -520,23 +520,6 @@ describe('Criteria', function() {
       }
     };
     criteria = {
-      "$not": {
-        "a": {
-          "$lt": 6
-        }
-      }
-    };
-    expect(Criteria.check(obj, criteria)).not.to.be.ok();
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    criteria = {
       "a": {
         "$not": {
           "$lt": 0
