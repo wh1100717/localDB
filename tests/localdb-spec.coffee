@@ -47,7 +47,7 @@ describe 'LocalDB', ->
         collection.update {
             $set: {b:4, c:5}
         }, {
-            criteria: {
+            where: {
                 a: {$gt: 3, $lt: 10},
                 d: {
                     e: 4
@@ -58,7 +58,7 @@ describe 'LocalDB', ->
         expect(collection.find()[6].c).to.be(5)
     it 'find', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a:{$lt:3},
                 b:2
             },
@@ -69,138 +69,125 @@ describe 'LocalDB', ->
             },
             limit: 4
         }
-        console.log data
+        console.log(data)
         expect(data).to.be.a("array")
     it 'Fine One Data', ->
         data = collection.findOne {
-            criteria: {
+            where: {
                 a:{$lt:3}
             }
         }
-        console.log data
         expect(data.length).to.be(1 or 0)
     it '$in', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$in: [3,4,5]}
             }
         }
-        console.log data
         expect(d.a).to.be.within(3, 5) for d in data
     it '$nin', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$nin: [3,4,5]}
             }
         }
-        console.log data
         expect(d.a).not.to.be.within(3, 5) for d in data
     it '$and', ->
         data = collection.find {
-            criteria: {
+            where: {
                 $and: [{b:4},{a:5}]
             }
         }
-        console.log data
         expect(d.b).to.be(4) for d in data
     it '$not', ->
         data = collection.find {
-            criteria: {
+            where: {
                 b: {
                     $not: 4
                 }
             }
         }
-        console.log data
         expect(d.b).not.to.be(4) for d in data
     it '$nor', ->
         data = collection.find {
-            criteria: {
+            where: {
                 $nor: [{b:4},{a:1},{a:2}]
             }
         }
-        console.log data
         for d in data
             expect(d.b).not.to.be(4)
             expect(d.a).not.to.be(1)
             expect(d.a).not.to.be(2)
     it '$or', ->
         data = collection.find {
-            criteria: {
+            where: {
                 $or: [{a:1},{a:2}]
             }
         }
-        console.log data
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":4,"f":5}},{"a":2,"b":2,"c":3,"d":{"e":4,"f":5}}])
     it '$exists', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$exists: false}
             }
         }
-        console.log data
         expect(d.a?).not.to.be.ok() for d in data
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$exists: true}
             }
         }
-        console.log data
         expect(d.a?).to.be.ok() for d in data
 
     it '$exists', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$type: "number"},
                 b: {$type: "number"},
-                d: {$type: "object", e: {$type: "string"}}
+                d: {$type: "object"},
+                "d.e": {$type: "string"}
             }
         }
-        console.log data
         expect(data).to.be.eql([{"a":1,"b":2,"c":3,"d":{"e":"4","f":5}}])
     it '$mod', ->
         data = collection.find {
-            criteria: {
+            where: {
                 a: {$mod: [4, 0]}
             }
         }
-        console.log data
         expect(d.a % 4).to.be(0) for d in data
     it '$regex', ->
         collection.insert({a:15,b:2,c:3,d:{e:4,f:5},g:"Hello World"})
         data = collection.find {
-            criteria: {
+            where: {
                 g: {$regex: 'ello'}
             }
         }
-        console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
         data = collection.find {
-            criteria: {
+            where: {
                 g: /ello/
             }
         }
-        console.log data
         expect(/ello/.test(d.g)).to.be.ok() for d in data
         collection.insert({a:15,b:2,c:3,d:{e:4,f:5},g:["Hello World"]})
         data = collection.find {
-            criteria: {
+            where: {
                 g: /ello/
             }
         }
-        console.log data
 
     it '$all', ->
         collection.insert({a:1,b:2,c:3,h:[1,2,3,4],i:[[1,2,3],[1,2,4]]})
         data = collection.find {
-            criteria: {
+            where: {
                 h: {$all: [1,2]}
             }
         }
         expect(1 in d.h).to.be.ok() for d in data
         expect(2 in d.h).to.be.ok() for d in data
         data = collection.find {
-            criteria: {
+            where: {
                 i: {$all: [[1,2]]}
             }
         }
@@ -211,15 +198,13 @@ describe 'LocalDB', ->
         collection.insert({ _id: 2, results: [ { product: "abc", score: 8 }, { product: "xyz", score: 7 } ] })
         collection.insert({ _id: 3, results: [ { product: "abc", score: 7 }, { product: "xyz", score: 8 } ] })
         data = collection.find {
-            criteria: { results: { $elemMatch: { product: "xyz", score: { $gte: 8 } } } }
+            where: { results: { $elemMatch: { product: "xyz", score: { $gte: 8 } } } }
         }
-        console.log data
         expect(data).to.be.eql([{"_id":3,"results":[{"product":"abc","score":7},{"product":"xyz","score":8}]}])
     it '$size', ->
         data = collection.find {
-            criteria: {results: {$size: 2}}
+            where: {results: {$size: 2}}
         }
-        console.log data
         expect(data.length).to.be(3)
     it 'projection $', ->
         collection.insert({ "_id" : 1, "semester" : 1, "grades" : [ 70, 87, 90 ] })
@@ -229,10 +214,9 @@ describe 'LocalDB', ->
         collection.insert({ "_id" : 5, "semester" : 2, "grades" : [ 88, 88, 92 ] })
         collection.insert({ "_id" : 6, "semester" : 2, "grades" : [ 95, 90, 96 ] })
         data = collection.find {
-            criteria: { semester: 1, grades: { $gte: 85 } },
+            where: { semester: 1, grades: { $gte: 85 } },
             projection: {"grades.$": 1}
         }
-        console.log data
     it 'projection $elemMatch', ->
         collection.insert  {
             _id: 1,
@@ -244,30 +228,29 @@ describe 'LocalDB', ->
             ]
         }
         data = collection.find {
-            criteria: {zipcode: "63109"},
+            where: {zipcode: "63109"},
             projection: { students: { $elemMatch: { school: 102 } } }
         }
-        console.log data
     it 'update $inc', ->
         collection.insert {
             age: 1
         }
-        console.log collection.find {criteria:{age: {$exists:true}}}
+        console.log collection.find {where:{age: {$exists:true}}}
         collection.update {
             $set: {age: 10},
             $inc: {age: 2}
         }
-        console.log collection.find {criteria:{age: {$exists:true}}}
+        console.log collection.find {where:{age: {$exists:true}}}
         collection.update {
             age: 100,
             $inc: {age: 2}
         }
-        console.log collection.find {criteria:{age: {$exists:true}}}
+        console.log collection.find {where:{age: {$exists:true}}}
     it 'update $mul', ->
         collection.insert { _id: 1, item: "ABC", price: 10.99 }
-        console.log collection.find {criteria: {price: {$exists: true}}}
+        console.log collection.find {where: {price: {$exists: true}}}
         collection.update {$mul: {price: 1.25}}
-        console.log collection.find {criteria: {price: {$exists: true}}}
+        console.log collection.find {where: {price: {$exists: true}}}
     it 'update $rename', ->
         collection.insert {
             "_id": 1,
@@ -278,8 +261,8 @@ describe 'LocalDB', ->
         collection.update {
             $rename: {"nmae":"name","alias":"nickname"}
         }
-        console.log collection.find {criteria: {nmae: {$exists: true}}}
-        console.log collection.find {criteria: {name: {$exists: true}}}
+        console.log collection.find {where: {nmae: {$exists: true}}}
+        console.log collection.find {where: {name: {$exists: true}}}
     it 'update $unset', ->
         collection.insert {
             "_id": 1,
@@ -290,14 +273,14 @@ describe 'LocalDB', ->
         collection.update {
             $unset: {alias:"",nmae:""}
         }
-        console.log collection.find {criteria: {mobile1: {$exists: true}}}
+        console.log collection.find {where: {mobile1: {$exists: true}}}
     it 'update $min && $max', ->
         collection.insert { _id: 1, highScore: 800, lowScore: 200 }
         collection.update {
             $min: { lowScore: 150 },
             $max: { highScore: 1000 }
         }
-        console.log collection.find {criteria: {highScore: {$exists: true}}}
+        console.log collection.find {where: {highScore: {$exists: true}}}
 
 
 

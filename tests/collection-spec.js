@@ -156,7 +156,7 @@ describe('Collection', function() {
         c: 5
       }
     }, {
-      criteria: {
+      where: {
         a: {
           $gt: 0,
           $lt: 10
@@ -172,7 +172,7 @@ describe('Collection', function() {
   it('Collection find', function() {
     var data;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $gt: 1,
           $lt: 10
@@ -189,9 +189,8 @@ describe('Collection', function() {
   });
   it('Collection findOne', function() {
     var data;
-    data = collection.findOne(null);
     data = collection.findOne({
-      criteria: {
+      where: {
         a: {
           $lt: 3
         }
@@ -200,19 +199,21 @@ describe('Collection', function() {
     return expect(data.length).to.be(1 || 0);
   });
   it('Collection remove', function() {
+    console.log(collection.find());
     collection.remove({
-      criteria: {
+      where: {
         a: 99
       }
     });
     collection.remove({
-      criteria: {
+      where: {
         a: {
           $gt: 3,
           $lt: 10
         }
       }
     });
+    console.log(collection.find());
     collection.remove(null);
     return expect(collection.find().length).to.be(0);
   });

@@ -1,9 +1,9 @@
 'use strict'
 
 Utils = require('./utils')
-Criteria = require('./criteria')
 Projection = require('./projection')
 Update = require('./update')
+Where = require('./where')
 
 class Collection
 
@@ -44,30 +44,30 @@ class Collection
      *  update collection
     ###
     update: (actions, options = {}) ->
-        criteria = options.criteria or {}
+        where = options.where or {}
         @deserialize()
-        @data = Update @data, actions, criteria
+        @data = Update @data, actions, where
         @serialize()
 
     ###
      *  remove data from collection
     ###
     remove: (options = {}) ->
-        criteria = options.criteria or {}
+        where = options.where or {}
         @deserialize()
-        @data = (d for d in @data when not Criteria.check(d, criteria))
+        @data = (d for d in @data when not Where(d, where))
         @serialize()
 
     ###
      * find data from collection
     ###
     find: (options = {}) ->
-        criteria = options.criteria or {}
+        where = options.where or {}
         projection = options.projection or {}
         limit = options.limit or -1
         @deserialize()
         result = []
-        for d in @data when Criteria.check(d, criteria)
+        for d in @data when Where(d, where)
             break if limit is 0
             limit = limit - 1
             result.push d

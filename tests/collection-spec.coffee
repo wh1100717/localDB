@@ -34,7 +34,7 @@ describe 'Collection', ->
         collection.update {
             $set: {b:4, c:5}
         }, {
-            criteria: {
+            where: {
                 a: {$gt: 0, $lt: 10},
                 d: {
                     e: "4"
@@ -45,7 +45,7 @@ describe 'Collection', ->
         expect(collection.find()[0].c).to.be(5)
     it 'Collection find', ->
         data = collection.find({
-            criteria: {
+            where: {
                 a: {$gt: 1, $lt: 10}
             },
             projection: {
@@ -58,9 +58,8 @@ describe 'Collection', ->
         expect(data).to.be.a("array")
 
     it 'Collection findOne', ->
-        data = collection.findOne(null)
         data = collection.findOne {
-            criteria: {
+            where: {
                 a:{$lt:3}
             }
         }
@@ -69,12 +68,12 @@ describe 'Collection', ->
     it 'Collection remove', ->
         console.log collection.find()
         collection.remove({
-            criteria:{
+            where:{
                 a:99
             }
         })
         collection.remove({
-            criteria: {
+            where: {
                 a: {$gt:3 , $lt: 10}
             }
         })

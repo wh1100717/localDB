@@ -180,7 +180,7 @@ describe('LocalDB', function() {
         c: 5
       }
     }, {
-      criteria: {
+      where: {
         a: {
           $gt: 3,
           $lt: 10
@@ -196,7 +196,7 @@ describe('LocalDB', function() {
   it('find', function() {
     var data;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $lt: 3
         },
@@ -215,25 +215,23 @@ describe('LocalDB', function() {
   it('Fine One Data', function() {
     var data;
     data = collection.findOne({
-      criteria: {
+      where: {
         a: {
           $lt: 3
         }
       }
     });
-    console.log(data);
     return expect(data.length).to.be(1 || 0);
   });
   it('$in', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $in: [3, 4, 5]
         }
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -244,13 +242,12 @@ describe('LocalDB', function() {
   it('$nin', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $nin: [3, 4, 5]
         }
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -261,7 +258,7 @@ describe('LocalDB', function() {
   it('$and', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         $and: [
           {
             b: 4
@@ -271,7 +268,6 @@ describe('LocalDB', function() {
         ]
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -282,13 +278,12 @@ describe('LocalDB', function() {
   it('$not', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         b: {
           $not: 4
         }
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -299,7 +294,7 @@ describe('LocalDB', function() {
   it('$nor', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         $nor: [
           {
             b: 4
@@ -311,7 +306,6 @@ describe('LocalDB', function() {
         ]
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -324,7 +318,7 @@ describe('LocalDB', function() {
   it('$or', function() {
     var data;
     data = collection.find({
-      criteria: {
+      where: {
         $or: [
           {
             a: 1
@@ -334,7 +328,6 @@ describe('LocalDB', function() {
         ]
       }
     });
-    console.log(data);
     return expect(data).to.be.eql([
       {
         "a": 1,
@@ -358,25 +351,23 @@ describe('LocalDB', function() {
   it('$exists', function() {
     var d, data, _i, _j, _len, _len1, _results;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $exists: false
         }
       }
     });
-    console.log(data);
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
       expect(d.a != null).not.to.be.ok();
     }
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $exists: true
         }
       }
     });
-    console.log(data);
     _results = [];
     for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
       d = data[_j];
@@ -387,7 +378,7 @@ describe('LocalDB', function() {
   it('$exists', function() {
     var data;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $type: "number"
         },
@@ -395,14 +386,13 @@ describe('LocalDB', function() {
           $type: "number"
         },
         d: {
-          $type: "object",
-          e: {
-            $type: "string"
-          }
+          $type: "object"
+        },
+        "d.e": {
+          $type: "string"
         }
       }
     });
-    console.log(data);
     return expect(data).to.be.eql([
       {
         "a": 1,
@@ -418,13 +408,12 @@ describe('LocalDB', function() {
   it('$mod', function() {
     var d, data, _i, _len, _results;
     data = collection.find({
-      criteria: {
+      where: {
         a: {
           $mod: [4, 0]
         }
       }
     });
-    console.log(data);
     _results = [];
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
@@ -445,23 +434,21 @@ describe('LocalDB', function() {
       g: "Hello World"
     });
     data = collection.find({
-      criteria: {
+      where: {
         g: {
           $regex: 'ello'
         }
       }
     });
-    console.log(data);
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       d = data[_i];
       expect(/ello/.test(d.g)).to.be.ok();
     }
     data = collection.find({
-      criteria: {
+      where: {
         g: /ello/
       }
     });
-    console.log(data);
     for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
       d = data[_j];
       expect(/ello/.test(d.g)).to.be.ok();
@@ -476,12 +463,11 @@ describe('LocalDB', function() {
       },
       g: ["Hello World"]
     });
-    data = collection.find({
-      criteria: {
+    return data = collection.find({
+      where: {
         g: /ello/
       }
     });
-    return console.log(data);
   });
   it('$all', function() {
     var d, data, _i, _j, _k, _l, _len, _len1, _len2, _len3, _results;
@@ -493,7 +479,7 @@ describe('LocalDB', function() {
       i: [[1, 2, 3], [1, 2, 4]]
     });
     data = collection.find({
-      criteria: {
+      where: {
         h: {
           $all: [1, 2]
         }
@@ -508,7 +494,7 @@ describe('LocalDB', function() {
       expect(__indexOf.call(d.h, 2) >= 0).to.be.ok();
     }
     data = collection.find({
-      criteria: {
+      where: {
         i: {
           $all: [[1, 2]]
         }
@@ -564,7 +550,7 @@ describe('LocalDB', function() {
       ]
     });
     data = collection.find({
-      criteria: {
+      where: {
         results: {
           $elemMatch: {
             product: "xyz",
@@ -575,7 +561,6 @@ describe('LocalDB', function() {
         }
       }
     });
-    console.log(data);
     return expect(data).to.be.eql([
       {
         "_id": 3,
@@ -594,13 +579,12 @@ describe('LocalDB', function() {
   it('$size', function() {
     var data;
     data = collection.find({
-      criteria: {
+      where: {
         results: {
           $size: 2
         }
       }
     });
-    console.log(data);
     return expect(data.length).to.be(3);
   });
   it('projection $', function() {
@@ -635,8 +619,8 @@ describe('LocalDB', function() {
       "semester": 2,
       "grades": [95, 90, 96]
     });
-    data = collection.find({
-      criteria: {
+    return data = collection.find({
+      where: {
         semester: 1,
         grades: {
           $gte: 85
@@ -646,7 +630,6 @@ describe('LocalDB', function() {
         "grades.$": 1
       }
     });
-    return console.log(data);
   });
   it('projection $elemMatch', function() {
     var data;
@@ -669,8 +652,8 @@ describe('LocalDB', function() {
         }
       ]
     });
-    data = collection.find({
-      criteria: {
+    return data = collection.find({
+      where: {
         zipcode: "63109"
       },
       projection: {
@@ -681,14 +664,13 @@ describe('LocalDB', function() {
         }
       }
     });
-    return console.log(data);
   });
   it('update $inc', function() {
     collection.insert({
       age: 1
     });
     console.log(collection.find({
-      criteria: {
+      where: {
         age: {
           $exists: true
         }
@@ -703,7 +685,7 @@ describe('LocalDB', function() {
       }
     });
     console.log(collection.find({
-      criteria: {
+      where: {
         age: {
           $exists: true
         }
@@ -716,7 +698,7 @@ describe('LocalDB', function() {
       }
     });
     return console.log(collection.find({
-      criteria: {
+      where: {
         age: {
           $exists: true
         }
@@ -730,7 +712,7 @@ describe('LocalDB', function() {
       price: 10.99
     });
     console.log(collection.find({
-      criteria: {
+      where: {
         price: {
           $exists: true
         }
@@ -742,7 +724,7 @@ describe('LocalDB', function() {
       }
     });
     return console.log(collection.find({
-      criteria: {
+      where: {
         price: {
           $exists: true
         }
@@ -766,14 +748,14 @@ describe('LocalDB', function() {
       }
     });
     console.log(collection.find({
-      criteria: {
+      where: {
         nmae: {
           $exists: true
         }
       }
     }));
     return console.log(collection.find({
-      criteria: {
+      where: {
         name: {
           $exists: true
         }
@@ -797,7 +779,7 @@ describe('LocalDB', function() {
       }
     });
     return console.log(collection.find({
-      criteria: {
+      where: {
         mobile1: {
           $exists: true
         }
@@ -819,7 +801,7 @@ describe('LocalDB', function() {
       }
     });
     return console.log(collection.find({
-      criteria: {
+      where: {
         highScore: {
           $exists: true
         }
