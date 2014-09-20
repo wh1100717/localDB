@@ -13,6 +13,7 @@ reservedKeys = [
 isKeyReserved = (key) -> key in reservedKeys
 
 Where = (data, conditions) ->
+    return false if not data?
     ###
      *  如果key中包含dot的话，则执行dotCheck
      *  执行valueCheck

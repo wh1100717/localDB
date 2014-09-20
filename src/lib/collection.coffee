@@ -37,7 +37,8 @@ class Collection
     ###
     insert: (rowData) ->
         @deserialize()
-        @data.push rowData
+        (@data.push d for d in rowData when Utils.isObject(d)) if Utils.isArray(rowData)
+        @data.push rowData if Utils.isObject(rowData)
         @serialize()
 
     ###

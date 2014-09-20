@@ -35,7 +35,12 @@ describe 'LocalDB', ->
         collection.insert({a:13,b:2,c:3,d:{e:4,f:5}})
         collection.insert({a:14,b:2,c:3,d:{e:4,f:5}})
         collection.insert({a:15,b:2,c:3,d:{e:4,f:5}})
-        expect(collection.find().length).to.be(14)
+        collection.insert [
+            {aa:1,bb:2,cc:3},
+            {aa:10,bb:"abc",cc:4,dd:111},
+            {aaa:111,bbb:222,ccc:333}
+        ]
+        expect(collection.find().length).to.be(17)
     it 'Get Collections', ->
         collections = db.collections()
         console.log collections
@@ -49,9 +54,7 @@ describe 'LocalDB', ->
         }, {
             where: {
                 a: {$gt: 3, $lt: 10},
-                d: {
-                    e: 4
-                }
+                "d.e":4
             }
         }
         expect(collection.find()[6].b).to.be(4)

@@ -56,8 +56,19 @@ Collection = (function() {
    */
 
   Collection.prototype.insert = function(rowData) {
+    var d, _i, _len;
     this.deserialize();
-    this.data.push(rowData);
+    if (Utils.isArray(rowData)) {
+      for (_i = 0, _len = rowData.length; _i < _len; _i++) {
+        d = rowData[_i];
+        if (Utils.isObject(d)) {
+          this.data.push(d);
+        }
+      }
+    }
+    if (Utils.isObject(rowData)) {
+      this.data.push(rowData);
+    }
     return this.serialize();
   };
 

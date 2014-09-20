@@ -36,9 +36,7 @@ describe 'Collection', ->
         }, {
             where: {
                 a: {$gt: 0, $lt: 10},
-                d: {
-                    e: "4"
-                }
+                "d.e": "4"
             }
         }
         expect(collection.find()[0].b).to.be(4)
