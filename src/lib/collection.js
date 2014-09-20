@@ -61,12 +61,18 @@ Collection = (function() {
     if (Utils.isArray(rowData)) {
       for (_i = 0, _len = rowData.length; _i < _len; _i++) {
         d = rowData[_i];
-        if (Utils.isObject(d)) {
-          this.data.push(d);
+        if (!(Utils.isObject(d))) {
+          continue;
         }
+        if (d._id == null) {
+          d._id = Utils.createObjectId();
+        }
+        this.data.push(d);
       }
-    }
-    if (Utils.isObject(rowData)) {
+    } else if (Utils.isObject(rowData)) {
+      if (rowData._id == null) {
+        rowData._id = Utils.createObjectId();
+      }
       this.data.push(rowData);
     }
     return this.serialize();

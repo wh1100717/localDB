@@ -1,3 +1,7 @@
+'use strict'
+
+BSON = require('./bson')()
+
 Utils = {}
 
 toString = Object.prototype.toString
@@ -66,6 +70,13 @@ eq = (a, b, aStack, bStack) ->
     return result
 
 Utils.isEqual = (a, b) -> eq(a, b, [], [])
+
+Utils.createObjectId = -> BSON.ObjectID().inspect()
+
+
+
+
+
 
 Utils.parse = (str) -> if str? and Utils.isString(str) then JSON.parse(str) else []
 Utils.stringify = (obj) -> if obj? and (Utils.isArray(obj) or Utils.isObject(obj))then JSON.stringify(obj) else "[]"

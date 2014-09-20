@@ -196,7 +196,7 @@ collection.remove({
 
 ##Feature
 
-###BSON _ID generator support(TODO)
+*   [X] BSON _ID generator support
 
 ###[Query Operators](http://docs.mongodb.org/manual/reference/operator/query/)
 
