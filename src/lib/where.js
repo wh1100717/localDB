@@ -12,18 +12,21 @@ isKeyReserved = function(key) {
 };
 
 Where = function(data, conditions) {
-  var condition, key;
-  if (data == null) {
-    return false;
-  }
 
   /*
    *  如果key中包含dot的话，则执行dotCheck
    *  执行valueCheck
    *  如果返回值为true的话，执行keywordCheck
    */
+  var condition, key;
   for (key in conditions) {
     condition = conditions[key];
+    if (data == null) {
+      if (key === "$exists" && condition === false) {
+        continue;
+      }
+      return false;
+    }
     if (key.indexOf(".") !== -1) {
       if (dotCheck(data, key, condition)) {
         continue;

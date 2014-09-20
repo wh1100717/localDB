@@ -13,13 +13,15 @@ reservedKeys = [
 isKeyReserved = (key) -> key in reservedKeys
 
 Where = (data, conditions) ->
-    return false if not data?
     ###
      *  如果key中包含dot的话，则执行dotCheck
      *  执行valueCheck
      *  如果返回值为true的话，执行keywordCheck
     ###
     for key, condition of conditions
+        if not data?
+            continue if key is "$exists" and condition is false
+            return false
         #dot check
         (if dotCheck(data, key, condition) then continue else return false) if key.indexOf(".") isnt -1
         #value check
