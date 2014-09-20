@@ -117,7 +117,7 @@ use `collection.find(options)` to find the data in specific collection.
 
 options:
 
-*   criteria：  Query Criteria like `where` in MYSQL
+*   where：  Query Criteria like `where` in MYSQL
 *   projection: like `SELECT` in MYSQL 
 *   limit:  just limit.....
 
@@ -126,7 +126,7 @@ Criteria operations are listed below [Feature]({{ site.baseurl }}feature/):
 
 ```javascript
 collection.find({
-    criteria: {
+    where: {
         a: {$gt: 3, $lt: 10},
         b: 4
     },
@@ -144,7 +144,7 @@ collection.find({
 use `collection.findOne(options)`, same as `collection.fine()` except return one item, not a list.
 
 
-<h5 id="updateDataByCriteria"> Update data by criteria </h5>
+<h5 id="updateDataByCriteria"> Update data by where </h5>
 
 use `collection.update(actions, options)` to update the data in specific collection.
 
@@ -154,30 +154,30 @@ actions:
 
 options:
 
-* criteria:   Query Criteria like `where` in MYSQL
+* where:   Query Criteria like `where` in MYSQL
 
 ```javascript
 collection.update({
     $set: {b: 4,c: 5}
 }, {
-    criteria: {
+    where: {
         a: {$gt: 3, $lt: 10},
         d: {e: 4}
     }
 });
 ```
 
-<h5 id="deleteDataByCriteria"> Delete data by criteria </h5>
+<h5 id="deleteDataByCriteria"> Delete data by where </h5>
 
 use `collection.remove(options)` to delete data in specific collection.
 
 options:
 
-*   criteria:   Query Criteria like `where` in MYSQL
+*   where:   Query Criteria like `where` in MYSQL
 
 ```javascript
 collection.remove({
-    criteira: {
+    where: {
         a: {$gt:3 , $lt: 10, $ne: 5}
     }
 })
