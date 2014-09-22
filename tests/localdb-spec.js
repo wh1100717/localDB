@@ -190,12 +190,23 @@ describe('LocalDB', function() {
     return expect(collection).to.be.a("object");
   });
   it('Update Data', function() {
+    var data;
     collection.update({
       $set: {
         b: 4,
         c: 5
       }
     }, {
+      where: {
+        a: {
+          $gt: 3,
+          $lt: 10
+        },
+        "d.e": 4
+      },
+      multi: true
+    });
+    data = collection.find({
       where: {
         a: {
           $gt: 3,

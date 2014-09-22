@@ -50,9 +50,8 @@ class Collection
      *  update collection
     ###
     update: (actions, options = {}) ->
-        where = options.where or {}
         @deserialize()
-        @data = Update @data, actions, where
+        @data = Update @data, actions, options
         @serialize()
 
     ###

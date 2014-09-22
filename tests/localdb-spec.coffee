@@ -55,6 +55,13 @@ describe 'LocalDB', ->
             where: {
                 a: {$gt: 3, $lt: 10},
                 "d.e":4
+            },
+            multi: true
+        }
+        data = collection.find {
+            where: {
+                a: {$gt: 3, $lt: 10},
+                "d.e":4
             }
         }
         expect(collection.find()[6].b).to.be(4)

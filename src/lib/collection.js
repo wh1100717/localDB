@@ -85,13 +85,11 @@ Collection = (function() {
    */
 
   Collection.prototype.update = function(actions, options) {
-    var where;
     if (options == null) {
       options = {};
     }
-    where = options.where || {};
     this.deserialize();
-    this.data = Update(this.data, actions, where);
+    this.data = Update(this.data, actions, options);
     return this.serialize();
   };
 
