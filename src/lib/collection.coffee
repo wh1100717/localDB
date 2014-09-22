@@ -30,7 +30,7 @@ class Collection
     ###
      *  delete this collection
     ###
-    drop: -> @ls.removeItem @name
+    drop: -> @ls.removeItem @name;true
 
     ###
      *  insert data into collection

@@ -7,18 +7,28 @@ Utils = {}
 toString = Object.prototype.toString
 
 _isType = (type) -> (obj) -> toString.call(obj).toLowerCase() is "[object #{type}]".toLowerCase()
+
 Utils.isType = (ele, type) -> _isType(type)(ele)
+
 Utils.isObject = _isType "object"
+
 Utils.isString = _isType "string"
+
 Utils.isNumber = _isType "number"
+
 Utils.isArray = _isType "array"
+
 Utils.isFunction = _isType "function"
+
 Utils.isRegex = _isType "regexp"
+
 Utils.isSameType = (a, b) -> toString.call(a) is toString.call(b)
+
 Utils.keys = (obj) ->
     return [] if not Utils.isObject(obj)
     return Object.keys(obj) if Object.keys
     return (key for key of obj when Utils.has(obj, key))
+
 Utils.has = (obj, key) -> obj isnt null and obj isnt undefined and Object.prototype.hasOwnProperty.call(obj, key)
 
 ###
@@ -73,12 +83,8 @@ Utils.isEqual = (a, b) -> eq(a, b, [], [])
 
 Utils.createObjectId = -> BSON.ObjectID().inspect()
 
-
-
-
-
-
 Utils.parse = (str) -> if str? and Utils.isString(str) then JSON.parse(str) else []
+
 Utils.stringify = (obj) -> if obj? and (Utils.isArray(obj) or Utils.isObject(obj))then JSON.stringify(obj) else "[]"
 
 module.exports = Utils

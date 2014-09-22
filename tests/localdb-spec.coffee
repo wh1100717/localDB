@@ -4,7 +4,7 @@ LocalDB = require('../src/localdb.js')
 
 describe 'LocalDB', ->
     it 'LocalStorage Support', ->
-        expect(LocalDB.isSupport()).to.be.ok()
+        expect(LocalDB.support()).to.be.ok()
     it 'Init DB', ->
         db = new LocalDB("db_foo")
         expect(db).to.be.a("object")

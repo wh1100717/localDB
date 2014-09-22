@@ -10,14 +10,23 @@ class LocalDB
     ###
      *  Constructor
      *  var db = new LocalDB('foo')
-     *  var db = new LocalDB('foo', localStorage)
-     *  var db = new LocalDB('foo', sessionStorage)
+     *  var db = new LocalDB('foo', {engine: localStorage})
+     *  var db = new LocalDB('foo', {engine: sessionStorage})
      *
      *  localStorage would save the foo db even after browser closed.
      *  sessionStorage would only save the foo db while the brower stay open.
      *  localStorage by default
     ###
-    constructor: (dbName, @ls = localStorage) -> @name = dbPrefix + dbName
+    constructor: (dbName, options = {}) ->
+        #TODO 如果以后增加一些新的配置项，比如说size，则需要将db带着options内容存储起来，执行构造函数的时候也需要先通过@name和@ls来查看该db是否已经存在。
+        @name = dbPrefix + dbName
+        @ls = options.engine or localStorage
+
+    # get options
+    options: -> {
+        name: @name.substr(dbPrefix.length)
+        engine: @ls
+    }
 
     ###
      *  Get Collection Names
@@ -45,6 +54,10 @@ class LocalDB
  *  Check Browser Compatibility
  *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
 ###
-LocalDB.isSupport = -> if localStorage? then true else false
+LocalDB.support = -> {
+    localStorage: if localStorage? then true else false
+    sessionStorage: if sessionStorage? then true else false
+    indexOf: if indexedDB? then true else false
+}
 
 module.exports = LocalDB

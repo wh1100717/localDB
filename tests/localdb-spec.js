@@ -10,7 +10,7 @@ LocalDB = require('../src/localdb.js');
 describe('LocalDB', function() {
   var collection, db;
   it('LocalStorage Support', function() {
-    return expect(LocalDB.isSupport()).to.be.ok();
+    return expect(LocalDB.support()).to.be.ok();
   });
   it('Init DB', function() {
     var db;

@@ -13,17 +13,27 @@ LocalDB = (function() {
   /*
    *  Constructor
    *  var db = new LocalDB('foo')
-   *  var db = new LocalDB('foo', localStorage)
-   *  var db = new LocalDB('foo', sessionStorage)
+   *  var db = new LocalDB('foo', {engine: localStorage})
+   *  var db = new LocalDB('foo', {engine: sessionStorage})
    *
    *  localStorage would save the foo db even after browser closed.
    *  sessionStorage would only save the foo db while the brower stay open.
    *  localStorage by default
    */
-  function LocalDB(dbName, ls) {
-    this.ls = ls != null ? ls : localStorage;
+  function LocalDB(dbName, options) {
+    if (options == null) {
+      options = {};
+    }
     this.name = dbPrefix + dbName;
+    this.ls = options.engine || localStorage;
   }
+
+  LocalDB.prototype.options = function() {
+    return {
+      name: this.name.substr(dbPrefix.length),
+      engine: this.ls
+    };
+  };
 
 
   /*
@@ -88,12 +98,12 @@ LocalDB = (function() {
  *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
  */
 
-LocalDB.isSupport = function() {
-  if (typeof localStorage !== "undefined" && localStorage !== null) {
-    return true;
-  } else {
-    return false;
-  }
+LocalDB.support = function() {
+  return {
+    localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
+    sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
+    indexOf: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
+  };
 };
 
 module.exports = LocalDB;

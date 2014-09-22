@@ -47,7 +47,8 @@ Collection = (function() {
    */
 
   Collection.prototype.drop = function() {
-    return this.ls.removeItem(this.name);
+    this.ls.removeItem(this.name);
+    return true;
   };
 
 
