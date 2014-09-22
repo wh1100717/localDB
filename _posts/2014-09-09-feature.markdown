@@ -4,7 +4,7 @@ title: "Feature"
 permalink: /feature/
 ---
 
-<h2 id="BSON_ID"> BSON _ID </h2>
+<h2 id="BSON_ID"> BSON_ID </h2>
 
 *   <input type="checkbox" checked disabled>
         BSON _ID generator support
