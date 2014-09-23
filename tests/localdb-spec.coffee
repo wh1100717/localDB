@@ -40,6 +40,7 @@ describe 'LocalDB', ->
             {aa:10,bb:"abc",cc:4,dd:111},
             {aaa:111,bbb:222,ccc:333}
         ]
+        console.log collection.find()
         expect(collection.find().length).to.be(17)
     it 'Get Collections', ->
         collections = db.collections()

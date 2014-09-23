@@ -177,6 +177,7 @@ describe('LocalDB', function() {
         ccc: 333
       }
     ]);
+    console.log(collection.find());
     return expect(collection.find().length).to.be(17);
   });
   it('Get Collections', function() {

@@ -1,9 +1,10 @@
 'use strict'
 
 Utils = require('./utils')
-Projection = require('./projection')
 Update = require('./update')
-Where = require('./where')
+Remove = require('./remove')
+Insert = require('./insert')
+Find = require('./find')
 
 class Collection
 
@@ -35,15 +36,9 @@ class Collection
     ###
      *  insert data into collection
     ###
-    insert: (rowData) ->
+    insert: (rowData, options = {}) ->
         @deserialize()
-        if Utils.isArray(rowData)
-            for d in rowData when Utils.isObject(d)
-                d._id = Utils.createObjectId() if not d._id?
-                @data.push d
-        else if Utils.isObject(rowData)
-            rowData._id = Utils.createObjectId() if not rowData._id?
-            @data.push rowData
+        @data = Insert @data, rowData, options
         @serialize()
 
     ###
@@ -58,31 +53,22 @@ class Collection
      *  remove data from collection
     ###
     remove: (options = {}) ->
-        where = options.where or {}
         @deserialize()
-        @data = (d for d in @data when not Where(d, where))
+        @data = Remove @data, options
         @serialize()
 
     ###
      * find data from collection
     ###
     find: (options = {}) ->
-        where = options.where or {}
-        projection = options.projection or {}
-        limit = options.limit or -1
         @deserialize()
-        result = []
-        for d in @data when Where(d, where)
-            break if limit is 0
-            limit = limit - 1
-            result.push d
-        return Projection.generate(result, projection)
+        Find @data, options
 
     ###
      *  find data and only return one data from collection
     ###
     findOne: (options = {}) ->
         options.limit = 1
-        @find(options)
+        Find @data, options
 
 module.exports = Collection
