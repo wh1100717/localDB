@@ -19,6 +19,8 @@ localDB uses localStorage or sessionStorage to store data in modern browser. The
 
 localDB does not support IE 6 && 7 currently with userData behavior.
 
+[localStorage Support Browsers](https://html5test.com/compare/feature/storage-localStorage.html)
+
 ##Installation
 
 #####By Bower
