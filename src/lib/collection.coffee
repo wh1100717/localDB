@@ -1,10 +1,7 @@
 'use strict'
 
 Utils = require('./utils')
-Update = require('./update')
-Remove = require('./remove')
-Insert = require('./insert')
-Find = require('./find')
+Operation = require('./operation')
 
 class Collection
 
@@ -38,7 +35,7 @@ class Collection
     ###
     insert: (rowData, options = {}) ->
         @deserialize()
-        @data = Insert @data, rowData, options
+        @data = Operation.insert @data, rowData, options
         @serialize()
 
     ###
@@ -46,7 +43,7 @@ class Collection
     ###
     update: (actions, options = {}) ->
         @deserialize()
-        @data = Update @data, actions, options
+        @data = Operation.update @data, actions, options
         @serialize()
 
     ###
@@ -54,7 +51,7 @@ class Collection
     ###
     remove: (options = {}) ->
         @deserialize()
-        @data = Remove @data, options
+        @data = Operation.remove @data, options
         @serialize()
 
     ###
@@ -62,13 +59,13 @@ class Collection
     ###
     find: (options = {}) ->
         @deserialize()
-        Find @data, options
+        Operation.find @data, options
 
     ###
      *  find data and only return one data from collection
     ###
     findOne: (options = {}) ->
         options.limit = 1
-        Find @data, options
+        Operation.find @data, options
 
 module.exports = Collection
