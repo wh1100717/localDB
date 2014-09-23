@@ -45,7 +45,6 @@ describe('Where', function() {
       }
     };
     result = Where(obj, where);
-    console.log(result);
     expect(result).to.be.ok();
     obj = {
       "a": 0,
@@ -529,7 +528,24 @@ describe('Where', function() {
         }
       }
     };
-    return expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be.ok();
+    obj = {
+      "a": 5,
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": {
+        "$not": {
+          "$gt": 0
+        }
+      }
+    };
+    return expect(Where(obj, where)).not.to.be.ok();
   });
   it('Where Logical nor', function() {
     var obj, where;
@@ -876,7 +892,7 @@ describe('Where', function() {
     var obj, where;
     obj = [
       {
-        "a": [1, 2, 3],
+        "a": [1, 2],
         "b": 4,
         "c": 5,
         "d": {
@@ -884,7 +900,7 @@ describe('Where', function() {
           "f": 5
         }
       }, {
-        "a": 1
+        "a": [1, 2, 3]
       }
     ];
     where = {
@@ -892,7 +908,7 @@ describe('Where', function() {
         "$all": [1, 2]
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be.ok();
     obj = {
       "a": [1, 2, 3],
       "b": 4,
@@ -907,16 +923,20 @@ describe('Where', function() {
         "$all": [1, 2]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
-    obj = {
-      "a": [1, 2],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    expect(Where(obj, where)).not.to.be.ok();
+    obj = [
+      {
+        "a": [1, 2],
+        "b": 4,
+        "c": 5,
+        "d": {
+          "e": "4",
+          "f": 5
+        }
+      }, {
+        "a": [1, 2, 3]
       }
-    };
+    ];
     where = {
       "a": {
         "$all": [3, 2]

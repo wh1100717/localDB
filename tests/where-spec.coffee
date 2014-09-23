@@ -14,7 +14,6 @@ describe 'Where', ->
         obj = {"a":2,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$gt":1}}
         result = Where(obj, where)
-        console.log result
         expect(result).to.be.ok()
         obj = {"a":0,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$gt":1}}
@@ -107,6 +106,9 @@ describe 'Where', ->
         obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$not":{"$lt":0}}}
         expect(Where(obj,where)).to.be.ok()
+        obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
+        where = {"a":{"$not":{"$gt":0}}}
+        expect(Where(obj,where)).not.to.be.ok()
     it 'Where Logical nor', ->
         obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"$nor":[{"a":5},{"b":4}]}
@@ -189,13 +191,13 @@ describe 'Where', ->
         where = {"a":/\b/}
         expect(Where(obj,where)).to.be.ok()
     it 'Where Array all', ->
-        obj = [{"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":1}]
-        where = {"a":{"$all": [1,2]}}
-        expect(Where(obj,where)).not.to.be.ok()
-        obj = {"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}}
+        obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
         where = {"a":{"$all": [1,2]}}
         expect(Where(obj,where)).to.be.ok()
-        obj = {"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}}
+        obj = {"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}}
+        where = {"a":{"$all": [1,2]}}
+        expect(Where(obj,where)).not.to.be.ok()
+        obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
         where = {"a":{"$all": [3,2]}}
         expect(Where(obj,where)).not.to.be.ok()
     it 'Where Array eleMatch', ->
