@@ -32,7 +32,7 @@ class LocalDB
      *  Get Collection Names
      *  db.collections()    //['foo','foo1','foo2','foo3',....]
     ###
-    collections: -> (@ls.key(i) for i in [0...@ls.length] when @ls.key(i).indexOf("#{@name}_") is 0)
+    collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.length] when @ls.key(i).indexOf("#{@name}_") is 0)
 
     ###
      *  Get Collection
@@ -57,7 +57,7 @@ class LocalDB
 LocalDB.support = -> {
     localStorage: if localStorage? then true else false
     sessionStorage: if sessionStorage? then true else false
-    indexOf: if indexedDB? then true else false
+    indexedDB: if indexedDB? then true else false
 }
 
 module.exports = LocalDB

@@ -89,7 +89,7 @@ Operation.find = function(data, options) {
 
 Update = {
   isKeyReserved: function(key) {
-    return key === '$inc' || key === '$set' || key === '$mul' || key === '$rename' || key === '$unset' || key === '$min';
+    return key === '$inc' || key === '$set' || key === '$mul' || key === '$rename' || key === '$unset' || key === '$max' || key === '$min';
   },
   generate: function(data, action, value, where, multi, upsert) {
     var d, firstKey, flag, k, v, _i, _len;

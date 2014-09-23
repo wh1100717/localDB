@@ -51,7 +51,7 @@ Operation.find = (data, options) ->
     return Projection.generate(result, projection)
 
 Update = {
-    isKeyReserved: (key) -> key in ['$inc', '$set', '$mul', '$rename', '$unset', '$min']
+    isKeyReserved: (key) -> key in ['$inc', '$set', '$mul', '$rename', '$unset', '$max', '$min']
     generate: (data, action, value, where, multi, upsert) ->
         return data if not Update.isKeyReserved(action)
         for k, v of value

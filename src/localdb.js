@@ -46,7 +46,7 @@ LocalDB = (function() {
     _results = [];
     for (i = _i = 0, _ref = this.ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
       if (this.ls.key(i).indexOf("" + this.name + "_") === 0) {
-        _results.push(this.ls.key(i));
+        _results.push(this.ls.key(i).substr(("" + this.name + "_").length));
       }
     }
     return _results;
@@ -102,7 +102,7 @@ LocalDB.support = function() {
   return {
     localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
     sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
-    indexOf: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
+    indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
   };
 };
 

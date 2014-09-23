@@ -16,5 +16,8 @@
     },
     "space_operators" : {
         "level" : "error"
+    },
+    "max_line_length": {
+        "level" : "ignore"
     }
 }

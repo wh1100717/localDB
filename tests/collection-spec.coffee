@@ -1,84 +1,111 @@
-'use strict'
-expect = require('expect.js')
-LocalDB = require('../src/localdb.js')
-Collection = require('../src/lib/collection.js')
+"use strict"
+expect = require("expect.js")
+LocalDB = require("../src/localdb.js")
+Collection = require("../src/lib/collection.js")
+Utils = require('../src/lib/utils.js')
+
 
 db = new LocalDB("foo")
 
-describe 'Collection', ->
-    it 'Collection Init', ->
-        #第一种collection初始化方式
-        collection = db.collection("bar")
-        expect(collection).to.be.ok()
-        #第二种collection初始化方式
-        collection = new Collection("bar", db)
-        expect(collection).to.be.ok()
-    collection = db.collection("bar")
-    it 'Collection insert', ->
-        collection.insert({a:1,b:2,c:3,d:{e:"4",f:5}})
-        collection.insert({a:2,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:3,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:4,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:5,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:6,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:7,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:8,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:10,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:11,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:12,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:13,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:14,b:2,c:3,d:{e:4,f:5}})
-        collection.insert({a:15,b:2,c:3,d:{e:4,f:5}})
-        expect(collection.find().length).to.be(14)
-    it 'Collection update', ->
-        collection.update {
-            $set: {b:4, c:5}
-        }, {
-            where: {
-                a: {$gt: 0, $lt: 10},
-                "d.e": "4"
-            }
+describe "Collection", ->
+    bar = db.collection("bar")
+    it "Init", ->
+        expect(bar instanceof Collection).to.be(true)
+    it "Insert", ->
+        bar.insert {
+            a: 1,
+            b: "abc",
+            c: /hell.*ld/,
+            d: {e: 4, f: "5"},
+            g: (h) -> return h * 3
+            i: [1,2,3]
         }
-        expect(collection.find()[0].b).to.be(4)
-        expect(collection.find()[0].c).to.be(5)
-    it 'Collection find', ->
-        data = collection.find({
-            where: {
-                a: {$gt: 1, $lt: 10}
+        data = bar.find()[0]
+        expect(data.a).to.be(1)
+        expect(data.b).to.be("abc")
+        expect(data.c.test("hello world")).to.be(true)
+        expect(data.d).to.be.eql({e:4, f: "5"})
+        expect(Utils.isFunction(data.g)).to.be(true)
+        expect(data.g(100)).to.be(300)
+        expect(data.i).to.be.eql([1,2,3])
+    it "Insert List", ->
+        bar.drop()
+        bar.insert [
+            {
+                a:1,
+                b:2,
+                c:3
             },
-            projection: {
-                a: 1,
-                b: 1,
-                c: 0
-            },
-            limit: 4
-        })
-        expect(data).to.be.a("array")
+            {
+                a:2,
+                b:3,
+                c:4
+            }
+        ]
+        data = bar.find()
+        expect(data.length).to.be(2)
+    it "Update", ->
+        bar.drop()
+        bar.insert {
+            a: 1
+            b: 2
+            c: {d: 3, e:4}
+            f: (x) -> x * x
+            g: [1,2,3,4]
+            h: "abc"
+            price: 10.99
+            max1: 100
+            max2: 200
+            min1: 50
+            min2: 30
+        }
+        bar.update {
+            $set: {
+                a:4
+                "c.d": 5
+            }
+            $inc: {
+                b: 2
+            }
+            $rename: {f:"function"}
+            $unset: {h:""}
+            $mul: {price: 1.25}
+            $max: {max1:120, max2:150}
+            $min: {min1:80, min2: 10}
+        }
+        data = bar.find()[0]
+        expect(data.a).to.be(4)
+        expect(data.c.d).to.be(5)
+        expect(data.b).to.be(4)
+        expect(data.f).not.to.be.ok()
+        expect(Utils.isFunction(data.function)).to.be(true)
+        expect(data.function(9)).to.be(81)
+        expect(data.h).not.to.be.ok()
+        expect(data.max1).to.be(120)
+        expect(data.max2).to.be(200)
+        expect(data.min1).to.be(50)
+        expect(data.min2).to.be(10)
 
-    it 'Collection findOne', ->
-        data = collection.findOne {
-            where: {
-                a:{$lt:3}
-            }
-        }
-        expect(data.length).to.be(1 or 0)
-    
-    it 'Collection remove', ->
-        console.log collection.find()
-        collection.remove({
-            where:{
-                a:99
-            }
-        })
-        collection.remove({
-            where: {
-                a: {$gt:3 , $lt: 10}
-            }
-        })
-        console.log collection.find()
-        collection.remove(null)
-        expect(collection.find().length).to.be(0)
-    it 'Collection drop', ->
-        collection = db.collection("collection_bar")
-        collection.drop()
-        expect(collection.find().length).to.be(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

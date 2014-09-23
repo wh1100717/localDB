@@ -153,20 +153,38 @@ Utils.createObjectId = function() {
   return BSON.ObjectID().inspect();
 };
 
-Utils.parse = function(str) {
-  if ((str != null) && Utils.isString(str)) {
-    return JSON.parse(str);
-  } else {
-    return [];
-  }
-};
-
-Utils.stringify = function(obj) {
-  if ((obj != null) && (Utils.isArray(obj) || Utils.isObject(obj))) {
-    return JSON.stringify(obj);
-  } else {
+Utils.stringify = function(arr) {
+  if ((arr == null) || !Utils.isArray(arr)) {
     return "[]";
   }
+  return JSON.stringify(arr, function(key, value) {
+    if (Utils.isRegex(value) || Utils.isFunction(value)) {
+      return value.toString();
+    }
+    return value;
+  });
+};
+
+Utils.parse = function(str) {
+  if ((str == null) || !Utils.isString(str)) {
+    return [];
+  }
+  return JSON.parse(str, function(key, value) {
+    var v;
+    try {
+      v = eval(value);
+    } catch (_error) {}
+    if ((v != null) && Utils.isRegex(v)) {
+      return v;
+    }
+    try {
+      v = eval("(" + value + ")");
+    } catch (_error) {}
+    if ((v != null) && Utils.isFunction(v)) {
+      return v;
+    }
+    return value;
+  });
 };
 
 module.exports = Utils;

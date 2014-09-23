@@ -38,7 +38,7 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
       _results = [];
       for (i = _i = 0, _ref = this.ls.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
         if (this.ls.key(i).indexOf("" + this.name + "_") === 0) {
-          _results.push(this.ls.key(i));
+          _results.push(this.ls.key(i).substr(("" + this.name + "_").length));
         }
       }
       return _results;
@@ -83,7 +83,7 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
     return {
       localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
       sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
-      indexOf: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
+      indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
     };
   };
   module.exports = LocalDB;
@@ -224,19 +224,37 @@ define("localdb/0.0.1/src/lib/utils-debug", [], function(require, exports, modul
   Utils.createObjectId = function() {
     return BSON.ObjectID().inspect();
   };
-  Utils.parse = function(str) {
-    if ((str != null) && Utils.isString(str)) {
-      return JSON.parse(str);
-    } else {
-      return [];
-    }
-  };
-  Utils.stringify = function(obj) {
-    if ((obj != null) && (Utils.isArray(obj) || Utils.isObject(obj))) {
-      return JSON.stringify(obj);
-    } else {
+  Utils.stringify = function(arr) {
+    if ((arr == null) || !Utils.isArray(arr)) {
       return "[]";
     }
+    return JSON.stringify(arr, function(key, value) {
+      if (Utils.isRegex(value) || Utils.isFunction(value)) {
+        return value.toString();
+      }
+      return value;
+    });
+  };
+  Utils.parse = function(str) {
+    if ((str == null) || !Utils.isString(str)) {
+      return [];
+    }
+    return JSON.parse(str, function(key, value) {
+      var v;
+      try {
+        v = eval(value);
+      } catch (_error) {}
+      if ((v != null) && Utils.isRegex(v)) {
+        return v;
+      }
+      try {
+        v = eval("(" + value + ")");
+      } catch (_error) {}
+      if ((v != null) && Utils.isFunction(v)) {
+        return v;
+      }
+      return value;
+    });
   };
   module.exports = Utils;
 });
@@ -4725,7 +4743,7 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
   };
   Update = {
     isKeyReserved: function(key) {
-      return key === '$inc' || key === '$set' || key === '$mul' || key === '$rename' || key === '$unset' || key === '$min';
+      return key === '$inc' || key === '$set' || key === '$mul' || key === '$rename' || key === '$unset' || key === '$max' || key === '$min';
     },
     generate: function(data, action, value, where, multi, upsert) {
       var d, firstKey, flag, k, v, _i, _len;

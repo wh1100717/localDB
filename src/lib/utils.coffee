@@ -83,8 +83,25 @@ Utils.isEqual = (a, b) -> eq(a, b, [], [])
 
 Utils.createObjectId = -> BSON.ObjectID().inspect()
 
-Utils.parse = (str) -> if str? and Utils.isString(str) then JSON.parse(str) else []
+Utils.stringify = (arr) ->
+    return "[]" if not arr? or not Utils.isArray(arr)
+    JSON.stringify arr, (key, value) ->
+        return value.toString() if Utils.isRegex(value) or Utils.isFunction(value)
+        return value
 
-Utils.stringify = (obj) -> if obj? and (Utils.isArray(obj) or Utils.isObject(obj))then JSON.stringify(obj) else "[]"
+Utils.parse = (str) ->
+    return [] if not str? or not Utils.isString(str)
+    JSON.parse str, (key, value) ->
+        try v = eval(value)
+        return v if v? and Utils.isRegex(v)
+        try v = eval("(" + value  + ")")
+        return v if v? and Utils.isFunction(v)
+        return value
 
 module.exports = Utils
+
+
+
+
+
+

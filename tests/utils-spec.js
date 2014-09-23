@@ -76,7 +76,7 @@ describe('Utils', function() {
     expect(Utils.isFunction(new RegExp("abc"))).not.to.be.ok();
     return expect(Utils.isFunction(/abc/)).not.to.be.ok();
   });
-  it('isRegex', function() {
+  return it('isRegex', function() {
     expect(Utils.isRegex(new Object())).not.to.be.ok();
     expect(Utils.isRegex({})).not.to.be.ok();
     expect(Utils.isRegex(new String("abc"))).not.to.be.ok();
@@ -88,19 +88,5 @@ describe('Utils', function() {
     expect(Utils.isRegex(function() {})).not.to.be.ok();
     expect(Utils.isRegex(new RegExp("abc"))).to.be.ok();
     return expect(Utils.isRegex(/abc/)).to.be.ok();
-  });
-  it('parse', function() {
-    expect(Utils.parse()).to.be.eql([]);
-    expect(Utils.parse('{"a":1}')).to.be.eql({
-      a: 1
-    });
-    return expect(Utils.parse('[1,2,3]')).to.be.eql([1, 2, 3]);
-  });
-  return it('stringify', function() {
-    expect(Utils.stringify()).to.be('[]');
-    expect(Utils.stringify({
-      a: 1
-    })).to.be('{"a":1}');
-    return expect(Utils.stringify([1, 2, 3])).to.be('[1,2,3]');
   });
 });
