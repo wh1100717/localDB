@@ -31,6 +31,25 @@ describe('Where', function() {
     };
     expect(Where(obj, where)).not.to.be.ok();
     obj = {
+      "a": 1,
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": [
+        {
+          "$gt": 1
+        }, {
+          "$lt": 3
+        }
+      ]
+    };
+    expect(Where(obj, where)).not.to.be.ok();
+    obj = {
       "a": 2,
       "b": 4,
       "c": 5,
@@ -919,6 +938,21 @@ describe('Where', function() {
         "$all": [3, 2]
       }
     };
+    expect(Where(obj, where)).not.to.be.ok();
+    obj = {
+      "a": 1,
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": {
+        "$all": [3, 2]
+      }
+    };
     return expect(Where(obj, where)).not.to.be.ok();
   });
   it('Where Array eleMatch', function() {
@@ -965,6 +999,26 @@ describe('Where', function() {
           "price": 7
         }
       ],
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": {
+        "$elemMatch": {
+          "book": "xyz",
+          "price": {
+            "$gte": 8
+          }
+        }
+      }
+    };
+    expect(Where(obj, where)).not.to.be.ok();
+    obj = {
+      "a": 1,
       "b": 4,
       "c": 5,
       "d": {
@@ -1050,6 +1104,21 @@ describe('Where', function() {
     expect(Where(obj, where)).to.be.ok();
     obj = {
       "a": [1, 2, 3, 4],
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": {
+        "$size": 3
+      }
+    };
+    expect(Where(obj, where)).not.to.be.ok();
+    obj = {
+      "a": 1,
       "b": 4,
       "c": 5,
       "d": {
