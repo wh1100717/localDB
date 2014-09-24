@@ -191,13 +191,13 @@ describe 'Where', ->
         where = {"a":/\b/}
         expect(Where(obj,where)).to.be.ok()
     it 'Where Array all', ->
-        obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
-        where = {"a":{"$all": [1,2]}}
-        expect(Where(obj,where)).to.be.ok()
+        # obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
+        # where = {"a":{"$all": [1,2]}}
+        # expect(Where(obj,where)).to.be.ok()
         obj = {"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$all": [1,2]}}
-        expect(Where(obj,where)).not.to.be.ok()
-        obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
+        expect(Where(obj,where)).to.be.ok()
+        obj = {"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$all": [3,2]}}
         expect(Where(obj,where)).not.to.be.ok()
     it 'Where Array eleMatch', ->
