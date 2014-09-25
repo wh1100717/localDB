@@ -6,6 +6,13 @@ Where = require('../src/lib/where.js')
 
 db = new LocalDB("foo")
 
+### Where 测试用例原则:
+ *  1. 不需要测试迭代过程的中间环节，因此定义的obj应该都为对象，不应该出现数字、字符串、数组等
+ *  2. 测试用例要完全覆盖所有代码分支
+ *  3. 尽量少用`to.be.ok()`，如果返回值为`true`/`false`，也需要使用`to.be(true/false)`这种格式。
+ *  4. 如果有测试用例报错的话，注释加备注再提交请求，或者发个issue。
+###
+
 describe 'Where', ->
     it 'Where Comparison gt', ->
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
@@ -62,10 +69,9 @@ describe 'Where', ->
         obj = {"a":9,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$in":[10,9,8]}}
         expect(Where(obj,where)).to.be.ok()
-        #有问题，应该能通过
-        # obj = {"a":[9,8],"b":4,"c":5,"d":{"e":"4","f":5}}
-        # where = {"a":{"$in":[[9,8],10,9,8]}}
-        # expect(Where(obj,where)).to.be.ok()
+        obj = {"a":[9,8],"b":4,"c":5,"d":{"e":"4","f":5}}
+        where = {"a":{"$in":[[9,8],10,9,8]}}
+        expect(Where(obj,where)).to.be.ok()
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$in":[10,11,12]}}
         expect(Where(obj,where)).not.to.be.ok()
@@ -136,12 +142,6 @@ describe 'Where', ->
         obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$type":"number"}}
         expect(Where(obj,where)).to.be.ok()
-        # obj = [{"a":[5,6,7],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":5}]
-        # where = {"a":{"$type":"number"}}
-        # expect(Where(obj,where)).not.to.be.ok()
-        # obj = [{"a":5,"b":4,"c":5,"d":{"e":"4","f":5}},{"a":5}]
-        # where = {"a":{"$type":"number"}}
-        # expect(Where(obj,where)).to.be.ok()
         obj = {"a":5,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$type":"string"}}
         expect(Where(obj,where)).not.to.be.ok()
@@ -168,16 +168,12 @@ describe 'Where', ->
         where = {"a":{"$mod":[2,0]}}
         expect(Where(obj,where)).not.to.be.ok()
     it 'Where Evaluation regex', ->
-        #应该是匹配不上
-        # obj = {"a":[1,2,3,4],"b":4,"c":5,"d":{"e":"4","f":5}}
-        # where = {"a":/\d/}
-        # expect(Where(obj,where)).to.be.ok()
+        obj = {"a":[1,2,3,4],"b":4,"c":5,"d":{"e":"4","f":5}}
+        where = {"a":/\d/}
+        expect(Where(obj,where)).to.be.ok()
         obj = {"a":['1','2','3','4'],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":/\d/}
         expect(Where(obj,where)).to.be.ok()
-        obj = [{"a":'1'},{"a":'1'}]
-        where = {"a":/\d/}
-        expect(Where(obj,where)).not.to.be.ok()
         obj = {"a":'1',"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":/\d/}
         expect(Where(obj,where)).to.be.ok()
@@ -194,9 +190,6 @@ describe 'Where', ->
         where = {"a":/\b/}
         expect(Where(obj,where)).to.be.ok()
     it 'Where Array all', ->
-        # obj = [{"a":[1,2],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":[1,2,3]}]
-        # where = {"a":{"$all": [1,2]}}
-        # expect(Where(obj,where)).to.be.ok()
         obj = {"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$all": [1,2]}}
         expect(Where(obj,where)).to.be.ok()
@@ -207,9 +200,6 @@ describe 'Where', ->
         where = {"a":{"$all": [3,2]}}
         expect(Where(obj,where)).not.to.be.ok()
     it 'Where Array eleMatch', ->
-        obj = [{"a":[ { "book": "abc", "price": 8 }, { "book": "xyz", "price": 7 } ],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":1}]
-        where = {"a": { "$elemMatch": { "book": "xyz", "price": { "$gte": 8 } } }}
-        expect(Where(obj,where)).not.to.be.ok()
         obj = {"a":[ { "book": "abc", "price": 8 }, { "book": "xyz", "price": 7 } ],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a": { "$elemMatch": { "book": "xyz", "price": { "$gte": 8 } } }}
         expect(Where(obj,where)).not.to.be.ok()
@@ -220,9 +210,6 @@ describe 'Where', ->
         where = {"a": { "$elemMatch": { "book": "xyz", "price": { "$gte": 8 } } }}
         expect(Where(obj,where)).to.be.ok()
     it 'Where Array size', ->
-        obj = [{"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}},{"a":1}]
-        where = {"a":{"$size": 3}}
-        expect(Where(obj,where)).not.to.be.ok()
         obj = {"a":[1,2,3],"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$size": 3}}
         expect(Where(obj,where)).to.be.ok()
@@ -230,11 +217,8 @@ describe 'Where', ->
         where = {"a":{"$size": 3}}
         expect(Where(obj,where)).not.to.be.ok()
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
-        where = {"a":{"$size": 3}}
+        where = {"a":{"$size": 1}}
         expect(Where(obj,where)).not.to.be.ok()
-        # obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
-        # where = {"a":{"$size": 1}}
-        # expect(Where(obj,where)).to.be.ok()
 
 
 

@@ -12,6 +12,14 @@ Where = require('../src/lib/where.js');
 
 db = new LocalDB("foo");
 
+
+/* Where 测试用例原则:
+ *  1. 不需要测试迭代过程的中间环节，因此定义的obj应该都为对象，不应该出现数字、字符串、数组等
+ *  2. 测试用例要完全覆盖所有代码分支
+ *  3. 尽量少用`to.be.ok()`，如果返回值为`true`/`false`，也需要使用`to.be(true/false)`这种格式。
+ *  4. 如果有测试用例报错的话，注释加备注再提交请求，或者发个issue。
+ */
+
 describe('Where', function() {
   it('Where Comparison gt', function() {
     var obj, result, where;
@@ -272,6 +280,21 @@ describe('Where', function() {
     where = {
       "a": {
         "$in": [10, 9, 8]
+      }
+    };
+    expect(Where(obj, where)).to.be.ok();
+    obj = {
+      "a": [9, 8],
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": {
+        "$in": [[9, 8], 10, 9, 8]
       }
     };
     expect(Where(obj, where)).to.be.ok();
@@ -814,6 +837,19 @@ describe('Where', function() {
   it('Where Evaluation regex', function() {
     var obj, where;
     obj = {
+      "a": [1, 2, 3, 4],
+      "b": 4,
+      "c": 5,
+      "d": {
+        "e": "4",
+        "f": 5
+      }
+    };
+    where = {
+      "a": /\d/
+    };
+    expect(Where(obj, where)).to.be.ok();
+    obj = {
       "a": ['1', '2', '3', '4'],
       "b": 4,
       "c": 5,
@@ -826,17 +862,6 @@ describe('Where', function() {
       "a": /\d/
     };
     expect(Where(obj, where)).to.be.ok();
-    obj = [
-      {
-        "a": '1'
-      }, {
-        "a": '1'
-      }
-    ];
-    where = {
-      "a": /\d/
-    };
-    expect(Where(obj, where)).not.to.be.ok();
     obj = {
       "a": '1',
       "b": 4,
@@ -957,38 +982,6 @@ describe('Where', function() {
   });
   it('Where Array eleMatch', function() {
     var obj, where;
-    obj = [
-      {
-        "a": [
-          {
-            "book": "abc",
-            "price": 8
-          }, {
-            "book": "xyz",
-            "price": 7
-          }
-        ],
-        "b": 4,
-        "c": 5,
-        "d": {
-          "e": "4",
-          "f": 5
-        }
-      }, {
-        "a": 1
-      }
-    ];
-    where = {
-      "a": {
-        "$elemMatch": {
-          "book": "xyz",
-          "price": {
-            "$gte": 8
-          }
-        }
-      }
-    };
-    expect(Where(obj, where)).not.to.be.ok();
     obj = {
       "a": [
         {
@@ -1068,25 +1061,6 @@ describe('Where', function() {
   });
   return it('Where Array size', function() {
     var obj, where;
-    obj = [
-      {
-        "a": [1, 2, 3],
-        "b": 4,
-        "c": 5,
-        "d": {
-          "e": "4",
-          "f": 5
-        }
-      }, {
-        "a": 1
-      }
-    ];
-    where = {
-      "a": {
-        "$size": 3
-      }
-    };
-    expect(Where(obj, where)).not.to.be.ok();
     obj = {
       "a": [1, 2, 3],
       "b": 4,
@@ -1128,7 +1102,7 @@ describe('Where', function() {
     };
     where = {
       "a": {
-        "$size": 3
+        "$size": 1
       }
     };
     return expect(Where(obj, where)).not.to.be.ok();

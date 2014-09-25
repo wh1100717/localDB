@@ -59,7 +59,14 @@ keywordCheck = (data, key, condition) ->
         when "$lt" then return false if data >= condition
         when "$lte" then return false if data > condition
         when "$ne" then return false if data is condition
-        when "$in" then return false if not (-> return true for c in condition when (Utils.isRegex(c) and c.test(data)) or (data is c);false)()
+        when "$in"
+            if Utils.isArray(data)
+                flag = true
+                for d in data when flag
+                    flag = false if (-> return true for c in condition when (Utils.isRegex(c) and c.test(d) or (Utils.isEqual(c, d)));false)()
+                return false if flag
+            else
+                return false if not (-> return true for c in condition when (Utils.isRegex(c) and c.test(data) or (Utils.isEqual(c, data)));false)()
         when "$nin" then return false if data in condition
         when "$exists" then return false if condition isnt data?
         when "$type" then return false if not Utils.isType(data, condition)

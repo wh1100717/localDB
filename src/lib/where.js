@@ -86,7 +86,7 @@ valueCheck = function(data, key, condition) {
 };
 
 keywordCheck = function(data, key, condition) {
-  var c, _i, _j, _k, _len, _len1, _len2;
+  var c, d, flag, _i, _j, _k, _l, _len, _len1, _len2, _len3;
   switch (key) {
     case "$gt":
       if (data <= condition) {
@@ -114,17 +114,41 @@ keywordCheck = function(data, key, condition) {
       }
       break;
     case "$in":
-      if (!(function() {
-        var c, _i, _len;
-        for (_i = 0, _len = condition.length; _i < _len; _i++) {
-          c = condition[_i];
-          if ((Utils.isRegex(c) && c.test(data)) || (data === c)) {
-            return true;
+      if (Utils.isArray(data)) {
+        flag = true;
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          d = data[_i];
+          if (flag) {
+            if ((function() {
+              var c, _j, _len1;
+              for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
+                c = condition[_j];
+                if (Utils.isRegex(c) && c.test(d) || (Utils.isEqual(c, d))) {
+                  return true;
+                }
+              }
+              return false;
+            })()) {
+              flag = false;
+            }
           }
         }
-        return false;
-      })()) {
-        return false;
+        if (flag) {
+          return false;
+        }
+      } else {
+        if (!(function() {
+          var c, _j, _len1;
+          for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
+            c = condition[_j];
+            if (Utils.isRegex(c) && c.test(data) || (Utils.isEqual(c, data))) {
+              return true;
+            }
+          }
+          return false;
+        })()) {
+          return false;
+        }
       }
       break;
     case "$nin":
@@ -153,16 +177,16 @@ keywordCheck = function(data, key, condition) {
       }
       break;
     case "$and":
-      for (_i = 0, _len = condition.length; _i < _len; _i++) {
-        c = condition[_i];
+      for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
+        c = condition[_j];
         if (!Where(data, c)) {
           return false;
         }
       }
       break;
     case "$nor":
-      for (_j = 0, _len1 = condition.length; _j < _len1; _j++) {
-        c = condition[_j];
+      for (_k = 0, _len2 = condition.length; _k < _len2; _k++) {
+        c = condition[_k];
         if (Where(data, c)) {
           return false;
         }
@@ -170,9 +194,9 @@ keywordCheck = function(data, key, condition) {
       break;
     case "$or":
       if (!(function() {
-        var _k, _len2;
-        for (_k = 0, _len2 = condition.length; _k < _len2; _k++) {
-          c = condition[_k];
+        var _l, _len3;
+        for (_l = 0, _len3 = condition.length; _l < _len3; _l++) {
+          c = condition[_l];
           if (Where(data, c)) {
             return true;
           }
@@ -191,12 +215,12 @@ keywordCheck = function(data, key, condition) {
       if (!Utils.isArray(data)) {
         return false;
       }
-      for (_k = 0, _len2 = condition.length; _k < _len2; _k++) {
-        c = condition[_k];
+      for (_l = 0, _len3 = condition.length; _l < _len3; _l++) {
+        c = condition[_l];
         if (!(function() {
-          var d, _l, _len3;
-          for (_l = 0, _len3 = data.length; _l < _len3; _l++) {
-            d = data[_l];
+          var _len4, _m;
+          for (_m = 0, _len4 = data.length; _m < _len4; _m++) {
+            d = data[_m];
             if (Utils.isArray(c) ? keywordCheck(d, key, c) : d === c) {
               return true;
             }
@@ -211,9 +235,9 @@ keywordCheck = function(data, key, condition) {
         return false;
       }
       if (!(function() {
-        var d, _l, _len3;
-        for (_l = 0, _len3 = data.length; _l < _len3; _l++) {
-          d = data[_l];
+        var _len4, _m;
+        for (_m = 0, _len4 = data.length; _m < _len4; _m++) {
+          d = data[_m];
           if (Where(d, condition)) {
             return true;
           }
