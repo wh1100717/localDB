@@ -14,6 +14,17 @@ db = new LocalDB("foo")
 ###
 
 describe 'Where', ->
+    it 'Where Comparison equal', ->
+        obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
+        where = {"a":1}
+        expect(Where(obj, where)).to.be(true)
+        where = {"d.e":"4"}
+        expect(Where(obj, where)).to.be(true)
+        where = {"d": {"e":"4","f":5}}
+        expect(Where(obj, where)).to.be(true)
+        obj = {"a":[1,2,3,4],b:["a","b","c"]}
+        where = {"a":1, "b":"c"}
+        expect(Where(obj, where)).to.be(true)
     it 'Where Comparison gt', ->
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$gt":1}}
@@ -74,6 +85,9 @@ describe 'Where', ->
         expect(Where(obj,where)).to.be(true)
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$in":[10,11,12]}}
+        expect(Where(obj,where)).to.be(false)
+        obj = {"a":[1,2],"b":4,"c":5}
+        where = {"a":{"$in": [5,6,7]}}        
         expect(Where(obj,where)).to.be(false)
     it 'Where Comparison nin', ->
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}

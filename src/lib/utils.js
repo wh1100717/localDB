@@ -130,7 +130,7 @@ eq = function(a, b, aStack, bStack) {
   } else {
     keys = Utils.keys(a);
     size = keys.length;
-    result = Utils.keys(b) === size;
+    result = Utils.keys(b).length === size;
     if (result) {
       while (size--) {
         key = keys[size];

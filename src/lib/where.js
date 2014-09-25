@@ -328,7 +328,7 @@ objectCheck = function(data, conditions) {
     }
   }
   if (flag) {
-    return Utils.isEqual(data, c);
+    return Utils.isEqual(data, conditions);
   } else {
     return true;
   }

@@ -70,7 +70,7 @@ eq = (a, b, aStack, bStack) ->
     else
         keys = Utils.keys(a)
         size = keys.length
-        result = Utils.keys(b) is size
+        result = Utils.keys(b).length is size
         if result
             while size--
                 key = keys[size]

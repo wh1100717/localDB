@@ -122,7 +122,7 @@ objectCheck = (data, conditions) ->
     for key, c of conditions when isKeyReserved(key)
         flag = false
         return false if not Where(data, (new -> @[key] = c;return))
-    return if flag then Utils.isEqual(data, c) else true
+    return if flag then Utils.isEqual(data, conditions) else true
 
 module.exports = Where
 
