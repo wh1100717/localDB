@@ -37,7 +37,7 @@ describe('Where', function() {
         "$gt": 1
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -56,7 +56,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 2,
       "b": 4,
@@ -72,7 +72,7 @@ describe('Where', function() {
       }
     };
     result = Where(obj, where);
-    expect(result).to.be.ok();
+    expect(result).to.be(true);
     obj = {
       "a": 0,
       "b": 4,
@@ -87,7 +87,7 @@ describe('Where', function() {
         "$gt": 1
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Comparison gte', function() {
     var obj, where;
@@ -105,7 +105,7 @@ describe('Where', function() {
         "$gte": 1
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 2,
       "b": 4,
@@ -120,7 +120,7 @@ describe('Where', function() {
         "$gte": 1
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 0,
       "b": 4,
@@ -135,7 +135,7 @@ describe('Where', function() {
         "$gte": 1
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Comparisongte lt', function() {
     var obj, where;
@@ -153,7 +153,7 @@ describe('Where', function() {
         "$lt": 10
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 11,
       "b": 4,
@@ -168,7 +168,7 @@ describe('Where', function() {
         "$lt": 10
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 9,
       "b": 4,
@@ -183,7 +183,7 @@ describe('Where', function() {
         "$lt": 10
       }
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   it('Where Comparisonlte lte', function() {
     var obj, where;
@@ -201,7 +201,7 @@ describe('Where', function() {
         "$lte": 10
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 11,
       "b": 4,
@@ -216,7 +216,7 @@ describe('Where', function() {
         "$lte": 10
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 9,
       "b": 4,
@@ -231,7 +231,7 @@ describe('Where', function() {
         "$lte": 10
       }
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   it('Where Comparison ne', function() {
     var obj, where;
@@ -249,7 +249,7 @@ describe('Where', function() {
         "$ne": 10
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 11,
       "b": 4,
@@ -264,7 +264,7 @@ describe('Where', function() {
         "$ne": 10
       }
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   it('Where Comparison in', function() {
     var obj, where;
@@ -282,7 +282,7 @@ describe('Where', function() {
         "$in": [10, 9, 8]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": [9, 8],
       "b": 4,
@@ -297,7 +297,7 @@ describe('Where', function() {
         "$in": [[9, 8], 10, 9, 8]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 1,
       "b": 4,
@@ -312,7 +312,7 @@ describe('Where', function() {
         "$in": [10, 11, 12]
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Comparison nin', function() {
     var obj, where;
@@ -330,7 +330,7 @@ describe('Where', function() {
         "$nin": [1, 2, 3]
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -345,7 +345,7 @@ describe('Where', function() {
         "$nin": [4, 2, 3]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": "1",
       "b": 4,
@@ -360,7 +360,7 @@ describe('Where', function() {
         "$nin": ["1", "2", "3"]
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Logical or', function() {
     var obj, where;
@@ -386,7 +386,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 1,
       "b": 4,
@@ -409,7 +409,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 1,
       "b": 4,
@@ -432,7 +432,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 1,
       "b": 4,
@@ -455,7 +455,7 @@ describe('Where', function() {
         }
       ]
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Logical and', function() {
     var obj, where;
@@ -481,7 +481,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 1,
       "b": 4,
@@ -504,7 +504,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -527,7 +527,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -550,7 +550,7 @@ describe('Where', function() {
         }
       ]
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Logical not', function() {
     var obj, where;
@@ -570,7 +570,7 @@ describe('Where', function() {
         }
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 4,
@@ -587,7 +587,7 @@ describe('Where', function() {
         }
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Logical nor', function() {
     var obj, where;
@@ -609,7 +609,7 @@ describe('Where', function() {
         }
       ]
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 5,
       "b": 4,
@@ -628,7 +628,7 @@ describe('Where', function() {
         }
       ]
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   it('Where Element exists', function() {
     var obj, where;
@@ -646,7 +646,7 @@ describe('Where', function() {
         "$exists": true
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 4,
@@ -661,7 +661,7 @@ describe('Where', function() {
         "$exists": true
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 5,
       "b": 4,
@@ -676,7 +676,7 @@ describe('Where', function() {
         "$exists": false
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 4,
@@ -691,7 +691,7 @@ describe('Where', function() {
         "$exists": false
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Element type', function() {
     var obj, where;
@@ -709,7 +709,7 @@ describe('Where', function() {
         "$type": "number"
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 4,
@@ -724,7 +724,7 @@ describe('Where', function() {
         "$type": "string"
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": "5",
       "b": 4,
@@ -739,7 +739,7 @@ describe('Where', function() {
         "$type": "string"
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 4,
@@ -754,7 +754,7 @@ describe('Where', function() {
         "$type": "eric"
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 5,
       "b": 4,
@@ -769,7 +769,7 @@ describe('Where', function() {
         "$type": -1
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Evaluation mod', function() {
     var obj, where;
@@ -787,7 +787,7 @@ describe('Where', function() {
         "$mod": [2, 0]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 4,
       "b": 4,
@@ -802,7 +802,7 @@ describe('Where', function() {
         "$mod": [2, 0]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 5,
@@ -817,7 +817,7 @@ describe('Where', function() {
         "$mod": [3, 2]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": 5,
       "b": 5,
@@ -832,7 +832,7 @@ describe('Where', function() {
         "$mod": [2, 0]
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Evaluation regex', function() {
     var obj, where;
@@ -848,7 +848,7 @@ describe('Where', function() {
     where = {
       "a": /\d/
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": ['1', '2', '3', '4'],
       "b": 4,
@@ -861,7 +861,7 @@ describe('Where', function() {
     where = {
       "a": /\d/
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": '1',
       "b": 4,
@@ -874,7 +874,7 @@ describe('Where', function() {
     where = {
       "a": /\d/
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": "hello",
       "b": 4,
@@ -889,7 +889,7 @@ describe('Where', function() {
         "$regex": 'ello'
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": "hello",
       "b": 4,
@@ -904,7 +904,7 @@ describe('Where', function() {
         "$regex": 'what'
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -917,7 +917,7 @@ describe('Where', function() {
     where = {
       "a": /\d/
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": '1',
       "b": 4,
@@ -930,7 +930,7 @@ describe('Where', function() {
     where = {
       "a": /\b/
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   it('Where Array all', function() {
     var obj, where;
@@ -948,7 +948,7 @@ describe('Where', function() {
         "$all": [1, 2]
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": [1, 2],
       "b": 4,
@@ -963,7 +963,7 @@ describe('Where', function() {
         "$all": [3, 2]
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -978,7 +978,7 @@ describe('Where', function() {
         "$all": [3, 2]
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
   it('Where Array eleMatch', function() {
     var obj, where;
@@ -1009,7 +1009,7 @@ describe('Where', function() {
         }
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -1029,7 +1029,7 @@ describe('Where', function() {
         }
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": [
         {
@@ -1057,7 +1057,7 @@ describe('Where', function() {
         }
       }
     };
-    return expect(Where(obj, where)).to.be.ok();
+    return expect(Where(obj, where)).to.be(true);
   });
   return it('Where Array size', function() {
     var obj, where;
@@ -1075,7 +1075,7 @@ describe('Where', function() {
         "$size": 3
       }
     };
-    expect(Where(obj, where)).to.be.ok();
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": [1, 2, 3, 4],
       "b": 4,
@@ -1090,7 +1090,7 @@ describe('Where', function() {
         "$size": 3
       }
     };
-    expect(Where(obj, where)).not.to.be.ok();
+    expect(Where(obj, where)).to.be(false);
     obj = {
       "a": 1,
       "b": 4,
@@ -1105,6 +1105,6 @@ describe('Where', function() {
         "$size": 1
       }
     };
-    return expect(Where(obj, where)).not.to.be.ok();
+    return expect(Where(obj, where)).to.be(false);
   });
 });
