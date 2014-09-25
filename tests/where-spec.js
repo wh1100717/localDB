@@ -22,40 +22,45 @@ db = new LocalDB("foo");
 
 describe('Where', function() {
   it('Where Comparison equal', function() {
-    var obj, where;
+    var obj;
     obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+      num_val: 1,
+      str_val: "hello",
+      func_val: function() {
+        return 100;
+      },
+      regex_val: /he.*ld/,
+      arr_val: [1, 2, 3, 4],
+      arr2_val: ["a", "b", "c", "d", "hello World"],
+      obj_val: {
+        e: "4",
+        f: 5
+      },
+      b: [1, 2, 3, 4],
+      c: ["a", "b", "c", "d", "hello World"],
+      d: {
+        e: "4",
+        f: 5
       }
     };
-    where = {
-      "a": 1
-    };
-    expect(Where(obj, where)).to.be(true);
-    where = {
-      "d.e": "4"
-    };
-    expect(Where(obj, where)).to.be(true);
-    where = {
-      "d": {
-        "e": "4",
-        "f": 5
+    expect(Where(obj, {
+      num_val: 1
+    })).to.be(true);
+    expect(Where(obj, {
+      str_val: "hello"
+    })).to.be(true);
+    expect(Where(obj, {
+      obj_val: {
+        e: "4",
+        f: 5
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": [1, 2, 3, 4],
-      b: ["a", "b", "c"]
-    };
-    where = {
-      "a": 1,
-      "b": "c"
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
+    expect(Where(obj, {
+      "obj_val.e": "4"
+    })).to.be(true);
+    return expect(Where(obj, {
+      "obj_val.f": 5
+    })).to.be(true);
   });
   it('Where Comparison gt', function() {
     var obj, result, where;
