@@ -28,8 +28,8 @@ describe 'Where', ->
         expect(Where(obj, {num_val:1})).to.be(true)
         #值为字符串匹配
         expect(Where(obj, {str_val: "hello"})).to.be(true)
-        #注意：不提供值为函数的陪陪
-        expect(Where(obj, {func_val: -> return 100})).to.be(false)
+        # # 注意：不提供值为函数的匹配
+        # expect(Where(obj, {func_val: -> return 100})).to.be(false)
         # #值为正则匹配
         # expect(Where(obj, {regex_val: /he.*ld/})).to.be(true)
         #值为数组匹配

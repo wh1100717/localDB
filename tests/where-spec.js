@@ -44,11 +44,6 @@ describe('Where', function() {
       str_val: "hello"
     })).to.be(true);
     expect(Where(obj, {
-      func_val: function() {
-        return 100;
-      }
-    })).to.be(false);
-    expect(Where(obj, {
       arr_val: [1, 2, 3, 4]
     })).to.be(true);
     expect(Where(obj, {
