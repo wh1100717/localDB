@@ -15,9 +15,9 @@ hexTable = (function() {
 
 MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10);
 
-ObjectID = function(id) {
+ObjectID = function(id, _hex) {
   if (!this instanceof ObjectID) {
-    return new ObjectID(id);
+    return new ObjectID(id, _hex);
   }
   if ((id != null) && 'number' !== typeof id && id.length !== 12 && id.length !== 24) {
     throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
@@ -77,5 +77,20 @@ ObjectID.prototype.get_inc = function() {
 };
 
 ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
+
+ObjectID.createFromHexString = function(hexString) {
+  var len, result, _i;
+  if ((hexString == null) || hexString.length !== 24) {
+    throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
+  }
+  len = hexString.length;
+  result = '';
+  for (i = _i = 0; _i < 24; i = ++_i) {
+    if (i % 2 === 0) {
+      result += BinaryParser.fromByte(parseInt(hexString.substring(i, 2), 16));
+    }
+  }
+  return new ObjectID(result, hexString);
+};
 
 module.exports = ObjectID;

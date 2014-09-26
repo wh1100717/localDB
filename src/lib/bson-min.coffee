@@ -5,8 +5,8 @@ BinaryParser = require('./binary-parser')
 hexTable = ((if i <= 15 then '0' else '') + i.toString(16) for i in [0...256])
 
 MACHINE_ID = parseInt Math.random() * 0xFFFFFF, 10
-ObjectID = (id) ->
-    return new ObjectID(id) if not this instanceof ObjectID
+ObjectID = (id, _hex) ->
+    return new ObjectID(id, _hex) if not this instanceof ObjectID
     if id? and 'number' isnt typeof id and id.length isnt 12 and id.length isnt 24
         throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters")
     if not id? or typeof id is 'number'
@@ -51,6 +51,17 @@ ObjectID.prototype.get_inc = ->
     return ObjectID.index = (ObjectID.index + 1) % 0xFFFFFF
 
 ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10)
+
+ObjectID.createFromHexString = (hexString) ->
+    if not hexString? or hexString.length isnt 24
+        throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
+    len = hexString.length
+
+    result =''
+
+    for i in [0...24] when i % 2 is 0
+        result += BinaryParser.fromByte(parseInt(hexString.substring(i, 2), 16))
+    return new ObjectID(result, hexString)
 
 module.exports = ObjectID
 
