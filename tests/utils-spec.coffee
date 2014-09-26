@@ -87,6 +87,20 @@ describe 'Utils', ->
         expect(Utils.stringify()).to.be('[]')
         expect(Utils.stringify([{a:1}])).to.be('[{"a":1}]')
         expect(Utils.stringify([1,2,3])).to.be('[1,2,3]')
+    it 'isEqual', ->
+        expect(Utils.isEqual('aaa','bbb')).not.to.be.ok()
+        expect(Utils.isEqual('aaa','aaa')).to.be.ok()
+        expect(Utils.isEqual(1,2)).not.to.be.ok()
+        expect(Utils.isEqual(1,1)).to.be.ok()
+        expect(Utils.isEqual(0,1)).not.to.be.ok()
+        expect(Utils.isEqual(new Date(2014,9,26),new Date(2014,9,26))).to.be.ok()
+        expect(Utils.isEqual(new Date(2014,9,27),new Date(2014,9,26))).not.to.be.ok()
+        expect(Utils.isEqual(true,true)).to.be.ok()
+        expect(Utils.isEqual(true,false)).not.to.be.ok()
+        expect(Utils.isEqual(null,undefined)).not.to.be.ok()
+        expect(Utils.isEqual(undefined,null)).not.to.be.ok()
+        expect(Utils.isEqual(NaN,1)).not.to.be.ok()
+        # expect(Utils.isEqual({'a':1},{'a':2})).not.to.be.ok()
 
 
 

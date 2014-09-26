@@ -21,6 +21,7 @@ db = new LocalDB("foo");
  */
 
 describe('Where', function() {
+  var obj;
   it('Where Comparison equal', function() {
     var obj;
     obj = {
@@ -93,33 +94,36 @@ describe('Where', function() {
       "obj_val.f": 5
     })).to.be(true);
   });
-  it('Where Comparison gt', function() {
-    var obj, result, where;
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+  obj = {
+    "a": 1,
+    "b": 4,
+    "c": [[5], 10],
+    "d": {
+      "e": "4",
+      "f": 5
+    },
+    "e": "1",
+    "f": 5,
+    "g": 0,
+    "h": [1, 2, 3],
+    "i": 'hello',
+    "j": [
+      {
+        "book": "abc",
+        "price": 8
+      }, {
+        "book": "xyz",
+        "price": 7
       }
-    };
-    where = {
+    ]
+  };
+  it('Where Comparison gt', function() {
+    expect(Where(obj, {
       "a": {
         "$gt": 1
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "a": [
         {
           "$gt": 1
@@ -127,336 +131,127 @@ describe('Where', function() {
           "$lt": 3
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 2,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "a": {
-        "$gt": 1
+        "$gt": 0
       }
-    };
-    result = Where(obj, where);
-    expect(result).to.be(true);
-    obj = {
-      "a": 0,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    return expect(Where(obj, {
       "a": {
-        "$gt": 1
+        "$gt": 2
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Comparison gte', function() {
-    var obj, where;
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
         "$gte": 1
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 2,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "a": {
-        "$gte": 1
+        "$gte": 0
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 0,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    return expect(Where(obj, {
       "a": {
-        "$gte": 1
+        "$gte": 2
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Comparisongte lt', function() {
-    var obj, where;
-    obj = {
-      "a": 10,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    expect(Where(obj, {
+      "b": {
+        "$lt": 4
       }
-    };
-    where = {
-      "a": {
+    })).to.be(false);
+    expect(Where(obj, {
+      "b": {
+        "$lt": 3
+      }
+    })).to.be(false);
+    return expect(Where(obj, {
+      "b": {
         "$lt": 10
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 11,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
-        "$lt": 10
-      }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 9,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
-        "$lt": 10
-      }
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
   });
   it('Where Comparisonlte lte', function() {
-    var obj, where;
-    obj = {
-      "a": 10,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    expect(Where(obj, {
+      "b": {
+        "$lte": 4
       }
-    };
-    where = {
-      "a": {
-        "$lte": 10
+    })).to.be(true);
+    expect(Where(obj, {
+      "b": {
+        "$lte": 3
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 11,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    })).to.be(false);
+    return expect(Where(obj, {
+      "b": {
+        "$lte": 5
       }
-    };
-    where = {
-      "a": {
-        "$lte": 10
-      }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 9,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
-        "$lte": 10
-      }
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
   });
   it('Where Comparison ne', function() {
-    var obj, where;
-    obj = {
-      "a": 10,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
-        "$ne": 10
+        "$ne": 1
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 11,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "a": {
-        "$ne": 10
+        "$ne": 2
       }
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
   });
   it('Where Comparison in', function() {
-    var obj, where;
-    obj = {
-      "a": 9,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
-        "$in": [10, 9, 8]
+        "$in": [1, 9, 8]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": [9, 8],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    })).to.be(true);
+    expect(Where(obj, {
+      "c": {
+        "$in": [5, 9, 8]
       }
-    };
-    where = {
-      "a": {
-        "$in": [[9, 8], 10, 9, 8]
+    })).to.be(false);
+    expect(Where(obj, {
+      "c": {
+        "$in": [[5], 8, 9]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "a": {
         "$in": [10, 11, 12]
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": [1, 2],
-      "b": 4,
-      "c": 5
-    };
-    where = {
-      "a": {
+    })).to.be(false);
+    return expect(Where(obj, {
+      "c": {
         "$in": [5, 6, 7]
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Comparison nin', function() {
-    var obj, where;
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
         "$nin": [1, 2, 3]
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "a": {
         "$nin": [4, 2, 3]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": "1",
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    return expect(Where(obj, {
+      "e": {
         "$nin": ["1", "2", "3"]
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Logical or', function() {
-    var obj, where;
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "$or": [
         {
           "a": {
@@ -468,18 +263,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "$or": [
         {
           "a": {
@@ -491,18 +276,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "$or": [
         {
           "a": {
@@ -514,18 +289,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    return expect(Where(obj, {
       "$or": [
         {
           "a": {
@@ -537,21 +302,10 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Logical and', function() {
-    var obj, where;
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "$and": [
         {
           "a": {
@@ -563,18 +317,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "$and": [
         {
           "a": {
@@ -586,18 +330,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "$and": [
         {
           "a": {
@@ -609,18 +343,8 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "$and": [
         {
           "a": {
@@ -632,457 +356,171 @@ describe('Where', function() {
           }
         }
       ]
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Logical not', function() {
-    var obj, where;
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    expect(Where(obj, {
+      "f": {
         "$not": {
           "$lt": 0
         }
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    return expect(Where(obj, {
+      "f": {
         "$not": {
           "$gt": 0
         }
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Logical nor', function() {
-    var obj, where;
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "$nor": [
         {
-          "a": 5
+          "f": 5
         }, {
           "b": 4
         }
       ]
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "$nor": [
         {
-          "a": 1
+          "f": 1
         }, {
           "b": 5
         }
       ]
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
   });
   it('Where Element exists', function() {
-    var obj, where;
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
         "$exists": true
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "z": {
         "$exists": true
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "z": {
         "$exists": false
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    return expect(Where(obj, {
       "a": {
         "$exists": false
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Element type', function() {
-    var obj, where;
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    expect(Where(obj, {
       "a": {
         "$type": "number"
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "a": {
         "$type": "string"
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": "5",
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(false);
+    expect(Where(obj, {
+      "e": {
         "$type": "string"
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(true);
+    expect(Where(obj, {
       "a": {
         "$type": "eric"
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 5,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "d.e": {
         "$type": -1
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Evaluation mod', function() {
-    var obj, where;
-    obj = {
-      "a": 0,
-      "b": 5,
-      "c": 3,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    expect(Where(obj, {
+      "g": {
         "$mod": [2, 0]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 4,
-      "b": 4,
-      "c": 3,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    expect(Where(obj, {
+      "b": {
         "$mod": [2, 0]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 5,
-      "c": 0,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    expect(Where(obj, {
+      "f": {
         "$mod": [3, 2]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": 5,
-      "b": 5,
-      "c": 3,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    return expect(Where(obj, {
+      "f": {
         "$mod": [2, 0]
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Evaluation regex', function() {
-    var obj, where;
-    obj = {
-      "a": [1, 2, 3, 4],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": /\d/
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": ['1', '2', '3', '4'],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": /\d/
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": '1',
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": /\d/
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": "hello",
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    expect(Where(obj, {
+      "h": /\d/
+    })).to.be(true);
+    expect(Where(obj, {
+      "c": /\d/
+    })).to.be(true);
+    expect(Where(obj, {
+      "e": /\d/
+    })).to.be(true);
+    expect(Where(obj, {
+      "i": {
         "$regex": 'ello'
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": "hello",
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(true);
+    expect(Where(obj, {
+      "i": {
         "$regex": 'what'
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "a": /\d/
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": '1',
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": /\b/
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
+    return expect(Where(obj, {
+      "e": /\b/
+    })).to.be(true);
   });
   it('Where Array all', function() {
-    var obj, where;
-    obj = {
-      "a": [1, 2, 3],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    expect(Where(obj, {
+      "h": {
         "$all": [1, 2]
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": [1, 2],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    })).to.be(true);
+    expect(Where(obj, {
+      "h": {
+        "$all": [4, 2]
       }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "a": {
         "$all": [3, 2]
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
-        "$all": [3, 2]
-      }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
   it('Where Array eleMatch', function() {
-    var obj, where;
-    obj = {
-      "a": [
-        {
-          "book": "abc",
-          "price": 8
-        }, {
+    expect(Where(obj, {
+      "j": {
+        "$elemMatch": {
           "book": "xyz",
-          "price": 7
+          "price": {
+            "$gte": 8
+          }
         }
-      ],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
       }
-    };
-    where = {
+    })).to.be(false);
+    expect(Where(obj, {
       "a": {
         "$elemMatch": {
           "book": "xyz",
@@ -1091,103 +529,33 @@ describe('Where', function() {
           }
         }
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    })).to.be(false);
+    return expect(Where(obj, {
+      "j": {
         "$elemMatch": {
           "book": "xyz",
           "price": {
-            "$gte": 8
+            "$gte": 6
           }
         }
       }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": [
-        {
-          "book": "abc",
-          "price": 8
-        }, {
-          "book": "xyz",
-          "price": 9
-        }
-      ],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
-        "$elemMatch": {
-          "book": "xyz",
-          "price": {
-            "$gte": 8
-          }
-        }
-      }
-    };
-    return expect(Where(obj, where)).to.be(true);
+    })).to.be(true);
   });
   return it('Where Array size', function() {
-    var obj, where;
-    obj = {
-      "a": [1, 2, 3],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
-      "a": {
+    expect(Where(obj, {
+      "h": {
         "$size": 3
       }
-    };
-    expect(Where(obj, where)).to.be(true);
-    obj = {
-      "a": [1, 2, 3, 4],
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
+    })).to.be(true);
+    expect(Where(obj, {
+      "h": {
+        "$size": 6
       }
-    };
-    where = {
-      "a": {
-        "$size": 3
-      }
-    };
-    expect(Where(obj, where)).to.be(false);
-    obj = {
-      "a": 1,
-      "b": 4,
-      "c": 5,
-      "d": {
-        "e": "4",
-        "f": 5
-      }
-    };
-    where = {
+    })).to.be(false);
+    return expect(Where(obj, {
       "a": {
         "$size": 1
       }
-    };
-    return expect(Where(obj, where)).to.be(false);
+    })).to.be(false);
   });
 });

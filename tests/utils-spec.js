@@ -98,7 +98,7 @@ describe('Utils', function() {
     ]);
     return expect(Utils.parse('[1,2,3]')).to.be.eql([1, 2, 3]);
   });
-  return it('stringify', function() {
+  it('stringify', function() {
     expect(Utils.stringify()).to.be('[]');
     expect(Utils.stringify([
       {
@@ -106,5 +106,19 @@ describe('Utils', function() {
       }
     ])).to.be('[{"a":1}]');
     return expect(Utils.stringify([1, 2, 3])).to.be('[1,2,3]');
+  });
+  return it('isEqual', function() {
+    expect(Utils.isEqual('aaa', 'bbb')).not.to.be.ok();
+    expect(Utils.isEqual('aaa', 'aaa')).to.be.ok();
+    expect(Utils.isEqual(1, 2)).not.to.be.ok();
+    expect(Utils.isEqual(1, 1)).to.be.ok();
+    expect(Utils.isEqual(0, 1)).not.to.be.ok();
+    expect(Utils.isEqual(new Date(2014, 9, 26), new Date(2014, 9, 26))).to.be.ok();
+    expect(Utils.isEqual(new Date(2014, 9, 27), new Date(2014, 9, 26))).not.to.be.ok();
+    expect(Utils.isEqual(true, true)).to.be.ok();
+    expect(Utils.isEqual(true, false)).not.to.be.ok();
+    expect(Utils.isEqual(null, void 0)).not.to.be.ok();
+    expect(Utils.isEqual(void 0, null)).not.to.be.ok();
+    return expect(Utils.isEqual(NaN, 1)).not.to.be.ok();
   });
 });

@@ -109,9 +109,6 @@ define("localdb/0.0.1/src/lib/utils-debug", [], function(require, exports, modul
   Utils.isArray = _isType("array");
   Utils.isFunction = _isType("function");
   Utils.isRegex = _isType("regexp");
-  Utils.isSameType = function(a, b) {
-    return toString.call(a) === toString.call(b);
-  };
   Utils.keys = function(obj) {
     var key;
     if (!Utils.isObject(obj)) {
@@ -4633,7 +4630,6 @@ define("localdb/0.0.1/src/lib/collection-debug", [], function(require, exports, 
         options = {};
       }
       this.deserialize();
-      console.log("remove: ", options);
       this.data = Operation.remove(this.data, options);
       return this.serialize();
     };
@@ -4651,11 +4647,17 @@ define("localdb/0.0.1/src/lib/collection-debug", [], function(require, exports, 
      *  find data and only return one data from collection
      */
     Collection.prototype.findOne = function(options) {
+      var data;
       if (options == null) {
         options = {};
       }
       options.limit = 1;
-      return Operation.find(this.data, options);
+      data = Operation.find(this.data, options)[0];
+      if (data != null) {
+        return data;
+      } else {
+        return {};
+      }
     };
     return Collection;
   })();
@@ -4705,7 +4707,6 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
     var d, flag, multi, result, where, _i, _len;
     where = options.where || {};
     multi = options.multi != null ? options.multi : true;
-    console.log(options, options.where, JSON.stringify(where));
     result = [];
     flag = false;
     for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -4777,13 +4778,19 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
           }
           switch (action) {
             case "$inc":
-              d[k] += v;
+              if ((d[k] != null) || upsert) {
+                d[k] += v;
+              }
               break;
             case "$set":
-              d[k] = v;
+              if ((d[k] != null) || upsert) {
+                d[k] = v;
+              }
               break;
             case "$mul":
-              d[k] *= v;
+              if ((d[k] != null) || upsert) {
+                d[k] *= v;
+              }
               break;
             case "$rename":
               d[v] = d[k];
@@ -4793,10 +4800,14 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
               delete d[k];
               break;
             case "$min":
-              d[k] = Math.min(d[k], v);
+              if ((d[k] != null) || upsert) {
+                d[k] = Math.min(d[k], v);
+              }
               break;
             case "$max":
-              d[k] = Math.max(d[k], v);
+              if ((d[k] != null) || upsert) {
+                d[k] = Math.max(d[k], v);
+              }
           }
           if (!multi) {
             break;
