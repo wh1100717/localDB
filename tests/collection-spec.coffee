@@ -13,10 +13,10 @@ describe "Collection", ->
         expect(bar instanceof Collection).to.be(true)
     it "Insert", ->
         bar.insert {
-            a: 1,
-            b: "abc",
-            c: /hell.*ld/,
-            d: {e: 4, f: "5"},
+            a: 1
+            b: "abc"
+            c: /hell.*ld/
+            d: {e: 4, f: "5"}
             g: (h) -> return h * 3
             i: [1,2,3]
         }
@@ -32,18 +32,31 @@ describe "Collection", ->
         bar.drop()
         bar.insert [
             {
-                a:1,
-                b:2,
+                a:1
+                b:2
                 c:3
             },
             {
-                a:2,
-                b:3,
+                a:2
+                b:3
                 c:4
             }
         ]
-        data = bar.find()
-        expect(data.length).to.be(2)
+        expect(bar.find().length).to.be(2)
+        bar.insert [
+            {
+                a:1
+                b:2
+                c:3
+            }
+            4 #只能插入对象，该数据将被过滤掉，不会被插入
+            {
+                a:2
+                b:3
+                c:4
+            }
+        ]
+        expect(bar.find().length).to.be(4)
     it "Update", ->
         bar.drop()
         bar.insert {
@@ -85,6 +98,79 @@ describe "Collection", ->
         expect(data.max2).to.be(200)
         expect(data.min1).to.be(50)
         expect(data.min2).to.be(10)
+    it "Remove", ->
+        bar.drop()
+        bar.insert [
+            {a: 1,b: 2}
+            {a: 1,b: 3}
+            {a: 2,b: 4}
+        ]
+        bar.remove()
+        data = bar.find()
+        expect(bar.find()).to.be.eql([])
+        bar.drop()
+        bar.insert [
+            {a: 1,b: 2}
+            {a: 1,b: 3}
+            {a: 2,b: 4}
+        ]
+        bar.remove {
+            where: {a:1}
+            multi: false
+        }
+        expect(bar.find({where: {a: 1}}).length).to.be(1)
+        bar.drop()
+        bar.insert [
+            {a: 1,b: 2}
+            {a: 1,b: 3}
+            {a: 2,b: 4}
+            {a: 3,b: 4}
+        ]
+        bar.remove {
+            where: {a:1}
+        }
+        expect(bar.find({where: {a: 1}}).length).to.be(0)
+        expect(bar.find().length).to.be(2)
+    it "FindOne", ->
+        bar.drop()
+        bar.insert [{
+            a: 1
+            b: 2
+            c: {d: 3, e:4}
+            f: (x) -> x * x
+            g: [1,2,3,4]
+            h: "abc"
+            price: 10.99
+            max1: 100
+            max2: 200
+            min1: 50
+            min2: 30
+        },{
+            a: 1
+            b: 2
+            c: {d: 3, e:4}
+            f: (x) -> x * x
+            g: [1,2,3,4]
+            h: "abc"
+            price: 10.99
+            max1: 100
+            max2: 200
+            min1: 50
+            min2: 30
+        }]
+        expect(bar.findOne().length).to.be(1)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

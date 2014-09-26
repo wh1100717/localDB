@@ -18,15 +18,16 @@ Operation.insert = (data, rowData, options) ->
 
 Operation.update = (data, actions, options) ->
     where = options.where or {}
-    multi = options.multi or false
-    upsert = options.upsert or false
+    multi = if options.multi? then options.multi else true
+    upsert = if options.upsert? then options.upsert else false
     for action, value of actions
         data = Update.generate data, action, value, where, multi, upsert
     return data
 
 Operation.remove = (data, options) ->
     where = options.where or {}
-    multi = options.multi or false
+    multi = if options.multi? then options.multi else true
+    console.log options, options.where, JSON.stringify(where)
     result = []
     flag = false
     for d in data
@@ -34,7 +35,7 @@ Operation.remove = (data, options) ->
             result.push d
             continue
         if Where(d, where)
-            flag = true if multi
+            flag = true if not multi
             continue
         result.push d
     return result

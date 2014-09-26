@@ -32,6 +32,7 @@ describe('Where', function() {
       regex_val: /he.*ld/,
       arr_val: [1, 2, 3, 4],
       arr_val2: ["a", "b", "c", "d", "hello World"],
+      arr_val3: [/he.*ld/, /just.*do.*it/g],
       obj_val: {
         e: "4",
         f: 5
@@ -41,7 +42,19 @@ describe('Where', function() {
       num_val: 1
     })).to.be(true);
     expect(Where(obj, {
+      num_val: 2
+    })).to.be(false);
+    expect(Where(obj, {
+      arr_val: 3
+    })).to.be(true);
+    expect(Where(obj, {
       str_val: "hello"
+    })).to.be(true);
+    expect(Where(obj, {
+      str_val: ""
+    })).to.be(false);
+    expect(Where(obj, {
+      arr_val2: "d"
     })).to.be(true);
     expect(Where(obj, {
       regex_val: /he.*ld/
@@ -50,8 +63,23 @@ describe('Where', function() {
       regex_val: /he1.*ld/
     })).to.be(false);
     expect(Where(obj, {
+      arr_val3: /he1.*ld/
+    })).to.be(false);
+    expect(Where(obj, {
+      num_val: /\d/
+    })).to.be(true);
+    expect(Where(obj, {
+      arr_val: /\d/
+    })).to.be(true);
+    expect(Where(obj, {
+      arr_val3: /just.*do.*it/g
+    })).to.be(true);
+    expect(Where(obj, {
       arr_val: [1, 2, 3, 4]
     })).to.be(true);
+    expect(Where(obj, {
+      arr_val: ["1", "2", "3", "4"]
+    })).to.be(false);
     expect(Where(obj, {
       obj_val: {
         e: "4",
@@ -61,14 +89,8 @@ describe('Where', function() {
     expect(Where(obj, {
       "obj_val.e": "4"
     })).to.be(true);
-    expect(Where(obj, {
-      "obj_val.f": 5
-    })).to.be(true);
-    expect(Where(obj, {
-      arr_val: /\d/
-    })).to.be(true);
     return expect(Where(obj, {
-      arr_val2: /hell.*ld/
+      "obj_val.f": 5
     })).to.be(true);
   });
   it('Where Comparison gt', function() {

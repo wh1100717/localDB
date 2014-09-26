@@ -46,7 +46,6 @@ describe("Collection", function() {
     return expect(data.i).to.be.eql([1, 2, 3]);
   });
   it("Insert List", function() {
-    var data;
     bar.drop();
     bar.insert([
       {
@@ -59,10 +58,21 @@ describe("Collection", function() {
         c: 4
       }
     ]);
-    data = bar.find();
-    return expect(data.length).to.be(2);
+    expect(bar.find().length).to.be(2);
+    bar.insert([
+      {
+        a: 1,
+        b: 2,
+        c: 3
+      }, 4, {
+        a: 2,
+        b: 3,
+        c: 4
+      }
+    ]);
+    return expect(bar.find().length).to.be(4);
   });
-  return it("Update", function() {
+  it("Update", function() {
     var data;
     bar.drop();
     bar.insert({
@@ -121,5 +131,116 @@ describe("Collection", function() {
     expect(data.max2).to.be(200);
     expect(data.min1).to.be(50);
     return expect(data.min2).to.be(10);
+  });
+  it("Remove", function() {
+    var data;
+    bar.drop();
+    bar.insert([
+      {
+        a: 1,
+        b: 2
+      }, {
+        a: 1,
+        b: 3
+      }, {
+        a: 2,
+        b: 4
+      }
+    ]);
+    bar.remove();
+    data = bar.find();
+    expect(bar.find()).to.be.eql([]);
+    bar.drop();
+    bar.insert([
+      {
+        a: 1,
+        b: 2
+      }, {
+        a: 1,
+        b: 3
+      }, {
+        a: 2,
+        b: 4
+      }
+    ]);
+    bar.remove({
+      where: {
+        a: 1
+      },
+      multi: false
+    });
+    expect(bar.find({
+      where: {
+        a: 1
+      }
+    }).length).to.be(1);
+    bar.drop();
+    bar.insert([
+      {
+        a: 1,
+        b: 2
+      }, {
+        a: 1,
+        b: 3
+      }, {
+        a: 2,
+        b: 4
+      }, {
+        a: 3,
+        b: 4
+      }
+    ]);
+    bar.remove({
+      where: {
+        a: 1
+      }
+    });
+    expect(bar.find({
+      where: {
+        a: 1
+      }
+    }).length).to.be(0);
+    return expect(bar.find().length).to.be(2);
+  });
+  return it("FindOne", function() {
+    bar.drop();
+    bar.insert([
+      {
+        a: 1,
+        b: 2,
+        c: {
+          d: 3,
+          e: 4
+        },
+        f: function(x) {
+          return x * x;
+        },
+        g: [1, 2, 3, 4],
+        h: "abc",
+        price: 10.99,
+        max1: 100,
+        max2: 200,
+        min1: 50,
+        min2: 30
+      }, {
+        a: 1,
+        b: 2,
+        c: {
+          d: 3,
+          e: 4
+        },
+        f: function(x) {
+          return x * x;
+        },
+        g: [1, 2, 3, 4],
+        h: "abc",
+        price: 10.99,
+        max1: 100,
+        max2: 200,
+        min1: 50,
+        min2: 30
+      }
+    ]);
+    return expect(bar.findOne().length).to.be(1);
   });
 });

@@ -22,27 +22,36 @@ describe 'Where', ->
             regex_val: /he.*ld/
             arr_val: [1,2,3,4]
             arr_val2: ["a","b","c","d","hello World"]
+            arr_val3: [/he.*ld/, /just.*do.*it/g]
             obj_val: {e:"4",f:5}
         }
         #值匹配
         expect(Where(obj, {num_val:1})).to.be(true)
+        expect(Where(obj, {num_val:2})).to.be(false)
+        expect(Where(obj, {arr_val:3})).to.be(true)
         #值为字符串匹配
         expect(Where(obj, {str_val: "hello"})).to.be(true)
+        expect(Where(obj, {str_val: ""})).to.be(false)
+        expect(Where(obj, {arr_val2: "d"})).to.be(true)
+
         # # 注意：不提供值为函数的匹配
         # expect(Where(obj, {func_val: -> return 100})).to.be(false)
         #值为正则匹配
         expect(Where(obj, {regex_val: /he.*ld/})).to.be(true)
         expect(Where(obj, {regex_val: /he1.*ld/})).to.be(false)
+        expect(Where(obj, {arr_val3: /he1.*ld/})).to.be(false)
+        #正则匹配
+        expect(Where(obj, {num_val: /\d/})).to.be(true)
+        expect(Where(obj, {arr_val: /\d/})).to.be(true)
+        expect(Where(obj, {arr_val3: /just.*do.*it/g})).to.be(true)
         #值为数组匹配
         expect(Where(obj, {arr_val: [1,2,3,4]})).to.be(true)
+        expect(Where(obj, {arr_val: ["1","2","3","4"]})).to.be(false)
         #值为对象匹配
         expect(Where(obj, {obj_val: {e:"4",f:5}})).to.be(true)
         #key为dot匹配
         expect(Where(obj, {"obj_val.e":"4"})).to.be(true)
         expect(Where(obj, {"obj_val.f":5})).to.be(true)
-        #正则匹配
-        expect(Where(obj, {arr_val: /\d/})).to.be(true)
-        expect(Where(obj, {arr_val2: /hell.*ld/})).to.be(true)
     it 'Where Comparison gt', ->
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":{"$gt":1}}

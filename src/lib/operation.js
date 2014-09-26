@@ -35,8 +35,8 @@ Operation.insert = function(data, rowData, options) {
 Operation.update = function(data, actions, options) {
   var action, multi, upsert, value, where;
   where = options.where || {};
-  multi = options.multi || false;
-  upsert = options.upsert || false;
+  multi = options.multi != null ? options.multi : true;
+  upsert = options.upsert != null ? options.upsert : false;
   for (action in actions) {
     value = actions[action];
     data = Update.generate(data, action, value, where, multi, upsert);
@@ -47,7 +47,8 @@ Operation.update = function(data, actions, options) {
 Operation.remove = function(data, options) {
   var d, flag, multi, result, where, _i, _len;
   where = options.where || {};
-  multi = options.multi || false;
+  multi = options.multi != null ? options.multi : true;
+  console.log(options, options.where, JSON.stringify(where));
   result = [];
   flag = false;
   for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -57,7 +58,7 @@ Operation.remove = function(data, options) {
       continue;
     }
     if (Where(d, where)) {
-      if (multi) {
+      if (!multi) {
         flag = true;
       }
       continue;

@@ -4633,6 +4633,7 @@ define("localdb/0.0.1/src/lib/collection-debug", [], function(require, exports, 
         options = {};
       }
       this.deserialize();
+      console.log("remove: ", options);
       this.data = Operation.remove(this.data, options);
       return this.serialize();
     };
@@ -4692,8 +4693,8 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
   Operation.update = function(data, actions, options) {
     var action, multi, upsert, value, where;
     where = options.where || {};
-    multi = options.multi || false;
-    upsert = options.upsert || false;
+    multi = options.multi != null ? options.multi : true;
+    upsert = options.upsert != null ? options.upsert : false;
     for (action in actions) {
       value = actions[action];
       data = Update.generate(data, action, value, where, multi, upsert);
@@ -4703,7 +4704,8 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
   Operation.remove = function(data, options) {
     var d, flag, multi, result, where, _i, _len;
     where = options.where || {};
-    multi = options.multi || false;
+    multi = options.multi != null ? options.multi : true;
+    console.log(options, options.where, JSON.stringify(where));
     result = [];
     flag = false;
     for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -4713,7 +4715,7 @@ define("localdb/0.0.1/src/lib/operation-debug", [], function(require, exports, m
         continue;
       }
       if (Where(d, where)) {
-        if (multi) {
+        if (!multi) {
           flag = true;
         }
         continue;
@@ -5090,10 +5092,9 @@ define("localdb/0.0.1/src/lib/where-debug", [], function(require, exports, modul
   regexCheck = function(data, cmpData) {
     /* Regex Check
      *  cmpData: /abc/
-     *  data: "abcd" or ["abcdf","aaaa","basc","abce"]
+     *  data: "abcd" or ["abcdf","aaaa","basc","abce"] or /abc/ or [/abc/,/bce/,/hello.*ld/]
      */
     var d, _i, _len;
-    console.log(data, cmpData.toString());
     if (Utils.isArray(data)) {
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         d = data[_i];
