@@ -44,6 +44,12 @@ describe('Where', function() {
       str_val: "hello"
     })).to.be(true);
     expect(Where(obj, {
+      regex_val: /he.*ld/
+    })).to.be(true);
+    expect(Where(obj, {
+      regex_val: /he1.*ld/
+    })).to.be(false);
+    expect(Where(obj, {
       arr_val: [1, 2, 3, 4]
     })).to.be(true);
     expect(Where(obj, {
@@ -972,7 +978,7 @@ describe('Where', function() {
     where = {
       "a": /\d/
     };
-    expect(Where(obj, where)).to.be(false);
+    expect(Where(obj, where)).to.be(true);
     obj = {
       "a": '1',
       "b": 4,

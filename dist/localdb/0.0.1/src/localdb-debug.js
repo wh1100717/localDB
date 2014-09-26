@@ -5093,13 +5093,27 @@ define("localdb/0.0.1/src/lib/where-debug", [], function(require, exports, modul
      *  data: "abcd" or ["abcdf","aaaa","basc","abce"]
      */
     var d, _i, _len;
-    if (Utils.isString(data) && cmpData.test(data)) {
-      return true;
-    }
+    console.log(data, cmpData.toString());
     if (Utils.isArray(data)) {
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         d = data[_i];
-        if (cmpData.test(d)) {
+        if (Utils.isRegex(d)) {
+          if (Utils.isEqual(d, cmpData)) {
+            return true;
+          }
+        } else {
+          if (cmpData.test(d)) {
+            return true;
+          }
+        }
+      }
+    } else {
+      if (Utils.isRegex(data)) {
+        if (Utils.isEqual(data, cmpData)) {
+          return true;
+        }
+      } else {
+        if (cmpData.test(data)) {
           return true;
         }
       }

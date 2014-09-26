@@ -30,8 +30,9 @@ describe 'Where', ->
         expect(Where(obj, {str_val: "hello"})).to.be(true)
         # # 注意：不提供值为函数的匹配
         # expect(Where(obj, {func_val: -> return 100})).to.be(false)
-        # #值为正则匹配
-        # expect(Where(obj, {regex_val: /he.*ld/})).to.be(true)
+        #值为正则匹配
+        expect(Where(obj, {regex_val: /he.*ld/})).to.be(true)
+        expect(Where(obj, {regex_val: /he1.*ld/})).to.be(false)
         #值为数组匹配
         expect(Where(obj, {arr_val: [1,2,3,4]})).to.be(true)
         #值为对象匹配
@@ -216,7 +217,7 @@ describe 'Where', ->
         expect(Where(obj,where)).to.be(false)
         obj = {"a":1,"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":/\d/}
-        expect(Where(obj,where)).to.be(false)
+        expect(Where(obj,where)).to.be(true)
         obj = {"a":'1',"b":4,"c":5,"d":{"e":"4","f":5}}
         where = {"a":/\b/}
         expect(Where(obj,where)).to.be(true)

@@ -109,10 +109,19 @@ stringCheck = (data, cmpData) ->
 regexCheck = (data, cmpData) ->
     ### Regex Check
      *  cmpData: /abc/
-     *  data: "abcd" or ["abcdf","aaaa","basc","abce"]
+     *  data: "abcd" or ["abcdf","aaaa","basc","abce"] or /abc/ or [/abc/,/bce/,/hello.*ld/]
     ###
-    return true if Utils.isString(data) and cmpData.test(data)
-    (return true for d in data when cmpData.test(d)) if Utils.isArray(data)
+    if Utils.isArray(data)
+        for d in data
+            if Utils.isRegex(d)
+                return true if Utils.isEqual(d, cmpData)
+            else
+                return true if cmpData.test(d)
+    else
+        if Utils.isRegex(data)
+            return true if Utils.isEqual(data, cmpData)
+        else
+            return true if cmpData.test(data)
     return false
 
 arrayCheck = (data, cmpData) -> Utils.isEqual(data, cmpData)
