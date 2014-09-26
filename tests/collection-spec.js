@@ -73,7 +73,7 @@ describe("Collection", function() {
     return expect(bar.find().length).to.be(4);
   });
   it("Update", function() {
-    var data;
+    var d, data, index, _i, _len, _results;
     bar.drop();
     bar.insert({
       a: 1,
@@ -91,7 +91,8 @@ describe("Collection", function() {
       max1: 100,
       max2: 200,
       min1: 50,
-      min2: 30
+      min2: 30,
+      unchanged_val: 100
     });
     bar.update({
       $set: {
@@ -117,7 +118,8 @@ describe("Collection", function() {
       $min: {
         min1: 80,
         min2: 10
-      }
+      },
+      unchanged_val: 119
     });
     data = bar.find()[0];
     expect(data.a).to.be(4);
@@ -130,7 +132,80 @@ describe("Collection", function() {
     expect(data.max1).to.be(120);
     expect(data.max2).to.be(200);
     expect(data.min1).to.be(50);
-    return expect(data.min2).to.be(10);
+    expect(data.min2).to.be(10);
+    expect(data.unchanged_val).to.be(100);
+    bar.drop();
+    bar.insert({
+      a: 1
+    });
+    bar.update({
+      $set: {
+        a: 2
+      }
+    }, {
+      where: {
+        a: 2
+      }
+    });
+    data = bar.find()[0];
+    expect(data.a).to.be(1);
+    bar.update({
+      $set: {
+        b: 2,
+        "b.c": 1
+      }
+    }, {
+      where: {
+        a: 1
+      }
+    });
+    data = bar.find()[0];
+    expect(data.b).not.to.be.ok();
+    bar.update({
+      $set: {
+        b: 2,
+        "d.c": 3
+      }
+    }, {
+      where: {
+        a: 1
+      },
+      upsert: true
+    });
+    data = bar.findOne();
+    expect(data.b).to.be(2);
+    bar.drop();
+    bar.insert([
+      {
+        a: 1,
+        b: 2
+      }, {
+        a: 1,
+        b: 3
+      }, {
+        a: 1,
+        b: 4
+      }
+    ]);
+    bar.update({
+      $set: {
+        b: 5
+      }
+    }, {
+      where: {
+        a: 1
+      },
+      multi: false
+    });
+    data = bar.find();
+    _results = [];
+    for (index = _i = 0, _len = data.length; _i < _len; index = ++_i) {
+      d = data[index];
+      if (index > 0) {
+        _results.push(expect(d.b).not.to.be(5));
+      }
+    }
+    return _results;
   });
   it("Remove", function() {
     var data;
@@ -203,6 +278,7 @@ describe("Collection", function() {
     return expect(bar.find().length).to.be(2);
   });
   return it("FindOne", function() {
+    var data;
     bar.drop();
     bar.insert([
       {
@@ -241,6 +317,17 @@ describe("Collection", function() {
         min2: 30
       }
     ]);
-    return expect(bar.findOne().length).to.be(1);
+    data = bar.findOne({
+      where: {
+        a: 1
+      }
+    });
+    expect(data.a).to.be(1);
+    data = bar.findOne({
+      where: {
+        no_val: 11111
+      }
+    });
+    return expect(data.a).not.to.be.ok();
   });
 });

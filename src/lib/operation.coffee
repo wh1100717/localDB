@@ -27,7 +27,6 @@ Operation.update = (data, actions, options) ->
 Operation.remove = (data, options) ->
     where = options.where or {}
     multi = if options.multi? then options.multi else true
-    console.log options, options.where, JSON.stringify(where)
     result = []
     flag = false
     for d in data
@@ -68,16 +67,16 @@ Update = {
                     k = k.substr(k.indexOf(".") + 1)
                 continue if flag
                 switch action
-                    when "$inc" then d[k] += v
-                    when "$set" then d[k] = v
-                    when "$mul" then d[k] *= v
+                    when "$inc" then d[k] += v if d[k]? or upsert
+                    when "$set" then d[k] = v if d[k]? or upsert
+                    when "$mul" then d[k] *= v if d[k]? or upsert
                     when "$rename"
-                        d[v] = d[k]
+                        d[v] = d[k] 
                         delete d[k]
                     when "$unset"
                         delete d[k]
-                    when "$min" then d[k] = Math.min(d[k], v)
-                    when "$max" then d[k] = Math.max(d[k], v)
+                    when "$min" then d[k] = Math.min(d[k], v) if d[k]? or upsert
+                    when "$max" then d[k] = Math.max(d[k], v) if d[k]? or upsert
                 break if not multi
         return data
 }

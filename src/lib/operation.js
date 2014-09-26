@@ -48,7 +48,6 @@ Operation.remove = function(data, options) {
   var d, flag, multi, result, where, _i, _len;
   where = options.where || {};
   multi = options.multi != null ? options.multi : true;
-  console.log(options, options.where, JSON.stringify(where));
   result = [];
   flag = false;
   for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -122,13 +121,19 @@ Update = {
         }
         switch (action) {
           case "$inc":
-            d[k] += v;
+            if ((d[k] != null) || upsert) {
+              d[k] += v;
+            }
             break;
           case "$set":
-            d[k] = v;
+            if ((d[k] != null) || upsert) {
+              d[k] = v;
+            }
             break;
           case "$mul":
-            d[k] *= v;
+            if ((d[k] != null) || upsert) {
+              d[k] *= v;
+            }
             break;
           case "$rename":
             d[v] = d[k];
@@ -138,10 +143,14 @@ Update = {
             delete d[k];
             break;
           case "$min":
-            d[k] = Math.min(d[k], v);
+            if ((d[k] != null) || upsert) {
+              d[k] = Math.min(d[k], v);
+            }
             break;
           case "$max":
-            d[k] = Math.max(d[k], v);
+            if ((d[k] != null) || upsert) {
+              d[k] = Math.max(d[k], v);
+            }
         }
         if (!multi) {
           break;

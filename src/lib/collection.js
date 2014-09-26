@@ -108,11 +108,17 @@ Collection = (function() {
    */
 
   Collection.prototype.findOne = function(options) {
+    var data;
     if (options == null) {
       options = {};
     }
     options.limit = 1;
-    return Operation.find(this.data, options);
+    data = Operation.find(this.data, options)[0];
+    if (data != null) {
+      return data;
+    } else {
+      return {};
+    }
   };
 
   return Collection;

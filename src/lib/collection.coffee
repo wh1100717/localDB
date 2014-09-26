@@ -66,6 +66,7 @@ class Collection
     ###
     findOne: (options = {}) ->
         options.limit = 1
-        Operation.find @data, options
+        data = Operation.find(@data, options)[0]
+        if data? then data else {}
 
 module.exports = Collection

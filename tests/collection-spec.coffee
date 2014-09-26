@@ -71,6 +71,7 @@ describe "Collection", ->
             max2: 200
             min1: 50
             min2: 30
+            unchanged_val: 100
         }
         bar.update {
             $set: {
@@ -85,6 +86,7 @@ describe "Collection", ->
             $mul: {price: 1.25}
             $max: {max1:120, max2:150}
             $min: {min1:80, min2: 10}
+            unchanged_val: 119 #it will be ignored
         }
         data = bar.find()[0]
         expect(data.a).to.be(4)
@@ -98,6 +100,59 @@ describe "Collection", ->
         expect(data.max2).to.be(200)
         expect(data.min1).to.be(50)
         expect(data.min2).to.be(10)
+        expect(data.unchanged_val).to.be(100)
+        bar.drop()
+        bar.insert {
+            a: 1
+        }
+        bar.update {
+            $set: {
+                a: 2
+            }
+        }, {
+            where: {a:2}
+        }
+        data = bar.find()[0]
+        expect(data.a).to.be(1)
+        bar.update {
+            $set: {
+                b: 2
+                "b.c": 1
+            }
+        }, {
+            where: {a:1}
+        }
+        data = bar.find()[0]
+        expect(data.b).not.to.be.ok()
+        bar.update {
+            $set: {
+                b: 2
+                "d.c": 3
+            }
+        }, {
+            where: {a: 1}
+            upsert: true
+        }
+        data = bar.findOne()
+        expect(data.b).to.be(2)
+        bar.drop()
+        bar.insert [
+            {a:1, b:2}
+            {a:1, b:3}
+            {a:1, b:4}
+        ]
+        bar.update {
+            $set: {
+                b: 5
+            }
+        }, {
+            where: {
+                a: 1
+            }
+            multi: false
+        }
+        data = bar.find()
+        expect(d.b).not.to.be(5) for d,index in data  when index > 0
     it "Remove", ->
         bar.drop()
         bar.insert [
@@ -158,7 +213,14 @@ describe "Collection", ->
             min1: 50
             min2: 30
         }]
-        expect(bar.findOne().length).to.be(1)
+        data = bar.findOne {
+            where: {a: 1}
+        }
+        expect(data.a).to.be(1)
+        data = bar.findOne {
+            where: {no_val: 11111}
+        }
+        expect(data.a).not.to.be.ok()
 
 
 
