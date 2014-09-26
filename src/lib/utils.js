@@ -30,10 +30,6 @@ Utils.isFunction = _isType("function");
 
 Utils.isRegex = _isType("regexp");
 
-Utils.isSameType = function(a, b) {
-  return toString.call(a) === toString.call(b);
-};
-
 Utils.keys = function(obj) {
   var key;
   if (!Utils.isObject(obj)) {

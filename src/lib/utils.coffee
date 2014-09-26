@@ -22,8 +22,6 @@ Utils.isFunction = _isType "function"
 
 Utils.isRegex = _isType "regexp"
 
-Utils.isSameType = (a, b) -> toString.call(a) is toString.call(b)
-
 Utils.keys = (obj) ->
     return [] if not Utils.isObject(obj)
     return Object.keys(obj) if Object.keys
@@ -39,7 +37,6 @@ eq = (a, b, aStack, bStack) ->
     return a isnt 0 or 1 / a is 1 / b if a is b
     return false if a is null and b is undefined
     return false if a is undefined and b is null
-    # return false if not Utils.isSameType(a, b)
     className = toString.call(a)
     return false if className isnt toString.call(b)
     switch className

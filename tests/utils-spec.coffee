@@ -79,14 +79,14 @@ describe 'Utils', ->
         expect(Utils.isRegex(->)).not.to.be.ok()
         expect(Utils.isRegex(new RegExp("abc"))).to.be.ok()
         expect(Utils.isRegex(/abc/)).to.be.ok()
-    # it 'parse', ->
-    #     expect(Utils.parse()).to.be.eql([])
-    #     expect(Utils.parse('{"a":1}')).to.be.eql({a:1})
-    #     expect(Utils.parse('[1,2,3]')).to.be.eql([1,2,3])
-    # it 'stringify', ->
-    #     expect(Utils.stringify()).to.be('[]')
-    #     expect(Utils.stringify({a:1})).to.be('{"a":1}')
-    #     expect(Utils.stringify([1,2,3])).to.be('[1,2,3]')
+    it 'parse', ->
+        expect(Utils.parse()).to.be.eql([])
+        expect(Utils.parse('[{"a":1}]')).to.be.eql([{a:1}])
+        expect(Utils.parse('[1,2,3]')).to.be.eql([1,2,3])
+    it 'stringify', ->
+        expect(Utils.stringify()).to.be('[]')
+        expect(Utils.stringify([{a:1}])).to.be('[{"a":1}]')
+        expect(Utils.stringify([1,2,3])).to.be('[1,2,3]')
 
 
 
