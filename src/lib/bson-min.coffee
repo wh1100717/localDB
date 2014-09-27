@@ -4,9 +4,14 @@ BinaryParser = require('./binary-parser')
 
 hexTable = ((if i <= 15 then '0' else '') + i.toString(16) for i in [0...256])
 
-MACHINE_ID = parseInt Math.random() * 0xFFFFFF, 10
+MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10)
+
+checkForHexRegExp = /^[0-9a-fA-F]{24}$/
+
 ObjectID = (id, _hex) ->
-    return new ObjectID(id, _hex) if not this instanceof ObjectID
+    return new ObjectID(id, _hex) if not @ instanceof ObjectID
+    @_bsontype = 'ObjectID'
+    __id = null
     if id? and 'number' isnt typeof id and id.length isnt 12 and id.length isnt 24
         throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters")
     if not id? or typeof id is 'number'
@@ -17,9 +22,10 @@ ObjectID = (id, _hex) ->
         return ObjectID.createFromHexString(id)
     else
         throw new Error("Value passed in is not a valid 24 character hex string")
+    @__id = @toHexString() if ObjectID.cacheHexString
 
 ObjectID.prototype.generate = (time) ->
-    if 'number' is typeof number
+    if 'number' is typeof time
         time4Bytes = BinaryParser.encodeInt(time, 32, true, true)
         machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false)
         pid2Bytes = BinaryParser.fromShort(if typeof process is 'undefined' then Math.floor(Math.random() * 100000) else process.pid)
@@ -33,9 +39,11 @@ ObjectID.prototype.generate = (time) ->
     return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes
 
 ObjectID.prototype.toHexString = ->
+    return @__id if ObjectID.cacheHexString and @__id
     hexString = ''
     for i in [0...@id.length]
         hexString += hexTable[@id.charCodeAt(i)]
+    @__id = hexString if ObjectID.cacheHexString
     return hexString
 
 ObjectID.prototype.toString = -> @toHexString()
@@ -55,12 +63,9 @@ ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10)
 ObjectID.createFromHexString = (hexString) ->
     if not hexString? or hexString.length isnt 24
         throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
-    len = hexString.length
-
     result =''
-
     for i in [0...24] when i % 2 is 0
-        result += BinaryParser.fromByte(parseInt(hexString.substring(i, 2), 16))
+        result += BinaryParser.fromByte(parseInt(hexString.substr(i, 2), 16))
     return new ObjectID(result, hexString)
 
 module.exports = ObjectID

@@ -8,13 +8,16 @@ ObjectID = require("../src/lib/bson-min.js");
 
 describe("ObjectID", function() {
   return it("Init", function() {
-    var a;
+    var a, b;
     a = new ObjectID();
     console.log(a.toHexString());
     console.log(a.toString());
     console.log(a.id);
     console.log(a.inspect());
     console.log(a.getTimestamp());
-    return console.log(a.get_inc());
+    console.log(a.get_inc());
+    b = new ObjectID(a.inspect());
+    console.log(b.inspect());
+    return expect(a.inspect()).to.be(b.inspect());
   });
 });

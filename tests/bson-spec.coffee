@@ -11,3 +11,6 @@ describe "ObjectID", ->
         console.log a.inspect()
         console.log a.getTimestamp()
         console.log a.get_inc()
+        b = new ObjectID(a.inspect())
+        console.log b.inspect()
+        expect(a.inspect()).to.be(b.inspect())
