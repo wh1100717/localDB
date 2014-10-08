@@ -50,6 +50,12 @@ class LocalDB
         @ls.removeItem(j) for j in keys
         return true
 
+    ###
+     *  Get Timestamp
+     *  Convert ObjectId to timestamp
+    ###
+    timestamp: (objectId) -> Utils.timestamp(objectId)
+
 ###
  *  Check Browser Compatibility
  *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.

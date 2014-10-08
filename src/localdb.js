@@ -88,6 +88,16 @@ LocalDB = (function() {
     return true;
   };
 
+
+  /*
+   *  Get Timestamp
+   *  Convert ObjectId to timestamp
+   */
+
+  LocalDB.prototype.timestamp = function(objectId) {
+    return Utils.timestamp(objectId);
+  };
+
   return LocalDB;
 
 })();

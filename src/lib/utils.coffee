@@ -1,6 +1,6 @@
 'use strict'
 
-BSON = require('./bson')()
+ObjectID = require('./bson')
 
 Utils = {}
 
@@ -78,7 +78,7 @@ eq = (a, b, aStack, bStack) ->
 
 Utils.isEqual = (a, b) -> eq(a, b, [], [])
 
-Utils.createObjectId = -> BSON.ObjectID().inspect()
+Utils.createObjectId = -> (new ObjectID()).inspect()
 
 Utils.stringify = (arr) ->
     return "[]" if not arr? or not Utils.isArray(arr)
@@ -94,6 +94,10 @@ Utils.parse = (str) ->
         try v = eval("(" + value  + ")")
         return v if v? and Utils.isFunction(v)
         return value
+
+Utils.timestamp = (objectId) ->
+    object = ObjectID(objectId)
+    return object.getTimestamp()
 
 module.exports = Utils
 

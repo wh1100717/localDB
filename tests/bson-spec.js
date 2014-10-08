@@ -4,7 +4,7 @@ var ObjectID, expect;
 
 expect = require("expect.js");
 
-ObjectID = require("../src/lib/bson-min.js");
+ObjectID = require("../src/lib/bson.js");
 
 describe("ObjectID", function() {
   return it("Init", function() {
