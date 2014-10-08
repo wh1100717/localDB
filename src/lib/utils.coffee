@@ -95,9 +95,9 @@ Utils.parse = (str) ->
         return v if v? and Utils.isFunction(v)
         return value
 
-Utils.timestamp = (objectId) ->
-    object = ObjectID(objectId)
-    return object.getTimestamp()
+Utils.getTimestamp = (objectId) -> (new ObjectID(objectId)).getTimestamp()
+    
+Utils.getTime = (objectId) -> (new ObjectID(objectId)).getTime()
 
 module.exports = Utils
 

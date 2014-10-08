@@ -183,10 +183,12 @@ Utils.parse = function(str) {
   });
 };
 
-Utils.timestamp = function(objectId) {
-  var object;
-  object = ObjectID(objectId);
-  return object.getTimestamp();
+Utils.getTimestamp = function(objectId) {
+  return (new ObjectID(objectId)).getTimestamp();
+};
+
+Utils.getTime = function(objectId) {
+  return (new ObjectID(objectId)).getTime();
 };
 
 module.exports = Utils;

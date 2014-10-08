@@ -57,7 +57,7 @@ describe("LocalDB", function() {
     collections = db.collections();
     return expect(collections).to.be.eql([]);
   });
-  return it("drop db", function() {
+  it("drop db", function() {
     var bar1, bar2, collections;
     bar1 = db.collection("bar1");
     bar2 = db.collection("bar2");
@@ -70,5 +70,9 @@ describe("LocalDB", function() {
     db.drop();
     collections = db.collections();
     return expect(collections).to.be.eql([]);
+  });
+  return it("timestamp", function() {
+    console.log(LocalDB.getTimestamp("543509d5f3692b00001b2b61"));
+    return expect(LocalDB.getTime("543509d5f3692b00001b2b61")).to.be(1412762069000);
   });
 });

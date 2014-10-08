@@ -47,4 +47,7 @@ describe "LocalDB", ->
         db.drop()
         collections = db.collections()
         expect(collections).to.be.eql([])
+    it "timestamp", ->
+        console.log LocalDB.getTimestamp("543509d5f3692b00001b2b61")
+        expect(LocalDB.getTime("543509d5f3692b00001b2b61")).to.be(1412762069000)
 

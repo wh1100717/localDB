@@ -50,12 +50,6 @@ class LocalDB
         @ls.removeItem(j) for j in keys
         return true
 
-    ###
-     *  Get Timestamp
-     *  Convert ObjectId to timestamp
-    ###
-    timestamp: (objectId) -> Utils.timestamp(objectId)
-
 ###
  *  Check Browser Compatibility
  *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
@@ -65,5 +59,18 @@ LocalDB.support = -> {
     sessionStorage: if sessionStorage? then true else false
     indexedDB: if indexedDB? then true else false
 }
+###
+ *  Get Timestamp
+ *  Convert ObjectId to timestamp
+###
+LocalDB.getTimestamp = (objectId) -> Utils.getTimestamp(objectId)
+
+###
+ *  Get Time
+ *  Convert ObjectId to time
+###
+LocalDB.getTime = (objectId) -> Utils.getTime(objectId)
+
+
 
 module.exports = LocalDB

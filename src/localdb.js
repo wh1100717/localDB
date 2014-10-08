@@ -88,16 +88,6 @@ LocalDB = (function() {
     return true;
   };
 
-
-  /*
-   *  Get Timestamp
-   *  Convert ObjectId to timestamp
-   */
-
-  LocalDB.prototype.timestamp = function(objectId) {
-    return Utils.timestamp(objectId);
-  };
-
   return LocalDB;
 
 })();
@@ -114,6 +104,26 @@ LocalDB.support = function() {
     sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
     indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
   };
+};
+
+
+/*
+ *  Get Timestamp
+ *  Convert ObjectId to timestamp
+ */
+
+LocalDB.getTimestamp = function(objectId) {
+  return Utils.getTimestamp(objectId);
+};
+
+
+/*
+ *  Get Time
+ *  Convert ObjectId to time
+ */
+
+LocalDB.getTime = function(objectId) {
+  return Utils.getTime(objectId);
 };
 
 module.exports = LocalDB;
