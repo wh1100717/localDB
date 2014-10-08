@@ -221,7 +221,103 @@ describe "Collection", ->
             where: {no_val: 11111}
         }
         expect(data.a).not.to.be.ok()
-
+    it "Projection", ->
+        bar.drop()
+        bar.insert [{
+            a: 1
+            b: 2
+            c: {d: 3, e:4}
+            f: (x) -> x * x
+            g: [1,2,3,4]
+            h: "abc"
+            price: 10.99
+            max1: 100
+            max2: 200
+            min1: 50
+            min2: 30
+        },{
+            a: 1
+            b: 2
+            c: {d: 3, e:4}
+            f: (x) -> x * x
+            g: [1,2,3,4]
+            h: "abc"
+            price: 10.99
+            max1: 100
+            max2: 200
+            min1: 50
+            min2: 30
+        }]
+        data = bar.findOne {
+            where: {a: 1}
+            projection: {a: 1, _id: -1}
+        }
+        expect(data).to.be.eql({a:1})
+        data = bar.find {
+            where: {a: 1}
+            projection: {"g.$": 1}
+        }
+        expect(d.g).to.be.eql([1]) for d in data
+        data = bar.find {
+            where: {b: 1}
+            projection: {"g.$": 1}
+        }
+        expect(data).to.be.eql([])
+        data = bar.find {
+            where: {a: 1}
+            projection: {"a.$": 1}
+        }
+        expect(data).to.be.eql([])
+        bar.drop()
+        bar.insert [{
+            _id: 1,
+            zipcode: "63109",
+            students: [
+                { name: "john", school: 102, age: 10 },
+                { name: "jess", school: 102, age: 11 },
+                { name: "jeff", school: 108, age: 15 }
+            ]
+        }
+        {
+            _id: 2,
+            zipcode: "63110",
+            students: [
+                { name: "ajax", school: 100, age: 7 },
+                { name: "achilles", school: 100, age: 8 },
+            ]
+        }
+        {
+            _id: 3,
+            zipcode: "63109",
+            students: [
+                { name: "ajax", school: 100, age: 7 },
+                { name: "achilles", school: 100, age: 8 },
+            ]
+        }
+        {
+            _id: 4,
+            zipcode: "63109",
+            students: [
+                { name: "barney", school: 102, age: 7 },
+                { name: "ruth", school: 102, age: 16 },
+            ]
+        }]
+        data = bar.find {
+            where: { zipcode: "63109"}
+            projection: {
+                _id: 1
+                students: {$elemMatch: { school: 102 } }
+            }
+        }
+        console.log data
+        data = bar.find {
+            where: { zipcode: "63109"}
+            projection: {
+                _id: 1
+                unexist: {$elemMatch: { school: 102 } }
+            }
+        }
+        console.log data
 
 
 

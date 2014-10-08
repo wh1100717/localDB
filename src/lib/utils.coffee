@@ -25,7 +25,7 @@ Utils.isRegex = _isType "regexp"
 Utils.keys = (obj) ->
     return [] if not Utils.isObject(obj)
     return Object.keys(obj) if Object.keys
-    return (key for key of obj when Utils.has(obj, key))
+    # return (key for key of obj when Utils.has(obj, key))
 
 Utils.has = (obj, key) -> obj isnt null and obj isnt undefined and Object.prototype.hasOwnProperty.call(obj, key)
 

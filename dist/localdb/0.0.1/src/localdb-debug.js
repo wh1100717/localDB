@@ -73,13 +73,6 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
       }
       return true;
     };
-    /*
-     *  Get Timestamp
-     *  Convert ObjectId to timestamp
-     */
-    LocalDB.prototype.timestamp = function(objectId) {
-      return Utils.timestamp(objectId);
-    };
     return LocalDB;
   })();
   /*
@@ -92,6 +85,20 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
       sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
       indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
     };
+  };
+  /*
+   *  Get Timestamp
+   *  Convert ObjectId to timestamp
+   */
+  LocalDB.getTimestamp = function(objectId) {
+    return Utils.getTimestamp(objectId);
+  };
+  /*
+   *  Get Time
+   *  Convert ObjectId to time
+   */
+  LocalDB.getTime = function(objectId) {
+    return Utils.getTime(objectId);
   };
   module.exports = LocalDB;
 });
@@ -117,23 +124,12 @@ define("localdb/0.0.1/src/lib/utils-debug", [], function(require, exports, modul
   Utils.isFunction = _isType("function");
   Utils.isRegex = _isType("regexp");
   Utils.keys = function(obj) {
-    var key;
     if (!Utils.isObject(obj)) {
       return [];
     }
     if (Object.keys) {
       return Object.keys(obj);
     }
-    return (function() {
-      var _results;
-      _results = [];
-      for (key in obj) {
-        if (Utils.has(obj, key)) {
-          _results.push(key);
-        }
-      }
-      return _results;
-    })();
   };
   Utils.has = function(obj, key) {
     return obj !== null && obj !== void 0 && Object.prototype.hasOwnProperty.call(obj, key);
@@ -260,10 +256,11 @@ define("localdb/0.0.1/src/lib/utils-debug", [], function(require, exports, modul
       return value;
     });
   };
-  Utils.timestamp = function(objectId) {
-    var object;
-    object = ObjectID(objectId);
-    return object.getTimestamp();
+  Utils.getTimestamp = function(objectId) {
+    return (new ObjectID(objectId)).getTimestamp();
+  };
+  Utils.getTime = function(objectId) {
+    return (new ObjectID(objectId)).getTime();
   };
   module.exports = Utils;
 });
@@ -283,55 +280,34 @@ define("localdb/0.0.1/src/lib/bson-debug", [], function(require, exports, module
   MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10);
   checkForHexRegExp = /^[0-9a-fA-F]{24}$/;
   ObjectID = function(id, _hex) {
-    var __id;
-    if (!this instanceof ObjectID) {
-      return new ObjectID(id, _hex);
-    }
     this._bsontype = 'ObjectID';
-    __id = null;
-    if ((id != null) && 'number' !== typeof id && id.length !== 12 && id.length !== 24) {
+    if ((id != null) && id.length !== 12 && id.length !== 24) {
       throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
     }
-    if ((id == null) || typeof id === 'number') {
-      this.id = this.generate(id);
+    if (id == null) {
+      return this.id = this.generate();
     } else if ((id != null) && id.length === 12) {
-      this.id = id;
+      return this.id = id;
     } else if (checkForHexRegExp.test(id)) {
       return ObjectID.createFromHexString(id);
     } else {
       throw new Error("Value passed in is not a valid 24 character hex string");
     }
-    if (ObjectID.cacheHexString) {
-      return this.__id = this.toHexString();
-    }
   };
-  ObjectID.prototype.generate = function(time) {
+  ObjectID.prototype.generate = function() {
     var index3Bytes, machine3Bytes, pid2Bytes, time4Bytes, unixTime;
-    if ('number' === typeof time) {
-      time4Bytes = BinaryParser.encodeInt(time, 32, true, true);
-      machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
-      pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
-      index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
-    } else {
-      unixTime = parseInt(Date.now() / 1000, 10);
-      time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
-      machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
-      pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
-      index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
-    }
+    unixTime = parseInt(Date.now() / 1000, 10);
+    time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
+    machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
+    pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
+    index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
     return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes;
   };
   ObjectID.prototype.toHexString = function() {
     var hexString, _i, _ref;
-    if (ObjectID.cacheHexString && this.__id) {
-      return this.__id;
-    }
     hexString = '';
     for (i = _i = 0, _ref = this.id.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
       hexString += hexTable[this.id.charCodeAt(i)];
-    }
-    if (ObjectID.cacheHexString) {
-      this.__id = hexString;
     }
     return hexString;
   };
@@ -339,10 +315,13 @@ define("localdb/0.0.1/src/lib/bson-debug", [], function(require, exports, module
     return this.toHexString();
   };
   ObjectID.prototype.inspect = ObjectID.prototype.toString;
+  ObjectID.prototype.getTime = function() {
+    return Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000;
+  };
   ObjectID.prototype.getTimestamp = function() {
     var timestamp;
     timestamp = new Date();
-    timestamp.setTime(Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000);
+    timestamp.setTime(this.getTime());
     return timestamp;
   };
   ObjectID.prototype.get_inc = function() {
@@ -351,9 +330,6 @@ define("localdb/0.0.1/src/lib/bson-debug", [], function(require, exports, module
   ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
   ObjectID.createFromHexString = function(hexString) {
     var result, _i;
-    if ((hexString == null) || hexString.length !== 24) {
-      throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
-    }
     result = '';
     for (i = _i = 0; _i < 24; i = ++_i) {
       if (i % 2 === 0) {
@@ -375,92 +351,12 @@ define("localdb/0.0.1/src/lib/binary-parser-debug", [], function(require, export
   for (var i = 0; i < 64; i++) {
     maxBits[i] = Math.pow(2, i);
   }
-
-  function BinaryParser(bigEndian, allowExceptions) {
-    if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
-    this.bigEndian = bigEndian;
-    this.allowExceptions = allowExceptions;
-  };
-  BinaryParser.warn = function warn(msg) {
-    if (this.allowExceptions) {
-      throw new Error(msg);
-    }
-    return 1;
-  };
-  BinaryParser.decodeFloat = function decodeFloat(data, precisionBits, exponentBits) {
-    var b = new this.Buffer(this.bigEndian, data);
-    b.checkBuffer(precisionBits + exponentBits + 1);
-    var bias = maxBits[exponentBits - 1] - 1,
-      signal = b.readBits(precisionBits + exponentBits, 1),
-      exponent = b.readBits(precisionBits, exponentBits),
-      significand = 0,
-      divisor = 2,
-      curByte = b.buffer.length + (-precisionBits >> 3) - 1;
-    do {
-      for (var byteValue = b.buffer[++curByte], startBit = precisionBits % 8 || 8, mask = 1 << startBit; mask >>= 1;
-        (byteValue & mask) && (significand += 1 / divisor), divisor *= 2);
-    } while (precisionBits -= startBit);
-    return exponent == (bias << 1) + 1 ? significand ? NaN : signal ? -Infinity : +Infinity : (1 + signal * -2) * (exponent || significand ? !exponent ? Math.pow(2, -bias + 1) * significand : Math.pow(2, exponent - bias) * (1 + significand) : 0);
-  };
+  var BinaryParser = {}
   BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
     var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
       x = b.readBits(0, bits),
       max = maxBits[bits]; //max = Math.pow( 2, bits );
     return signed && x >= max / 2 ? x - max : x;
-  };
-  BinaryParser.encodeFloat = function encodeFloat(data, precisionBits, exponentBits) {
-    var bias = maxBits[exponentBits - 1] - 1,
-      minExp = -bias + 1,
-      maxExp = bias,
-      minUnnormExp = minExp - precisionBits,
-      n = parseFloat(data),
-      status = isNaN(n) || n == -Infinity || n == +Infinity ? n : 0,
-      exp = 0,
-      len = 2 * bias + 1 + precisionBits + 3,
-      bin = new Array(len),
-      signal = (n = status !== 0 ? 0 : n) < 0,
-      intPart = Math.floor(n = Math.abs(n)),
-      floatPart = n - intPart,
-      lastBit, rounded, result, i, j;
-    for (i = len; i; bin[--i] = 0);
-    for (i = bias + 2; intPart && i; bin[--i] = intPart % 2, intPart = Math.floor(intPart / 2));
-    for (i = bias + 1; floatPart > 0 && i;
-      (bin[++i] = ((floatPart *= 2) >= 1) - 0) && --floatPart);
-    for (i = -1; ++i < len && !bin[i];);
-    if (bin[(lastBit = precisionBits - 1 + (i = (exp = bias + 1 - i) >= minExp && exp <= maxExp ? i + 1 : bias + 1 - (exp = minExp - 1))) + 1]) {
-      if (!(rounded = bin[lastBit])) {
-        for (j = lastBit + 2; !rounded && j < len; rounded = bin[j++]);
-      }
-      for (j = lastBit + 1; rounded && --j >= 0;
-        (bin[j] = !bin[j] - 0) && (rounded = 0));
-    }
-    for (i = i - 2 < 0 ? -1 : i - 3; ++i < len && !bin[i];);
-    if ((exp = bias + 1 - i) >= minExp && exp <= maxExp) {
-      ++i;
-    } else if (exp < minExp) {
-      exp != bias + 1 - len && exp < minUnnormExp && this.warn("encodeFloat::float underflow");
-      i = bias + 1 - (exp = minExp - 1);
-    }
-    if (intPart || status !== 0) {
-      this.warn(intPart ? "encodeFloat::float overflow" : "encodeFloat::" + status);
-      exp = maxExp + 1;
-      i = bias + 2;
-      if (status == -Infinity) {
-        signal = 1;
-      } else if (isNaN(status)) {
-        bin[i] = 1;
-      }
-    }
-    for (n = Math.abs(exp + bias), j = exponentBits + 1, result = ""; --j; result = (n % 2) + result, n = n >>= 1);
-    for (n = 0, j = 0, i = (result = (signal ? "1" : "0") + result + bin.slice(i, i + precisionBits).join("")).length, r = []; i; j = (j + 1) % 8) {
-      n += (1 << j) * result.charAt(--i);
-      if (j == 7) {
-        r[r.length] = String.fromCharCode(n);
-        n = 0;
-      }
-    }
-    r[r.length] = n ? String.fromCharCode(n) : "";
-    return (this.bigEndian ? r.reverse() : r).join("");
   };
   BinaryParser.encodeInt = function encodeInt(data, bits, signed, forceBigEndian) {
     var max = maxBits[bits];
@@ -475,188 +371,11 @@ define("localdb/0.0.1/src/lib/binary-parser-debug", [], function(require, export
     for (bits = -(-bits >> 3) - r.length; bits--; r[r.length] = "\0");
     return ((this.bigEndian || forceBigEndian) ? r.reverse() : r).join("");
   };
-  BinaryParser.toSmall = function(data) {
-    return this.decodeInt(data, 8, true);
-  };
-  BinaryParser.fromSmall = function(data) {
-    return this.encodeInt(data, 8, true);
-  };
-  BinaryParser.toByte = function(data) {
-    return this.decodeInt(data, 8, false);
-  };
   BinaryParser.fromByte = function(data) {
     return this.encodeInt(data, 8, false);
   };
-  BinaryParser.toShort = function(data) {
-    return this.decodeInt(data, 16, true);
-  };
   BinaryParser.fromShort = function(data) {
     return this.encodeInt(data, 16, true);
-  };
-  BinaryParser.toWord = function(data) {
-    return this.decodeInt(data, 16, false);
-  };
-  BinaryParser.fromWord = function(data) {
-    return this.encodeInt(data, 16, false);
-  };
-  BinaryParser.toInt = function(data) {
-    return this.decodeInt(data, 32, true);
-  };
-  BinaryParser.fromInt = function(data) {
-    return this.encodeInt(data, 32, true);
-  };
-  BinaryParser.toLong = function(data) {
-    return this.decodeInt(data, 64, true);
-  };
-  BinaryParser.fromLong = function(data) {
-    return this.encodeInt(data, 64, true);
-  };
-  BinaryParser.toDWord = function(data) {
-    return this.decodeInt(data, 32, false);
-  };
-  BinaryParser.fromDWord = function(data) {
-    return this.encodeInt(data, 32, false);
-  };
-  BinaryParser.toQWord = function(data) {
-    return this.decodeInt(data, 64, true);
-  };
-  BinaryParser.fromQWord = function(data) {
-    return this.encodeInt(data, 64, true);
-  };
-  BinaryParser.toFloat = function(data) {
-    return this.decodeFloat(data, 23, 8);
-  };
-  BinaryParser.fromFloat = function(data) {
-    return this.encodeFloat(data, 23, 8);
-  };
-  BinaryParser.toDouble = function(data) {
-    return this.decodeFloat(data, 52, 11);
-  };
-  BinaryParser.fromDouble = function(data) {
-    return this.encodeFloat(data, 52, 11);
-  };
-  // Factor out the encode so it can be shared by add_header and push_int32
-  BinaryParser.encode_int32 = function encode_int32(number, asArray) {
-    var a, b, c, d, unsigned;
-    unsigned = (number < 0) ? (number + 0x100000000) : number;
-    a = Math.floor(unsigned / 0xffffff);
-    unsigned &= 0xffffff;
-    b = Math.floor(unsigned / 0xffff);
-    unsigned &= 0xffff;
-    c = Math.floor(unsigned / 0xff);
-    unsigned &= 0xff;
-    d = Math.floor(unsigned);
-    return asArray ? [chr(a), chr(b), chr(c), chr(d)] : chr(a) + chr(b) + chr(c) + chr(d);
-  };
-  BinaryParser.encode_int64 = function encode_int64(number) {
-    var a, b, c, d, e, f, g, h, unsigned;
-    unsigned = (number < 0) ? (number + 0x10000000000000000) : number;
-    a = Math.floor(unsigned / 0xffffffffffffff);
-    unsigned &= 0xffffffffffffff;
-    b = Math.floor(unsigned / 0xffffffffffff);
-    unsigned &= 0xffffffffffff;
-    c = Math.floor(unsigned / 0xffffffffff);
-    unsigned &= 0xffffffffff;
-    d = Math.floor(unsigned / 0xffffffff);
-    unsigned &= 0xffffffff;
-    e = Math.floor(unsigned / 0xffffff);
-    unsigned &= 0xffffff;
-    f = Math.floor(unsigned / 0xffff);
-    unsigned &= 0xffff;
-    g = Math.floor(unsigned / 0xff);
-    unsigned &= 0xff;
-    h = Math.floor(unsigned);
-    return chr(a) + chr(b) + chr(c) + chr(d) + chr(e) + chr(f) + chr(g) + chr(h);
-  };
-  /**
-   * UTF8 methods
-   */
-  // Take a raw binary string and return a utf8 string
-  BinaryParser.decode_utf8 = function decode_utf8(binaryStr) {
-    var len = binaryStr.length,
-      decoded = '',
-      i = 0,
-      c = 0,
-      c1 = 0,
-      c2 = 0,
-      c3;
-    while (i < len) {
-      c = binaryStr.charCodeAt(i);
-      if (c < 128) {
-        decoded += String.fromCharCode(c);
-        i++;
-      } else if ((c > 191) && (c < 224)) {
-        c2 = binaryStr.charCodeAt(i + 1);
-        decoded += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-        i += 2;
-      } else {
-        c2 = binaryStr.charCodeAt(i + 1);
-        c3 = binaryStr.charCodeAt(i + 2);
-        decoded += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-        i += 3;
-      }
-    }
-    return decoded;
-  };
-  // Encode a cstring
-  BinaryParser.encode_cstring = function encode_cstring(s) {
-    return unescape(encodeURIComponent(s)) + BinaryParser.fromByte(0);
-  };
-  // Take a utf8 string and return a binary string
-  BinaryParser.encode_utf8 = function encode_utf8(s) {
-    var a = "",
-      c;
-    for (var n = 0, len = s.length; n < len; n++) {
-      c = s.charCodeAt(n);
-      if (c < 128) {
-        a += String.fromCharCode(c);
-      } else if ((c > 127) && (c < 2048)) {
-        a += String.fromCharCode((c >> 6) | 192);
-        a += String.fromCharCode((c & 63) | 128);
-      } else {
-        a += String.fromCharCode((c >> 12) | 224);
-        a += String.fromCharCode(((c >> 6) & 63) | 128);
-        a += String.fromCharCode((c & 63) | 128);
-      }
-    }
-    return a;
-  };
-  BinaryParser.hprint = function hprint(s) {
-    var number;
-    for (var i = 0, len = s.length; i < len; i++) {
-      if (s.charCodeAt(i) < 32) {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(16) : s.charCodeAt(i).toString(16);
-        process.stdout.write(number + " ")
-      } else {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(16) : s.charCodeAt(i).toString(16);
-        process.stdout.write(number + " ")
-      }
-    }
-    process.stdout.write("\n\n");
-  };
-  BinaryParser.ilprint = function hprint(s) {
-    var number;
-    for (var i = 0, len = s.length; i < len; i++) {
-      if (s.charCodeAt(i) < 32) {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(10) : s.charCodeAt(i).toString(10);
-        requireAMD('util').debug(number + ' : ');
-      } else {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(10) : s.charCodeAt(i).toString(10);
-        requireAMD('util').debug(number + ' : ' + s.charAt(i));
-      }
-    }
-  };
-  BinaryParser.hlprint = function hprint(s) {
-    var number;
-    for (var i = 0, len = s.length; i < len; i++) {
-      if (s.charCodeAt(i) < 32) {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(16) : s.charCodeAt(i).toString(16);
-        requireAMD('util').debug(number + ' : ');
-      } else {
-        number = s.charCodeAt(i) <= 15 ? "0" + s.charCodeAt(i).toString(16) : s.charCodeAt(i).toString(16);
-        requireAMD('util').debug(number + ' : ' + s.charAt(i));
-      }
-    }
   };
   /**
    * BinaryParser buffer constructor.
@@ -1308,25 +1027,30 @@ define("localdb/0.0.1/src/lib/projection-debug", [], function(require, exports, 
   Utils = require("localdb/0.0.1/src/lib/utils-debug");
   Projection = {};
   Projection.generate = function(data, projection) {
-    var d;
+    var d, item, result, _i, _len;
     if (JSON.stringify(projection) === "{}") {
       return data;
     }
-    return (function() {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = data.length; _i < _len; _i++) {
-        d = data[_i];
-        _results.push(generateItem(d, projection));
+    result = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      d = data[_i];
+      item = generateItem(d, projection);
+      if (!Utils.isEqual(item, {})) {
+        result.push(item);
       }
-      return _results;
-    })();
+    }
+    return result;
   };
   generateItem = function(item, projection) {
-    var flag, i, key, r, result, v_key, v_value, value, _i, _len;
+    var flag, gItem, i, idFlag, key, r, result, v_key, v_value, value, _i, _len;
     result = {};
+    idFlag = true;
     for (key in projection) {
       value = projection[key];
+      if (key === "_id" && value === -1) {
+        idFlag = false;
+        continue;
+      }
       if (key.indexOf(".$") !== -1) {
         key = key.split(".")[0];
         if (!Utils.isArray(item[key]) || item[key].length === 0) {
@@ -1335,7 +1059,7 @@ define("localdb/0.0.1/src/lib/projection-debug", [], function(require, exports, 
         result[key] = [item[key][0]];
       } else if (key.indexOf("$elemMatch") === 0) {
         if (!Utils.isArray(item) || item.length === 0) {
-          continue;
+          return [];
         }
         r = [];
         for (_i = 0, _len = item.length; _i < _len; _i++) {
@@ -1343,9 +1067,7 @@ define("localdb/0.0.1/src/lib/projection-debug", [], function(require, exports, 
           flag = true;
           for (v_key in value) {
             v_value = value[v_key];
-            if (Utils.isObject(v_value)) {
-              console.log("TODO");
-            } else {
+            if (Utils.isObject(v_value)) {} else {
               if (i[v_key] !== v_value) {
                 flag = false;
               }
@@ -1353,16 +1075,26 @@ define("localdb/0.0.1/src/lib/projection-debug", [], function(require, exports, 
           }
           if (flag) {
             r.push(i);
+            break;
           }
+        }
+        if (Utils.isEqual(r, [])) {
+          return [];
         }
         return r;
       } else if (Utils.isObject(value)) {
-        result[key] = generateItem(item[key], value);
+        gItem = generateItem(item[key], value);
+        if (!Utils.isEqual(gItem, [])) {
+          result[key] = gItem;
+        }
       } else {
         if (value === 1) {
           result[key] = item[key];
         }
       }
+    }
+    if (idFlag && !Utils.isEqual(result, {})) {
+      result._id = item._id;
     }
     return result;
   };

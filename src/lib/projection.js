@@ -7,26 +7,31 @@ Utils = require('./utils');
 Projection = {};
 
 Projection.generate = function(data, projection) {
-  var d;
+  var d, item, result, _i, _len;
   if (JSON.stringify(projection) === "{}") {
     return data;
   }
-  return (function() {
-    var _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = data.length; _i < _len; _i++) {
-      d = data[_i];
-      _results.push(generateItem(d, projection));
+  result = [];
+  for (_i = 0, _len = data.length; _i < _len; _i++) {
+    d = data[_i];
+    item = generateItem(d, projection);
+    if (!Utils.isEqual(item, {})) {
+      result.push(item);
     }
-    return _results;
-  })();
+  }
+  return result;
 };
 
 generateItem = function(item, projection) {
-  var flag, i, key, r, result, v_key, v_value, value, _i, _len;
+  var flag, gItem, i, idFlag, key, r, result, v_key, v_value, value, _i, _len;
   result = {};
+  idFlag = true;
   for (key in projection) {
     value = projection[key];
+    if (key === "_id" && value === -1) {
+      idFlag = false;
+      continue;
+    }
     if (key.indexOf(".$") !== -1) {
       key = key.split(".")[0];
       if (!Utils.isArray(item[key]) || item[key].length === 0) {
@@ -35,7 +40,7 @@ generateItem = function(item, projection) {
       result[key] = [item[key][0]];
     } else if (key.indexOf("$elemMatch") === 0) {
       if (!Utils.isArray(item) || item.length === 0) {
-        continue;
+        return [];
       }
       r = [];
       for (_i = 0, _len = item.length; _i < _len; _i++) {
@@ -44,7 +49,7 @@ generateItem = function(item, projection) {
         for (v_key in value) {
           v_value = value[v_key];
           if (Utils.isObject(v_value)) {
-            console.log("TODO");
+
           } else {
             if (i[v_key] !== v_value) {
               flag = false;
@@ -53,16 +58,26 @@ generateItem = function(item, projection) {
         }
         if (flag) {
           r.push(i);
+          break;
         }
+      }
+      if (Utils.isEqual(r, [])) {
+        return [];
       }
       return r;
     } else if (Utils.isObject(value)) {
-      result[key] = generateItem(item[key], value);
+      gItem = generateItem(item[key], value);
+      if (!Utils.isEqual(gItem, [])) {
+        result[key] = gItem;
+      }
     } else {
       if (value === 1) {
         result[key] = item[key];
       }
     }
+  }
+  if (idFlag && !Utils.isEqual(result, {})) {
+    result._id = item._id;
   }
   return result;
 };

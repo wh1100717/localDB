@@ -107,7 +107,7 @@ describe('Utils', function() {
     ])).to.be('[{"a":1}]');
     return expect(Utils.stringify([1, 2, 3])).to.be('[1,2,3]');
   });
-  return it('isEqual', function() {
+  it('isEqual', function() {
     expect(Utils.isEqual('aaa', 'bbb')).not.to.be.ok();
     expect(Utils.isEqual('aaa', 'aaa')).to.be.ok();
     expect(Utils.isEqual(1, 2)).not.to.be.ok();
@@ -120,5 +120,9 @@ describe('Utils', function() {
     expect(Utils.isEqual(null, void 0)).not.to.be.ok();
     expect(Utils.isEqual(void 0, null)).not.to.be.ok();
     return expect(Utils.isEqual(NaN, 1)).not.to.be.ok();
+  });
+  return it('keys', function() {
+    expect(Utils.keys([])).to.be.eql([]);
+    return expect(Utils);
   });
 });

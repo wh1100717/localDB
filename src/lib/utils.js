@@ -31,23 +31,12 @@ Utils.isFunction = _isType("function");
 Utils.isRegex = _isType("regexp");
 
 Utils.keys = function(obj) {
-  var key;
   if (!Utils.isObject(obj)) {
     return [];
   }
   if (Object.keys) {
     return Object.keys(obj);
   }
-  return (function() {
-    var _results;
-    _results = [];
-    for (key in obj) {
-      if (Utils.has(obj, key)) {
-        _results.push(key);
-      }
-    }
-    return _results;
-  })();
 };
 
 Utils.has = function(obj, key) {

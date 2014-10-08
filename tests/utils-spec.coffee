@@ -100,8 +100,9 @@ describe 'Utils', ->
         expect(Utils.isEqual(null,undefined)).not.to.be.ok()
         expect(Utils.isEqual(undefined,null)).not.to.be.ok()
         expect(Utils.isEqual(NaN,1)).not.to.be.ok()
-        # expect(Utils.isEqual({'a':1},{'a':2})).not.to.be.ok()
-
+    it 'keys', ->
+        expect(Utils.keys([])).to.be.eql([])
+        expect(Utils)
 
 
 
