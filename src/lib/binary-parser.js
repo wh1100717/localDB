@@ -10,7 +10,22 @@ for (var i = 0; i < 64; i++) {
     maxBits[i] = Math.pow(2, i);
 }
 
-var BinaryParser = {}
+function BinaryParser(bigEndian, allowExceptions) {
+    if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
+
+    this.bigEndian = bigEndian;
+    this.allowExceptions = allowExceptions;
+};
+
+BinaryParser.warn = function warn(msg) {
+    if (this.allowExceptions) {
+        throw new Error(msg);
+    }
+
+    return 1;
+};
+
+
 
 BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
     var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
