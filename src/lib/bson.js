@@ -18,57 +18,36 @@ MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10);
 checkForHexRegExp = /^[0-9a-fA-F]{24}$/;
 
 ObjectID = function(id, _hex) {
-  var __id;
-  if (!this instanceof ObjectID) {
-    return new ObjectID(id, _hex);
-  }
   this._bsontype = 'ObjectID';
-  __id = null;
-  if ((id != null) && 'number' !== typeof id && id.length !== 12 && id.length !== 24) {
+  if ((id != null) && id.length !== 12 && id.length !== 24) {
     throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
   }
-  if ((id == null) || typeof id === 'number') {
-    this.id = this.generate(id);
+  if (id == null) {
+    return this.id = this.generate();
   } else if ((id != null) && id.length === 12) {
-    this.id = id;
+    return this.id = id;
   } else if (checkForHexRegExp.test(id)) {
     return ObjectID.createFromHexString(id);
   } else {
     throw new Error("Value passed in is not a valid 24 character hex string");
   }
-  if (ObjectID.cacheHexString) {
-    return this.__id = this.toHexString();
-  }
 };
 
-ObjectID.prototype.generate = function(time) {
+ObjectID.prototype.generate = function() {
   var index3Bytes, machine3Bytes, pid2Bytes, time4Bytes, unixTime;
-  if ('number' === typeof time) {
-    time4Bytes = BinaryParser.encodeInt(time, 32, true, true);
-    machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
-    pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
-    index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
-  } else {
-    unixTime = parseInt(Date.now() / 1000, 10);
-    time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
-    machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
-    pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
-    index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
-  }
+  unixTime = parseInt(Date.now() / 1000, 10);
+  time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
+  machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
+  pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
+  index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
   return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes;
 };
 
 ObjectID.prototype.toHexString = function() {
   var hexString, _i, _ref;
-  if (ObjectID.cacheHexString && this.__id) {
-    return this.__id;
-  }
   hexString = '';
   for (i = _i = 0, _ref = this.id.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
     hexString += hexTable[this.id.charCodeAt(i)];
-  }
-  if (ObjectID.cacheHexString) {
-    this.__id = hexString;
   }
   return hexString;
 };
@@ -79,10 +58,14 @@ ObjectID.prototype.toString = function() {
 
 ObjectID.prototype.inspect = ObjectID.prototype.toString;
 
+ObjectID.prototype.getTime = function() {
+  return Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000;
+};
+
 ObjectID.prototype.getTimestamp = function() {
   var timestamp;
   timestamp = new Date();
-  timestamp.setTime(Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000);
+  timestamp.setTime(this.getTime());
   return timestamp;
 };
 
@@ -94,9 +77,6 @@ ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
 
 ObjectID.createFromHexString = function(hexString) {
   var result, _i;
-  if ((hexString == null) || hexString.length !== 24) {
-    throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
-  }
   result = '';
   for (i = _i = 0; _i < 24; i = ++_i) {
     if (i % 2 === 0) {
