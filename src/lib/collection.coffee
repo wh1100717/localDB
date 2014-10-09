@@ -11,6 +11,7 @@ class Collection
      *  var collection = db.collection('bar')
     ###
     constructor: (collectionName, db) ->
+        throw new Error("collectionName should be specified.") if collectionName is undefined
         @name = "#{db.name}_#{collectionName}"
         @ls = db.ls
         @deserialize()

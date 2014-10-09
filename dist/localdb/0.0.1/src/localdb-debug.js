@@ -20,6 +20,9 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
       if (options == null) {
         options = {};
       }
+      if (dbName === void 0) {
+        throw new Error("dbName should be specified.");
+      }
       this.name = dbPrefix + dbName;
       this.ls = options.engine || localStorage;
     }
@@ -100,6 +103,9 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
   LocalDB.getTime = function(objectId) {
     return Utils.getTime(objectId);
   };
+  if (typeof seajs === "undefined" || seajs === null) {
+    window.LocalDB = LocalDB;
+  }
   module.exports = LocalDB;
 });
 define("localdb/0.0.1/src/lib/utils-debug", [], function(require, exports, module) {
@@ -351,7 +357,18 @@ define("localdb/0.0.1/src/lib/binary-parser-debug", [], function(require, export
   for (var i = 0; i < 64; i++) {
     maxBits[i] = Math.pow(2, i);
   }
-  var BinaryParser = {}
+
+  function BinaryParser(bigEndian, allowExceptions) {
+    if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
+    this.bigEndian = bigEndian;
+    this.allowExceptions = allowExceptions;
+  };
+  BinaryParser.warn = function warn(msg) {
+    if (this.allowExceptions) {
+      throw new Error(msg);
+    }
+    return 1;
+  };
   BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
     var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
       x = b.readBits(0, bits),
@@ -439,6 +456,9 @@ define("localdb/0.0.1/src/lib/collection-debug", [], function(require, exports, 
      *  var collection = db.collection('bar')
      */
     function Collection(collectionName, db) {
+      if (collectionName === void 0) {
+        throw new Error("collectionName should be specified.");
+      }
       this.name = "" + db.name + "_" + collectionName;
       this.ls = db.ls;
       this.deserialize();

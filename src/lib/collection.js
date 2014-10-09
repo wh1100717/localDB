@@ -14,6 +14,9 @@ Collection = (function() {
    *  var collection = db.collection('bar')
    */
   function Collection(collectionName, db) {
+    if (collectionName === void 0) {
+      throw new Error("collectionName should be specified.");
+    }
     this.name = "" + db.name + "_" + collectionName;
     this.ls = db.ls;
     this.deserialize();

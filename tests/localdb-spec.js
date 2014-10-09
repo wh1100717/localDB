@@ -71,8 +71,10 @@ describe("LocalDB", function() {
     collections = db.collections();
     return expect(collections).to.be.eql([]);
   });
-  return it("timestamp", function() {
-    console.log(LocalDB.getTimestamp("543509d5f3692b00001b2b61"));
+  it("timestamp", function() {
     return expect(LocalDB.getTime("543509d5f3692b00001b2b61")).to.be(1412762069000);
+  });
+  return it("window.LocalDB", function() {
+    return expect(typeof window.LocalDB).to.be("undefined");
   });
 });

@@ -24,6 +24,9 @@ LocalDB = (function() {
     if (options == null) {
       options = {};
     }
+    if (dbName === void 0) {
+      throw new Error("dbName should be specified.");
+    }
     this.name = dbPrefix + dbName;
     this.ls = options.engine || localStorage;
   }
@@ -125,5 +128,9 @@ LocalDB.getTimestamp = function(objectId) {
 LocalDB.getTime = function(objectId) {
   return Utils.getTime(objectId);
 };
+
+if (typeof seajs === "undefined" || seajs === null) {
+  window.LocalDB = LocalDB;
+}
 
 module.exports = LocalDB;
