@@ -32,13 +32,15 @@ describe "LocalDB", ->
         options = db.options()
         expect(options).to.be.ok()
         expect(options.name).to.be("foo")
-        expect(options.engine.toString()).to.be("[object Storage]")
+        expect(options.engine.type).to.be(1)
     it "collection", ->
         collection = db.collection("bar")
         collection.insert({a:1})
         expect(collection instanceof Collection).to.be(true)
     it "collections", ->
         collections = db.collections()
+        db.ls.length
+        console.log db.collections()
         expect(collections).to.be.eql(["bar"])
     it "drop collection", ->
         db.drop("bar")

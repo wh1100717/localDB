@@ -45,7 +45,7 @@ describe("LocalDB", function() {
     options = db.options();
     expect(options).to.be.ok();
     expect(options.name).to.be("foo");
-    return expect(options.engine.toString()).to.be("[object Storage]");
+    return expect(options.engine.type).to.be(1);
   });
   it("collection", function() {
     var collection;
@@ -58,6 +58,8 @@ describe("LocalDB", function() {
   it("collections", function() {
     var collections;
     collections = db.collections();
+    db.ls.length;
+    console.log(db.collections());
     return expect(collections).to.be.eql(["bar"]);
   });
   it("drop collection", function() {

@@ -2,6 +2,7 @@
 
 Utils = require('./lib/utils')
 Collection = require('./lib/collection')
+Engine = require('./lib/engine')
 
 dbPrefix = "ldb_"
 
@@ -21,7 +22,7 @@ class LocalDB
         #TODO 如果以后增加一些新的配置项，比如说size，则需要将db带着options内容存储起来，执行构造函数的时候也需要先通过@name和@ls来查看该db是否已经存在。
         throw new Error("dbName should be specified.") if dbName is undefined
         @name = dbPrefix + dbName
-        @ls = options.engine or localStorage
+        @ls = new Engine(localStorage)
 
     # get options
     options: -> {
@@ -33,7 +34,7 @@ class LocalDB
      *  Get Collection Names
      *  db.collections()    //['foo','foo1','foo2','foo3',....]
     ###
-    collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.length] when @ls.key(i).indexOf("#{@name}_") is 0)
+    collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.size()] when @ls.key(i).indexOf("#{@name}_") is 0)
 
     ###
      *  Get Collection
@@ -47,7 +48,7 @@ class LocalDB
     ###
     drop: (collectionName) ->
         collectionName = if collectionName? then "_#{collectionName}" else ""
-        keys = (@ls.key(i) for i in [0...@ls.length] when @ls.key(i).indexOf(@name + collectionName) is 0)
+        keys = (@ls.key(i) for i in [0...@ls.size()] when @ls.key(i).indexOf(@name + collectionName) is 0)
         @ls.removeItem(j) for j in keys
         return true
 
