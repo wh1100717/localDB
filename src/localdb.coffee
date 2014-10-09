@@ -58,7 +58,7 @@ class LocalDB
 LocalDB.support = -> {
     localStorage: if localStorage? then true else false
     sessionStorage: if sessionStorage? then true else false
-    indexedDB: if indexedDB? then true else false
+    indexedDB: false
 }
 ###
  *  Get Timestamp

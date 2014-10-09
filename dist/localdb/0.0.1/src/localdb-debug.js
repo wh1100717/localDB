@@ -86,7 +86,7 @@ define("localdb/0.0.1/src/localdb-debug", [], function(require, exports, module)
     return {
       localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
       sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
-      indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
+      indexedDB: false
     };
   };
   /*

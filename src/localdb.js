@@ -105,7 +105,7 @@ LocalDB.support = function() {
   return {
     localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
     sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
-    indexedDB: typeof indexedDB !== "undefined" && indexedDB !== null ? true : false
+    indexedDB: false
   };
 };
 

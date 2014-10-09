@@ -27,7 +27,7 @@ $ spm install localdb
 <body>
 </body>
 <script type="text/javascript">
-    var db = new LocalDB()
+    var db = new LocalDB("foo")
 </script>
 </html>
 ```
@@ -44,7 +44,7 @@ LocalDB 支持 [seajs](https://github.com/seajs/seajs) 作为其模块加载器�
 </body>
 <script type="text/javascript">
     seajs.use('localdb-seajs.js', function(LocalDB){
-        var db = new LocalDB()
+        var db = new LocalDB("foo")
     })
 </script>
 </html>
