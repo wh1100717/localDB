@@ -25,6 +25,15 @@ describe("LocalDB", function() {
       return expect(LocalDB.support().indexedDB).to.be(true);
     }
   });
+  it("wrong usage", function() {
+    var db, e;
+    try {
+      return db = new LocalDB();
+    } catch (_error) {
+      e = _error;
+      return expect(e.message).to.be("dbName should be specified.");
+    }
+  });
   db = new LocalDB('foo', {
     engine: localStorage
   });
@@ -72,6 +81,7 @@ describe("LocalDB", function() {
     return expect(collections).to.be.eql([]);
   });
   it("timestamp", function() {
+    expect(LocalDB.getTimestamp("543509d5f3692b00001b2b61")).to.be.ok();
     return expect(LocalDB.getTime("543509d5f3692b00001b2b61")).to.be(1412762069000);
   });
   return it("window.LocalDB", function() {

@@ -15,6 +15,11 @@ describe "LocalDB", ->
             expect(LocalDB.support().indexedDB).to.be(false)
         else
             expect(LocalDB.support().indexedDB).to.be(true)
+    it "wrong usage", ->
+        try
+            db = new LocalDB()
+        catch e
+            expect(e.message).to.be("dbName should be specified.")        
     db = new LocalDB('foo', {
         engine: localStorage
         #TODO size && allow
@@ -48,6 +53,7 @@ describe "LocalDB", ->
         collections = db.collections()
         expect(collections).to.be.eql([])
     it "timestamp", ->
+        expect(LocalDB.getTimestamp("543509d5f3692b00001b2b61")).to.be.ok()
         expect(LocalDB.getTime("543509d5f3692b00001b2b61")).to.be(1412762069000)
     it "window.LocalDB", ->
         expect(typeof window.LocalDB).to.be("undefined")

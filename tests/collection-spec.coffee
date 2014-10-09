@@ -8,6 +8,12 @@ Utils = require('../src/lib/utils.js')
 db = new LocalDB("foo")
 
 describe "Collection", ->
+    it "wrong usage", ->
+        try
+            bar = db.collection()
+        catch e
+            expect(e.message).to.be("collectionName should be specified.")
+        
     bar = db.collection("bar")
     it "Init", ->
         expect(bar instanceof Collection).to.be(true)

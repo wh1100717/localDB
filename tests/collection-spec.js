@@ -14,6 +14,15 @@ db = new LocalDB("foo");
 
 describe("Collection", function() {
   var bar;
+  it("wrong usage", function() {
+    var bar, e;
+    try {
+      return bar = db.collection();
+    } catch (_error) {
+      e = _error;
+      return expect(e.message).to.be("collectionName should be specified.");
+    }
+  });
   bar = db.collection("bar");
   it("Init", function() {
     return expect(bar instanceof Collection).to.be(true);
