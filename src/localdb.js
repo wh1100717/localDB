@@ -30,7 +30,7 @@ LocalDB = (function() {
       throw new Error("dbName should be specified.");
     }
     this.name = dbPrefix + dbName;
-    this.ls = new Engine(localStorage);
+    this.ls = new Engine(options.engine || localStorage);
   }
 
   LocalDB.prototype.options = function() {
