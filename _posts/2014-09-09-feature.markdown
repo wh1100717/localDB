@@ -1,7 +1,7 @@
 ---
 layout: feature
-title: "Feature"
-permalink: /feature/
+title: "Support Feature"
+permalink: /supportFeature/
 ---
 
 <h2 id="BSON_ID"> BSON _ID </h2>
