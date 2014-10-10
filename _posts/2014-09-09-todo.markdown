@@ -5,13 +5,33 @@ permalink: /todoList/
 ---
 
 
-*   [ ] insert的时候提供自增支持
-*   [ ] 支持IndexedDB引擎
-*   [ ] 支持WebSQL引擎
-*   [ ] 支持Promises
-*   [ ] 支持requireJS
-*   [ ] 支持component安装
-*   [ ] hack localStorage来扩展域存储容量
-*   [ ] 支持域白名单功能，实现跨域共享数据
-*   [ ] 存储数据简单加密功能
-*   [ ] 支持userData
+*   <input type="checkbox" disabled>
+		insert的时候提供自增支持
+	</input>
+*   <input type="checkbox" disabled>
+		支持IndexedDB引擎
+	</input>
+*   <input type="checkbox" disabled>
+		支持WebSQL引擎
+	</input>
+*   <input type="checkbox" disabled>
+		支持Promises
+	</input>
+*   <input type="checkbox" disabled>
+		支持requireJS
+	</input>
+*   <input type="checkbox" disabled>
+		支持component安装
+	</input>
+*   <input type="checkbox" disabled>
+		hack localStorage来扩展域存储容量
+	</input>
+*   <input type="checkbox" disabled>
+		支持域白名单功能，实现跨域共享数据
+	</input>
+*   <input type="checkbox" disabled>
+		存储数据简单加密功能
+	</input>
+*   <input type="checkbox" disabled>
+		支持userData
+	</input>
