@@ -2,39 +2,28 @@
 
 class Engine
 
-    constructor: (engine) ->
-        if engine is localStorage
-            @type = 1
-        else if engine is sessionStorage
-            @type = 2
-        else if engine is indexedDB
-            @type = 3
-        else
-            @type = 9
+    constructor: (type) ->
+        @type = if type is 2 then 2 else 1
+        
     key: (name) ->
-        switch @type
-            when 1 then return localStorage.key(name)
-            when 2 then return sessionStorage.key(name)
+        return sessionStorage.key(name) if @type is 1
+        return localStorage.key(name) if @type is 2
 
     size: ->
-        switch @type
-            when 1 then return localStorage.length
-            when 2 then return sessionStorage.length
+        return sessionStorage.length if @type is 1
+        return localStorage.length if @type is 2
 
     setItem: (key, val) ->
-        switch @type
-            when 1 then return localStorage.setItem(key, val)
-            when 2 then return sessionStorage.setItem(key, val)
+        return sessionStorage.setItem(key, val) if @type is 1
+        return localStorage.setItem(key, val) if @type is 2
 
     getItem: (key) ->
-        switch @type
-            when 1 then return localStorage.getItem(key)
-            when 2 then return sessionStorage.getItem(key)            
+        return sessionStorage.getItem(key) if @type is 1
+        return localStorage.getItem(key) if @type is 2
 
     removeItem: (key) ->
-        switch @type
-            when 1 then return localStorage.removeItem(key)
-            when 2 then return sessionStorage.removeItem(key)            
+        return sessionStorage.removeItem(key) if @type is 1
+        return localStorage.removeItem(key) if @type is 2
 
 module.exports = Engine        
 

@@ -21,7 +21,7 @@ describe "LocalDB", ->
         catch e
             expect(e.message).to.be("dbName should be specified.")        
     db = new LocalDB('foo', {
-        engine: localStorage
+        type: 2
         #TODO size && allow
         #size: 500
         #allow: ['baidu.com', 'pt.aliexpress.com','www.qq.com']
@@ -32,7 +32,7 @@ describe "LocalDB", ->
         options = db.options()
         expect(options).to.be.ok()
         expect(options.name).to.be("foo")
-        expect(options.engine.type).to.be(1)
+        expect(options.type).to.be(2)
     it "collection", ->
         collection = db.collection("bar")
         collection.insert({a:1})

@@ -15,12 +15,13 @@ LocalDB = (function() {
   /*
    *  Constructor
    *  var db = new LocalDB('foo')
-   *  var db = new LocalDB('foo', {engine: localStorage})
-   *  var db = new LocalDB('foo', {engine: sessionStorage})
+   *  var db = new LocalDB('foo', {type: 1})
+   *  var db = new LocalDB('foo', {type: 2})
    *
-   *  localStorage would save the foo db even after browser closed.
-   *  sessionStorage would only save the foo db while the brower stay open.
-   *  localStorage by default
+   *  Engine will decide to choose the best waty to handle the data automatically.
+   *  when type is 1, the data will be alive while browser stay open. e.g. sessionStorage
+   *  when type is 2, the data will be alive even after browser is closed. e.g. localStorage
+   *  1 by default
    */
   function LocalDB(dbName, options) {
     if (options == null) {
@@ -30,13 +31,13 @@ LocalDB = (function() {
       throw new Error("dbName should be specified.");
     }
     this.name = dbPrefix + dbName;
-    this.ls = new Engine(options.engine || localStorage);
+    this.ls = new Engine(options.type || 1);
   }
 
   LocalDB.prototype.options = function() {
     return {
       name: this.name.substr(dbPrefix.length),
-      engine: this.ls
+      type: this.ls.type
     };
   };
 

@@ -35,7 +35,7 @@ describe("LocalDB", function() {
     }
   });
   db = new LocalDB('foo', {
-    engine: localStorage
+    type: 2
   });
   it("new LocalDB", function() {
     return expect(db instanceof LocalDB).to.be(true);
@@ -45,7 +45,7 @@ describe("LocalDB", function() {
     options = db.options();
     expect(options).to.be.ok();
     expect(options.name).to.be("foo");
-    return expect(options.engine.type).to.be(1);
+    return expect(options.type).to.be(2);
   });
   it("collection", function() {
     var collection;

@@ -11,23 +11,24 @@ class LocalDB
     ###
      *  Constructor
      *  var db = new LocalDB('foo')
-     *  var db = new LocalDB('foo', {engine: localStorage})
-     *  var db = new LocalDB('foo', {engine: sessionStorage})
+     *  var db = new LocalDB('foo', {type: 1})
+     *  var db = new LocalDB('foo', {type: 2})
      *
-     *  localStorage would save the foo db even after browser closed.
-     *  sessionStorage would only save the foo db while the brower stay open.
-     *  localStorage by default
+     *  Engine will decide to choose the best waty to handle the data automatically.
+     *  when type is 1, the data will be alive while browser stay open. e.g. sessionStorage
+     *  when type is 2, the data will be alive even after browser is closed. e.g. localStorage
+     *  1 by default
     ###
     constructor: (dbName, options = {}) ->
         #TODO 如果以后增加一些新的配置项，比如说size，则需要将db带着options内容存储起来，执行构造函数的时候也需要先通过@name和@ls来查看该db是否已经存在。
         throw new Error("dbName should be specified.") if dbName is undefined
         @name = dbPrefix + dbName
-        @ls = new Engine(options.engine or localStorage)
+        @ls = new Engine(options.type or 1)
 
     # get options
     options: -> {
         name: @name.substr(dbPrefix.length)
-        engine: @ls
+        type: @ls.type
     }
 
     ###
