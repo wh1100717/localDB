@@ -173,6 +173,10 @@ section .lead {
 	text-align: left;
 }
 
+.feature {
+	transform: rotate(-30deg);
+}
+
 /* 测边栏 */
 aside {
 	padding-right: 20px;
