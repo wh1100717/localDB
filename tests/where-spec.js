@@ -67,13 +67,13 @@ describe('Where', function() {
       arr_val3: /he1.*ld/
     })).to.be(false);
     expect(Where(obj, {
+      arr_val3: /just.*do.*it/g
+    })).to.be(true);
+    expect(Where(obj, {
       num_val: /\d/
     })).to.be(true);
     expect(Where(obj, {
       arr_val: /\d/
-    })).to.be(true);
-    expect(Where(obj, {
-      arr_val3: /just.*do.*it/g
     })).to.be(true);
     expect(Where(obj, {
       arr_val: [1, 2, 3, 4]

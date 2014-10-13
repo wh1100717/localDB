@@ -40,10 +40,10 @@ describe 'Where', ->
         expect(Where(obj, {regex_val: /he.*ld/})).to.be(true)
         expect(Where(obj, {regex_val: /he1.*ld/})).to.be(false)
         expect(Where(obj, {arr_val3: /he1.*ld/})).to.be(false)
+        expect(Where(obj, {arr_val3: /just.*do.*it/g})).to.be(true)
         #正则匹配
         expect(Where(obj, {num_val: /\d/})).to.be(true)
         expect(Where(obj, {arr_val: /\d/})).to.be(true)
-        expect(Where(obj, {arr_val3: /just.*do.*it/g})).to.be(true)
         #值为数组匹配
         expect(Where(obj, {arr_val: [1,2,3,4]})).to.be(true)
         expect(Where(obj, {arr_val: ["1","2","3","4"]})).to.be(false)
