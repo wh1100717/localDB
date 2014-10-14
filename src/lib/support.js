@@ -45,3 +45,9 @@ Support.indexedDB = function() {
 Support.applicationcache = function() {
   return !!applicationCache;
 };
+
+Support.userdata = function() {
+  return !!document.documentElement.addBehavior;
+};
+
+module.exports = Support;

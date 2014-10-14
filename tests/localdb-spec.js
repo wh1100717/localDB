@@ -58,7 +58,7 @@ describe("LocalDB", function() {
   it("collections", function() {
     var collections;
     collections = db.collections();
-    db.ls.length;
+    console.log(db.ls.size());
     console.log(db.collections());
     return expect(collections).to.be.eql(["bar"]);
   });

@@ -39,7 +39,7 @@ describe "LocalDB", ->
         expect(collection instanceof Collection).to.be(true)
     it "collections", ->
         collections = db.collections()
-        db.ls.length
+        console.log db.ls.size()
         console.log db.collections()
         expect(collections).to.be.eql(["bar"])
     it "drop collection", ->

@@ -27,3 +27,7 @@ Support.websqldatabase = -> !!openDatabase
 Support.indexedDB = -> !!(indexedDB or webkitIndexedDB or mozIndexedDB or OIndexedDB or msIndexedDB)
 
 Support.applicationcache = -> !!applicationCache
+
+Support.userdata = -> !!document.documentElement.addBehavior
+
+module.exports = Support
