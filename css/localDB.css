@@ -163,18 +163,13 @@ section .title {
 
 section .lead {
 	max-width: 80%;
-	margin-right: auto;
-	margin-left: auto;
+	margin: 20px auto;
 }
 
 .post-section {
 	padding-top: 0;
 	padding-bottom: 40px;
 	text-align: left;
-}
-
-.feature {
-	transform: rotate(-30deg);
 }
 
 /* 测边栏 */

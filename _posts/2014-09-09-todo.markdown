@@ -6,25 +6,7 @@ permalink: /todoList/
 
 
 *   <input type="checkbox" disabled>
-		insert的时候提供自增支持
-	</input>
-*   <input type="checkbox" disabled>
-		支持IndexedDB引擎
-	</input>
-*   <input type="checkbox" disabled>
-		支持WebSQL引擎
-	</input>
-*   <input type="checkbox" disabled>
 		支持Promises
-	</input>
-*   <input type="checkbox" disabled>
-		支持requireJS
-	</input>
-*   <input type="checkbox" disabled>
-		支持component安装
-	</input>
-*   <input type="checkbox" disabled>
-		hack localStorage来扩展域存储容量
 	</input>
 *   <input type="checkbox" disabled>
 		支持域白名单功能，实现跨域共享数据
@@ -33,5 +15,23 @@ permalink: /todoList/
 		存储数据简单加密功能
 	</input>
 *   <input type="checkbox" disabled>
-		支持userData
+		insert的时候提供自增支持
+	</input>
+*   <input type="checkbox" disabled>
+		支持requireJS
+	</input>
+*   <input type="checkbox" disabled>
+		支持component安装
+	</input>
+*   <input type="checkbox" disabled>
+		提供chrome localStorage 增加存储容量的API(调用chrome接口，需要用户确认)
+	</input>
+*   <input type="checkbox" disabled>
+		浏览器版本判断
+	</input>
+*   <input type="checkbox" disabled>
+		讨论当容量已满时的行为方
+	</input>
+*   <input type="checkbox" disabled>
+		支持sort排序
 	</input>
