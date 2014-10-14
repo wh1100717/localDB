@@ -52,7 +52,7 @@ ObjectID.prototype.get_inc = ->
 ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10)
 
 ObjectID.createFromHexString = (hexString) ->
-    result =''
+    result = ''
     for i in [0...24] when i % 2 is 0
         result += BinaryParser.fromByte(parseInt(hexString.substr(i, 2), 16))
     return new ObjectID(result, hexString)

@@ -8,41 +8,6 @@ Utils = {};
 
 toString = Object.prototype.toString;
 
-_isType = function(type) {
-  return function(obj) {
-    return toString.call(obj).toLowerCase() === ("[object " + type + "]").toLowerCase();
-  };
-};
-
-Utils.isType = function(ele, type) {
-  return _isType(type)(ele);
-};
-
-Utils.isObject = _isType("object");
-
-Utils.isString = _isType("string");
-
-Utils.isNumber = _isType("number");
-
-Utils.isArray = _isType("array");
-
-Utils.isFunction = _isType("function");
-
-Utils.isRegex = _isType("regexp");
-
-Utils.keys = function(obj) {
-  if (!Utils.isObject(obj)) {
-    return [];
-  }
-  if (Object.keys) {
-    return Object.keys(obj);
-  }
-};
-
-Utils.has = function(obj, key) {
-  return obj !== null && obj !== void 0 && Object.prototype.hasOwnProperty.call(obj, key);
-};
-
 
 /*
  *  isEqual function is implemented by underscore and I just rewrite in my project.
@@ -128,6 +93,41 @@ eq = function(a, b, aStack, bStack) {
   aStack.pop();
   bStack.pop();
   return result;
+};
+
+_isType = function(type) {
+  return function(obj) {
+    return toString.call(obj).toLowerCase() === ("[object " + type + "]").toLowerCase();
+  };
+};
+
+Utils.isType = function(ele, type) {
+  return _isType(type)(ele);
+};
+
+Utils.isObject = _isType("object");
+
+Utils.isString = _isType("string");
+
+Utils.isNumber = _isType("number");
+
+Utils.isArray = _isType("array");
+
+Utils.isFunction = _isType("function");
+
+Utils.isRegex = _isType("regexp");
+
+Utils.keys = function(obj) {
+  if (!Utils.isObject(obj)) {
+    return [];
+  }
+  if (Object.keys) {
+    return Object.keys(obj);
+  }
+};
+
+Utils.has = function(obj, key) {
+  return obj !== null && obj !== void 0 && Object.prototype.hasOwnProperty.call(obj, key);
 };
 
 Utils.isEqual = function(a, b) {

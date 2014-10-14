@@ -6,29 +6,6 @@ Utils = {}
 
 toString = Object.prototype.toString
 
-_isType = (type) -> (obj) -> toString.call(obj).toLowerCase() is "[object #{type}]".toLowerCase()
-
-Utils.isType = (ele, type) -> _isType(type)(ele)
-
-Utils.isObject = _isType "object"
-
-Utils.isString = _isType "string"
-
-Utils.isNumber = _isType "number"
-
-Utils.isArray = _isType "array"
-
-Utils.isFunction = _isType "function"
-
-Utils.isRegex = _isType "regexp"
-
-Utils.keys = (obj) ->
-    return [] if not Utils.isObject(obj)
-    return Object.keys(obj) if Object.keys
-    # return (key for key of obj when Utils.has(obj, key))
-
-Utils.has = (obj, key) -> obj isnt null and obj isnt undefined and Object.prototype.hasOwnProperty.call(obj, key)
-
 ###
  *  isEqual function is implemented by underscore and I just rewrite in my project.
  *  https://github.com/jashkenas/underscore/blob/master/underscore.js
@@ -75,6 +52,29 @@ eq = (a, b, aStack, bStack) ->
     aStack.pop()
     bStack.pop()
     return result
+
+_isType = (type) -> (obj) -> toString.call(obj).toLowerCase() is "[object #{type}]".toLowerCase()
+
+Utils.isType = (ele, type) -> _isType(type)(ele)
+
+Utils.isObject = _isType "object"
+
+Utils.isString = _isType "string"
+
+Utils.isNumber = _isType "number"
+
+Utils.isArray = _isType "array"
+
+Utils.isFunction = _isType "function"
+
+Utils.isRegex = _isType "regexp"
+
+Utils.keys = (obj) ->
+    return [] if not Utils.isObject(obj)
+    return Object.keys(obj) if Object.keys
+    # return (key for key of obj when Utils.has(obj, key))
+
+Utils.has = (obj, key) -> obj isnt null and obj isnt undefined and Object.prototype.hasOwnProperty.call(obj, key)
 
 Utils.isEqual = (a, b) -> eq(a, b, [], [])
 

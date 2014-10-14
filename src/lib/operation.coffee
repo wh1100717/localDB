@@ -71,7 +71,7 @@ Update = {
                     when "$set" then d[k] = v if d[k]? or upsert
                     when "$mul" then d[k] *= v if d[k]? or upsert
                     when "$rename"
-                        d[v] = d[k] 
+                        d[v] = d[k]
                         delete d[k]
                     when "$unset"
                         delete d[k]

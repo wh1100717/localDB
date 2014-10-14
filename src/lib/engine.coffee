@@ -25,6 +25,6 @@ class Engine
         return sessionStorage.removeItem(key) if @type is 1
         return localStorage.removeItem(key) if @type is 2
 
-module.exports = Engine        
+module.exports = Engine
 
 
