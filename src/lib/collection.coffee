@@ -23,8 +23,19 @@ class Collection
 
     ###
      *  save data into localStorage/sessionStorage
+     *  when catching error in setItem(), delete the oldest data and try again.
     ###
-    serialize: -> @ls.setItem @name, Utils.stringify(@data)
+    serialize: ->
+        try
+            @ls.setItem @name, Utils.stringify(@data)
+        catch e
+            flag = true
+            while flag
+                try
+                    @data.splice(0,1)
+                    @ls.setItem @name, Utils.stringify(@data)
+                    flag = false
+        return
 
     ###
      *  delete this collection

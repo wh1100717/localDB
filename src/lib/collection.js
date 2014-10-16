@@ -34,10 +34,24 @@ Collection = (function() {
 
   /*
    *  save data into localStorage/sessionStorage
+   *  when catching error in setItem(), delete the oldest data and try again.
    */
 
   Collection.prototype.serialize = function() {
-    return this.ls.setItem(this.name, Utils.stringify(this.data));
+    var e, flag;
+    try {
+      this.ls.setItem(this.name, Utils.stringify(this.data));
+    } catch (_error) {
+      e = _error;
+      flag = true;
+      while (flag) {
+        try {
+          this.data.splice(0, 1);
+          this.ls.setItem(this.name, Utils.stringify(this.data));
+          flag = false;
+        } catch (_error) {}
+      }
+    }
   };
 
 
