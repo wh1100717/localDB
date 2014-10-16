@@ -54,6 +54,21 @@ class Engine
         else
             @userdata.removeItem(key, val)
 
+    usage: ->
+        ###
+         *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
+        ###
+        allStrings = ""
+        if @tyep is 1
+            for key, val of sessionStorage
+                allStrings += val
+        else if Support.localstorage()
+            for key, val of localStorage
+                allStrings += val
+        else
+            console.log "todo"
+        return allStrings.length / 512
+
 class UserData
     ### rewrite with coffee from https://github.com/marcuswestin/store.js
     // Since #userData storage applies only to specific paths, we need to

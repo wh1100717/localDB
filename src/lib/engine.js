@@ -72,6 +72,29 @@ Engine = (function() {
     }
   };
 
+  Engine.prototype.usage = function() {
+
+    /*
+     *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
+     */
+    var allStrings, key, val;
+    allStrings = "";
+    if (this.tyep === 1) {
+      for (key in sessionStorage) {
+        val = sessionStorage[key];
+        allStrings += val;
+      }
+    } else if (Support.localstorage()) {
+      for (key in localStorage) {
+        val = localStorage[key];
+        allStrings += val;
+      }
+    } else {
+      console.log("todo");
+    }
+    return allStrings.length / 512;
+  };
+
   return Engine;
 
 })();
