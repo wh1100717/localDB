@@ -11,6 +11,8 @@
 
 **LocalDB** 为开发者提供简单、易用又强大的浏览器端数据存取接口，其被设计用来为 WEB 应用、手机 H5 应用、网页游戏引擎提供浏览器端持久化存储方案。
 
+**Under Development - Still Unstable**
+
 ## Feature
 
 *   基于 JSON 风格文档的存储方式
