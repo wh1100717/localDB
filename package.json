@@ -39,6 +39,7 @@
     "grunt-contrib-clean": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-connect": "*",
+    "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-requirejs": "*",
     "grunt-contrib-uglify": "*",

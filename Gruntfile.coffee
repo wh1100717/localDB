@@ -56,6 +56,16 @@ module.exports = (grunt) ->
                 }
             }
         }
+        copy: {
+            main: {
+                files: {
+                    "dist/localdb-sea.js": ["dist/localdb.js"]
+                }
+                options: {
+                    process: (content, srcpath) -> "define(function(require, exports, module) {#{content}});"
+                }
+            }
+        }
         uglify: {
             all: {
                 files: {
@@ -91,7 +101,7 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'test', ['karma', 'coveralls']
 
-    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'uglify']
+    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify']
 
     grunt.registerTask 'default', ['test']
 

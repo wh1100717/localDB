@@ -1,4 +1,4 @@
-(function( global, factory ) {
+define(function(require, exports, module) {(function( global, factory ) {
 
     if ( typeof module === "object" && typeof module.exports === "object" ) {
         module.exports = global.document ?
@@ -1432,4 +1432,4 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
   }
 
   return LocalDB
-}));
+}));});

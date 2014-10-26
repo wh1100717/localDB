@@ -60,6 +60,18 @@ module.exports = function(grunt) {
         }
       }
     },
+    copy: {
+      main: {
+        files: {
+          "dist/localdb-sea.js": ["dist/localdb.js"]
+        },
+        options: {
+          process: function(content, srcpath) {
+            return "define(function(require, exports, module) {" + content + "});";
+          }
+        }
+      }
+    },
     uglify: {
       all: {
         files: {
@@ -93,6 +105,6 @@ module.exports = function(grunt) {
     }
   });
   grunt.registerTask('test', ['karma', 'coveralls']);
-  grunt.registerTask('build', ['test', 'clean:build', 'requirejs', 'uglify']);
+  grunt.registerTask('build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify']);
   grunt.registerTask('default', ['test']);
 };

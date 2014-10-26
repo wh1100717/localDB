@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <!-- <script type="text/javascript" src="require.js"></script> -->
+    <script type="text/javascript" src="../dist/localdb.js"></script>
+</head>
+<body>
+<script>
+var db = new LocalDB("foo")
+var collection = db.collection("bar")
+collection.drop()
+collection.insert({
+    a: 5,
+    b: "abc",
+    c: /hell.*ld/,
+    d: {e: 4, f: "5"},
+    g: function(h){return h*3},
+    i: [1,2,3]
+})
+var data = collection.find({
+    where: {
+        a: {$gt: 3, $lt: 10},
+        b: "abc"
+    },
+    projection: {
+        a:1,
+        b:1
+    }
+})
+console.log(data)
+</script>
+</body>
+</html>
