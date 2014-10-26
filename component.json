@@ -2,13 +2,7 @@
   "name": "localDB",
   "version": "0.0.1",
   "description": "local database using localStorage",
-  "homepage": "https://github.com/wh1100717/localDB",
-  "author": {
-    "name": "Eric Wang",
-    "email": "me@emptystack.net",
-    "url": "http://localdb.emptystack.net/"
-  },
-  "main": "dist/localdb.js",
+  "repo": "wh1100717/localDB",
   "keywords": [
     "localdb",
     "localstorage",
@@ -22,8 +16,8 @@
       "url": "http://mit-license.org"
     }
   ],
-  "ignore": [
-    "coverage/",
-    "node_modules/"
+  "main": "dist/localdb.js",
+  "scripts": [
+    "dsit/localdb.js"
   ]
 }
