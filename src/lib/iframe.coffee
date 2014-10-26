@@ -17,3 +17,5 @@ define (require, exports, module) ->
             document.body.appendChild(@ifrm)
             return
         remove: -> @ifrm.parentElement.removeChild(@ifrm)
+
+    module.exports = Iframe

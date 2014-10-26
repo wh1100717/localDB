@@ -115,9 +115,6 @@ define(function(require, exports, module) {
     return sum;
   };
 
-  /**
-   * Expose.
-   */
   BinaryParser.Buffer = BinaryParserBuffer;
 
   module.exports = BinaryParser

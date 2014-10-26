@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   'use strict';
   var Iframe;
-  return Iframe = (function() {
+  Iframe = (function() {
     function Iframe(origin) {
       this.origin = origin;
     }
@@ -27,4 +27,5 @@ define(function(require, exports, module) {
     return Iframe;
 
   })();
+  return module.exports = Iframe;
 });
