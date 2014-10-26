@@ -22,128 +22,128 @@
   // you try to trace through "use strict" call chains. (#13335)
   //
 
-    /**
-     * Binary Parser.
-     * Jonas Raoni Soares Silva
-     * http://jsfromhell.com/classes/binary-parser [v1.0]
-     */
-    var chr = String.fromCharCode;
+  /**
+   * Binary Parser.
+   * Jonas Raoni Soares Silva
+   * http://jsfromhell.com/classes/binary-parser [v1.0]
+   */
+  var chr = String.fromCharCode;
 
-    var maxBits = [];
-    for (var i = 0; i < 64; i++) {
-        maxBits[i] = Math.pow(2, i);
+  var maxBits = [];
+  for (var i = 0; i < 64; i++) {
+    maxBits[i] = Math.pow(2, i);
+  }
+
+  function BinaryParser(bigEndian, allowExceptions) {
+    if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
+
+    this.bigEndian = bigEndian;
+    this.allowExceptions = allowExceptions;
+  };
+
+  BinaryParser.warn = function warn(msg) {
+    if (this.allowExceptions) {
+      throw new Error(msg);
     }
 
-    function BinaryParser(bigEndian, allowExceptions) {
-        if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
+    return 1;
+  };
 
-        this.bigEndian = bigEndian;
-        this.allowExceptions = allowExceptions;
-    };
+  BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
+    var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
+      x = b.readBits(0, bits),
+      max = maxBits[bits]; //max = Math.pow( 2, bits );
 
-    BinaryParser.warn = function warn(msg) {
-        if (this.allowExceptions) {
-            throw new Error(msg);
-        }
+    return signed && x >= max / 2 ? x - max : x;
+  };
 
-        return 1;
-    };
+  BinaryParser.encodeInt = function encodeInt(data, bits, signed, forceBigEndian) {
+    var max = maxBits[bits];
 
-    BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
-        var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
-            x = b.readBits(0, bits),
-            max = maxBits[bits]; //max = Math.pow( 2, bits );
+    if (data >= max || data < -(max / 2)) {
+      this.warn("encodeInt::overflow");
+      data = 0;
+    }
 
-        return signed && x >= max / 2 ? x - max : x;
-    };
+    if (data < 0) {
+      data += max;
+    }
 
-    BinaryParser.encodeInt = function encodeInt(data, bits, signed, forceBigEndian) {
-        var max = maxBits[bits];
+    for (var r = []; data; r[r.length] = String.fromCharCode(data % 256), data = Math.floor(data / 256));
 
-        if (data >= max || data < -(max / 2)) {
-            this.warn("encodeInt::overflow");
-            data = 0;
-        }
+    for (bits = -(-bits >> 3) - r.length; bits--; r[r.length] = "\0");
 
-        if (data < 0) {
-            data += max;
-        }
+    return ((this.bigEndian || forceBigEndian) ? r.reverse() : r).join("");
+  };
 
-        for (var r = []; data; r[r.length] = String.fromCharCode(data % 256), data = Math.floor(data / 256));
+  BinaryParser.fromByte = function(data) {
+    return this.encodeInt(data, 8, false);
+  };
+  BinaryParser.fromShort = function(data) {
+    return this.encodeInt(data, 16, true);
+  };
 
-        for (bits = -(-bits >> 3) - r.length; bits--; r[r.length] = "\0");
+  /**
+   * BinaryParser buffer constructor.
+   */
+  function BinaryParserBuffer(bigEndian, buffer) {
+    this.bigEndian = bigEndian || 0;
+    this.buffer = [];
+    this.setBuffer(buffer);
+  };
 
-        return ((this.bigEndian || forceBigEndian) ? r.reverse() : r).join("");
-    };
+  BinaryParserBuffer.prototype.setBuffer = function setBuffer(data) {
+    var l, i, b;
 
-    BinaryParser.fromByte = function(data) {
-        return this.encodeInt(data, 8, false);
-    };
-    BinaryParser.fromShort = function(data) {
-        return this.encodeInt(data, 16, true);
-    };
+    if (data) {
+      i = l = data.length;
+      b = this.buffer = new Array(l);
+      for (; i; b[l - i] = data.charCodeAt(--i));
+      this.bigEndian && b.reverse();
+    }
+  };
 
-    /**
-     * BinaryParser buffer constructor.
-     */
-    function BinaryParserBuffer(bigEndian, buffer) {
-        this.bigEndian = bigEndian || 0;
-        this.buffer = [];
-        this.setBuffer(buffer);
-    };
+  BinaryParserBuffer.prototype.hasNeededBits = function hasNeededBits(neededBits) {
+    return this.buffer.length >= -(-neededBits >> 3);
+  };
 
-    BinaryParserBuffer.prototype.setBuffer = function setBuffer(data) {
-        var l, i, b;
+  BinaryParserBuffer.prototype.checkBuffer = function checkBuffer(neededBits) {
+    if (!this.hasNeededBits(neededBits)) {
+      throw new Error("checkBuffer::missing bytes");
+    }
+  };
 
-        if (data) {
-            i = l = data.length;
-            b = this.buffer = new Array(l);
-            for (; i; b[l - i] = data.charCodeAt(--i));
-            this.bigEndian && b.reverse();
-        }
-    };
+  BinaryParserBuffer.prototype.readBits = function readBits(start, length) {
+    //shl fix: Henri Torgemane ~1996 (compressed by Jonas Raoni)
 
-    BinaryParserBuffer.prototype.hasNeededBits = function hasNeededBits(neededBits) {
-        return this.buffer.length >= -(-neededBits >> 3);
-    };
+    function shl(a, b) {
+      for (; b--; a = ((a %= 0x7fffffff + 1) & 0x40000000) == 0x40000000 ? a * 2 : (a - 0x40000000) * 2 + 0x7fffffff + 1);
+      return a;
+    }
 
-    BinaryParserBuffer.prototype.checkBuffer = function checkBuffer(neededBits) {
-        if (!this.hasNeededBits(neededBits)) {
-            throw new Error("checkBuffer::missing bytes");
-        }
-    };
+    if (start < 0 || length <= 0) {
+      return 0;
+    }
 
-    BinaryParserBuffer.prototype.readBits = function readBits(start, length) {
-        //shl fix: Henri Torgemane ~1996 (compressed by Jonas Raoni)
+    this.checkBuffer(start + length);
 
-        function shl(a, b) {
-            for (; b--; a = ((a %= 0x7fffffff + 1) & 0x40000000) == 0x40000000 ? a * 2 : (a - 0x40000000) * 2 + 0x7fffffff + 1);
-            return a;
-        }
+    var offsetLeft, offsetRight = start % 8,
+      curByte = this.buffer.length - (start >> 3) - 1,
+      lastByte = this.buffer.length + (-(start + length) >> 3),
+      diff = curByte - lastByte,
+      sum = ((this.buffer[curByte] >> offsetRight) & ((1 << (diff ? 8 - offsetRight : length)) - 1)) + (diff && (offsetLeft = (start + length) % 8) ? (this.buffer[lastByte++] & ((1 << offsetLeft) - 1)) << (diff-- << 3) - offsetRight : 0);
 
-        if (start < 0 || length <= 0) {
-            return 0;
-        }
+    for (; diff; sum += shl(this.buffer[lastByte++], (diff-- << 3) - offsetRight));
 
-        this.checkBuffer(start + length);
+    return sum;
+  };
 
-        var offsetLeft, offsetRight = start % 8,
-            curByte = this.buffer.length - (start >> 3) - 1,
-            lastByte = this.buffer.length + (-(start + length) >> 3),
-            diff = curByte - lastByte,
-            sum = ((this.buffer[curByte] >> offsetRight) & ((1 << (diff ? 8 - offsetRight : length)) - 1)) + (diff && (offsetLeft = (start + length) % 8) ? (this.buffer[lastByte++] & ((1 << offsetLeft) - 1)) << (diff-- << 3) - offsetRight : 0);
+  /**
+   * Expose.
+   */
+  BinaryParser.Buffer = BinaryParserBuffer;
 
-        for (; diff; sum += shl(this.buffer[lastByte++], (diff-- << 3) - offsetRight));
-
-        return sum;
-    };
-
-    /**
-     * Expose.
-     */
-    BinaryParser.Buffer = BinaryParserBuffer;
-
-    
+  
 
   var MACHINE_ID, ObjectID, checkForHexRegExp, hexTable, i;
   hexTable = (function() {
