@@ -23,3 +23,5 @@ sea-modules
 .cache
 bower_components
 spm_modules
+temp/
+coverage/

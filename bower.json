@@ -6,16 +6,10 @@
     "wh1100717<me@emptystack.net>"
   ],
   "description": "local database using localStorage",
-  "main": "dist/localdb/0.0.1/src/localdb.js",
+  "main": "dist/localdb.js",
   "keywords": [
     "localdb",
     "localstorage"
   ],
-  "license": "MIT",
-  "ignore": [
-    "node_modules"
-  ],
-  "dependencies": {
-    "seajs": "~2.3.0"
-  }
+  "license": "MIT"
 }

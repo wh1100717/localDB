@@ -1,33 +1,35 @@
-'use strict'
+define (require, exports, module) ->
 
-mod = 'lST$*@?'
+    'use strict'
 
-Support = {}
+    mod = 'lST$*@?'
 
-Support.localstorage = ->
-    try
-        localStorage.setItem(mod, mod)
-        localStorage.removeItem(mod)
-        return true
-    catch e
-        return false
-    
-Support.sessionstorage = ->
-    try
-        sessionStorage.setItem(mod, mod)
-        sessionStorage.removeItem(mod)
-        return true
-    catch e
-        return false
+    Support = {}
 
-Support.postmessage = -> !!postMessage
+    Support.localstorage = ->
+        try
+            localStorage.setItem(mod, mod)
+            localStorage.removeItem(mod)
+            return true
+        catch e
+            return false
+        
+    Support.sessionstorage = ->
+        try
+            sessionStorage.setItem(mod, mod)
+            sessionStorage.removeItem(mod)
+            return true
+        catch e
+            return false
 
-Support.websqldatabase = -> !!openDatabase
+    Support.postmessage = -> !!postMessage
 
-Support.indexedDB = -> !!(indexedDB or webkitIndexedDB or mozIndexedDB or OIndexedDB or msIndexedDB)
+    Support.websqldatabase = -> !!openDatabase
 
-Support.applicationcache = -> !!applicationCache
+    Support.indexedDB = -> !!(indexedDB or webkitIndexedDB or mozIndexedDB or OIndexedDB or msIndexedDB)
 
-Support.userdata = -> !!document.documentElement.addBehavior
+    Support.applicationcache = -> !!applicationCache
 
-module.exports = Support
+    Support.userdata = -> !!document.documentElement.addBehavior
+
+    module.exports = Support
