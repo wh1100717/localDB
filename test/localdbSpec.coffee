@@ -9,11 +9,6 @@ define (require, exports, module) ->
             expect(LocalDB.support().localStorage).toEqual(true)
         it "SessionStorage Support", ->
             expect(LocalDB.support().sessionStorage).toEqual(true)
-        it "IndexedDB Support", ->
-            if navigator.userAgent.toLowerCase().indexOf("mozilla") isnt -1
-                expect(LocalDB.support().indexedDB).toEqual(false)
-            else
-                expect(LocalDB.support().indexedDB).toEqual(true)
         it "wrong usage", ->
             try
                 db = new LocalDB()

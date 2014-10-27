@@ -27,19 +27,19 @@ define(function(require, exports, module) {
     }
   };
   Support.postmessage = function() {
-    return !!postMessage;
+    return typeof postMessage !== "undefined" && postMessage !== null;
   };
   Support.websqldatabase = function() {
-    return !!openDatabase;
+    return typeof openDatabase !== "undefined" && openDatabase !== null;
   };
   Support.indexedDB = function() {
-    return !!(indexedDB || webkitIndexedDB || mozIndexedDB || OIndexedDB || msIndexedDB);
+    return (typeof indexedDB !== "undefined" && indexedDB !== null) || (typeof webkitIndexedDB !== "undefined" && webkitIndexedDB !== null) || (typeof mozIndexedDB !== "undefined" && mozIndexedDB !== null) || (typeof OIndexedDB !== "undefined" && OIndexedDB !== null) || (typeof msIndexedDB !== "undefined" && msIndexedDB !== null);
   };
   Support.applicationcache = function() {
-    return !!applicationCache;
+    return typeof applicationCache !== "undefined" && applicationCache !== null;
   };
   Support.userdata = function() {
-    return !!document.documentElement.addBehavior;
+    return document.documentElement.addBehavior != null;
   };
   return module.exports = Support;
 });

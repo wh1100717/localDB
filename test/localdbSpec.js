@@ -12,13 +12,6 @@ define(function(require, exports, module) {
     it("SessionStorage Support", function() {
       return expect(LocalDB.support().sessionStorage).toEqual(true);
     });
-    it("IndexedDB Support", function() {
-      if (navigator.userAgent.toLowerCase().indexOf("mozilla") !== -1) {
-        return expect(LocalDB.support().indexedDB).toEqual(false);
-      } else {
-        return expect(LocalDB.support().indexedDB).toEqual(true);
-      }
-    });
     it("wrong usage", function() {
       var db, e;
       try {

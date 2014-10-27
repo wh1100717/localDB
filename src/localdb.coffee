@@ -4,6 +4,7 @@ define (require, exports, module) ->
     Utils = require('lib/utils')
     Collection = require('lib/collection')
     Engine = require('lib/engine')
+    Support = require('lib/support')
 
     dbPrefix = "ldb_"
 
@@ -59,10 +60,15 @@ define (require, exports, module) ->
      *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
     ###
     LocalDB.support = -> {
-        localStorage: if localStorage? then true else false
-        sessionStorage: if sessionStorage? then true else false
-        indexedDB: false
+        localStorage: Support.localstorage()
+        sessionStorage: Support.sessionstorage()
+        postMessage: Support.postmessage()
+        webSql: Support.websqldatabase()
+        indexedDB: Support.indexedDB()
+        applicationCache: Support.applicationcache()
+        userdata: Support.userdata()
     }
+
     ###
      *  Get Timestamp
      *  Convert ObjectId to timestamp

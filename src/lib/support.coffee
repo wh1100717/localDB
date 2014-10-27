@@ -22,14 +22,14 @@ define (require, exports, module) ->
         catch e
             return false
 
-    Support.postmessage = -> !!postMessage
+    Support.postmessage = -> postMessage?
 
-    Support.websqldatabase = -> !!openDatabase
+    Support.websqldatabase = -> openDatabase?
 
-    Support.indexedDB = -> !!(indexedDB or webkitIndexedDB or mozIndexedDB or OIndexedDB or msIndexedDB)
+    Support.indexedDB = -> (indexedDB? or webkitIndexedDB? or mozIndexedDB? or OIndexedDB? or msIndexedDB?)
 
-    Support.applicationcache = -> !!applicationCache
+    Support.applicationcache = -> applicationCache?
 
-    Support.userdata = -> !!document.documentElement.addBehavior
+    Support.userdata = -> document.documentElement.addBehavior?
 
     module.exports = Support
