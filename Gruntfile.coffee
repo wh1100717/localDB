@@ -67,7 +67,7 @@ module.exports = (grunt) ->
             }
         }
         uglify: {
-            all: {
+            standalone: {
                 files: {
                     "dist/localdb.min.js": ["dist/localdb.js"]
                 }
@@ -76,6 +76,26 @@ module.exports = (grunt) ->
                     preserveComments: false
                     sourceMap: true
                     sourceMapName: "dist/localdb.min.map"
+                    report: "min"
+                    beautify: {
+                        "ascii_only": true
+                    }
+                    compress: {
+                        "hoist_funs": false
+                        loops: false
+                        unused: false
+                    }
+                }
+            }
+            sea: {
+                files: {
+                    "dist/localdb-sea.min.js": ["dist/localdb-sea.js"]
+                }
+                options: {
+                    banner: '<%= banner %>'
+                    preserveComments: false
+                    sourceMap: true
+                    sourceMapName: "dist/localdb-sea.min.map"
                     report: "min"
                     beautify: {
                         "ascii_only": true
@@ -101,7 +121,7 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'test', ['karma', 'coveralls']
 
-    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify']
+    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify:*']
 
     grunt.registerTask 'default', ['test']
 
