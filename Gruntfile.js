@@ -37,7 +37,7 @@ module.exports = function(grunt) {
       }
     },
     clean: {
-      build: ['dist']
+      build: ['dist/<%= pkg.version %>']
     },
     requirejs: {
 
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         options: {
           name: "localdb",
           baseUrl: "src/",
-          out: "dist/localdb.js",
+          out: "dist/<%= pkg.version %>/localdb.js",
           optimize: 'none',
           findNestedDependencies: true,
           skipSemiColonInsertion: true,
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: {
-          "dist/localdb-sea.js": ["dist/localdb.js"]
+          "dist/<%= pkg.version %>/localdb-sea.js": ["dist/<%= pkg.version %>/localdb.js"]
         },
         options: {
           process: function(content, srcpath) {
@@ -75,13 +75,13 @@ module.exports = function(grunt) {
     uglify: {
       standalone: {
         files: {
-          "dist/localdb.min.js": ["dist/localdb.js"]
+          "dist/<%= pkg.version %>/localdb.min.js": ["dist/<%= pkg.version %>/localdb.js"]
         },
         options: {
           banner: '<%= banner %>',
           preserveComments: false,
           sourceMap: true,
-          sourceMapName: "dist/localdb.min.map",
+          sourceMapName: "dist/<%= pkg.version %>/localdb.min.map",
           report: "min",
           beautify: {
             "ascii_only": true
@@ -95,13 +95,13 @@ module.exports = function(grunt) {
       },
       sea: {
         files: {
-          "dist/localdb-sea.min.js": ["dist/localdb-sea.js"]
+          "dist/<%= pkg.version %>/localdb-sea.min.js": ["dist/<%= pkg.version %>/localdb-sea.js"]
         },
         options: {
           banner: '<%= banner %>',
           preserveComments: false,
           sourceMap: true,
-          sourceMapName: "dist/localdb-sea.min.map",
+          sourceMapName: "dist/<%= pkg.version %>/localdb-sea.min.map",
           report: "min",
           beautify: {
             "ascii_only": true
