@@ -57,8 +57,3 @@ define (require, exports, module) ->
         return new ObjectID(result, hexString)
 
     module.exports = ObjectID
-
-
-
-
-

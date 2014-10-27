@@ -136,17 +136,3 @@ define (require, exports, module) ->
         return if flag then Utils.isEqual(data, conditions) else true
 
     module.exports = Where
-
-
-
-
-
-
-
-
-
-
-
-
-
-

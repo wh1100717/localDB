@@ -22,7 +22,7 @@ define(function(require, exports, module) {
       }
     });
     db = new LocalDB('foo', {
-      type: 2
+      session: false
     });
     it("new LocalDB", function() {
       return expect(db instanceof LocalDB).toEqual(true);
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
       options = db.options();
       expect(options).toBeDefined();
       expect(options.name).toEqual("foo");
-      return expect(options.type).toEqual(2);
+      return expect(options.session).toEqual(false);
     });
     it("collection", function() {
       var collection;

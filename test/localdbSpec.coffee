@@ -15,7 +15,7 @@ define (require, exports, module) ->
             catch e
                 expect(e.message).toEqual("dbName should be specified.")
         db = new LocalDB('foo', {
-            type: 2
+            session: false
             #TODO size && allow
             #size: 500
             #allow: ['baidu.com', 'pt.aliexpress.com','www.qq.com']
@@ -26,7 +26,7 @@ define (require, exports, module) ->
             options = db.options()
             expect(options).toBeDefined()
             expect(options.name).toEqual("foo")
-            expect(options.type).toEqual(2)
+            expect(options.session).toEqual(false)
         it "collection", ->
             collection = db.collection("bar")
             collection.insert({a:1})

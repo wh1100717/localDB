@@ -28,13 +28,13 @@ define(function(require, exports, module) {
         throw new Error("dbName should be specified.");
       }
       this.name = dbPrefix + dbName;
-      this.ls = new Engine(options.type || 1);
+      this.ls = new Engine(options);
     }
 
     LocalDB.prototype.options = function() {
       return {
         name: this.name.substr(dbPrefix.length),
-        type: this.ls.type
+        session: this.ls.session
       };
     };
 

@@ -102,9 +102,3 @@ define (require, exports, module) ->
     Utils.getTime = (objectId) -> (new ObjectID(objectId)).getTime()
 
     module.exports = Utils
-
-
-
-
-
-
