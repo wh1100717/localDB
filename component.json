@@ -16,8 +16,8 @@
       "url": "http://mit-license.org"
     }
   ],
-  "main": "dist/localdb.js",
+  "main": "dist/0.0.1/localdb.js",
   "scripts": [
-    "dsit/localdb.js"
+    "dsit/0.0.1/localdb.js"
   ]
 }

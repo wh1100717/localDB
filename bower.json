@@ -8,7 +8,7 @@
     "email": "me@emptystack.net",
     "url": "http://localdb.emptystack.net/"
   },
-  "main": "dist/localdb.js",
+  "main": "dist/0.0.1/localdb.js",
   "keywords": [
     "localdb",
     "localstorage",
