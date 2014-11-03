@@ -117,5 +117,5 @@ define(function(require, exports, module) {
 
   BinaryParser.Buffer = BinaryParserBuffer;
 
-  module.exports = BinaryParser
+  return module.exports = BinaryParser;
 });
