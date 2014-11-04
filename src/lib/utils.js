@@ -153,6 +153,26 @@ define(function(require, exports, module) {
       return value;
     });
   };
+  Utils.parseParas = function(paras) {
+    var callback, options;
+    options = {};
+    callback = null;
+    if (paras.length === 1) {
+      if (Utils.isObject(paras[0])) {
+        options = paras[0];
+      } else if (Utils.isFunction(paras[0])) {
+        callback = paras[0];
+      }
+    } else if (paras.length === 2) {
+      if (Utils.isObject(paras[0])) {
+        options = paras[0];
+      }
+      if (Utils.isFunction(paras[1])) {
+        callback = paras[1];
+      }
+    }
+    return [options, callback];
+  };
   Utils.getTimestamp = function(objectId) {
     return (new ObjectID(objectId)).getTimestamp();
   };

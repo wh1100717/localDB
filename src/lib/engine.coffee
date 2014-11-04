@@ -17,16 +17,16 @@ define (require, exports, module) ->
                 @storage = new Storage(@session)
             return
 
-        key: (index) -> (if @proxy? then @proxy else @storage).key(index)
+        key: (index, callback) -> (if @proxy? then @proxy else @storage).key(index, callback)
 
-        size: -> (if @proxy? then @proxy else @storage).size()
+        size: (callback) -> (if @proxy? then @proxy else @storage).size(callback)
 
-        setItem: (key, val) -> (if @proxy? then @proxy else @storage).setItem(key, val)
+        setItem: (key, val, callback) -> (if @proxy? then @proxy else @storage).setItem(key, val, callback)
 
-        getItem: (key) -> (if @proxy? then @proxy else @storage).getItem(key)
+        getItem: (key, callback) -> (if @proxy? then @proxy else @storage).getItem(key, callback)
 
-        removeItem: (key) -> (if @proxy? then @proxy else @storage).removeItem(key)
+        removeItem: (key, callback) -> (if @proxy? then @proxy else @storage).removeItem(key, callback)
 
-        usage: -> (if @proxy? then @proxy else @storage).usage()
+        usage: (callback) -> (if @proxy? then @proxy else @storage).usage(callback)
 
     module.exports = Engine

@@ -33,11 +33,11 @@ define (require, exports, module) ->
             session: @ls.session
         }
 
-        ###
-         *  Get Collection Names
-         *  db.collections()    //['foo','foo1','foo2','foo3',....]
-        ###
-        collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.size()] when @ls.key(i).indexOf("#{@name}_") is 0)
+        # ###
+        #  *  Get Collection Names
+        #  *  db.collections()    //['foo','foo1','foo2','foo3',....]
+        # ###
+        # collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.size()] when @ls.key(i).indexOf("#{@name}_") is 0)
 
         ###
          *  Get Collection
@@ -49,11 +49,11 @@ define (require, exports, module) ->
          *  Delete Collection: db.drop(collectionName)
          *  Delete DB: db.drop()
         ###
-        drop: (collectionName) ->
-            collectionName = if collectionName? then "_#{collectionName}" else ""
-            keys = (@ls.key(i) for i in [0...@ls.size()] when @ls.key(i).indexOf(@name + collectionName) is 0)
-            @ls.removeItem(j) for j in keys
-            return true
+        # drop: (collectionName, callback) ->
+        #     collectionName = if collectionName? then "_#{collectionName}" else ""
+        #     keys = (@ls.key(i) for i in [0...@ls.size()] when @ls.key(i).indexOf(@name + collectionName) is 0)
+        #     @ls.removeItem(j) for j in keys
+        #     return true
 
     ###
      *  Check Browser Compatibility

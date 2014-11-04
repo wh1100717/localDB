@@ -97,6 +97,19 @@ define (require, exports, module) ->
             return v if v? and Utils.isFunction(v)
             return value
 
+    Utils.parseParas = (paras) ->
+        options = {}
+        callback = null
+        if paras.length is 1
+            if Utils.isObject(paras[0])
+                options = paras[0]
+            else if Utils.isFunction(paras[0])
+                callback = paras[0]
+        else if paras.length is 2
+            options = paras[0] if Utils.isObject(paras[0])
+            callback = paras[1] if Utils.isFunction(paras[1])
+        return [options, callback]
+
     Utils.getTimestamp = (objectId) -> (new ObjectID(objectId)).getTimestamp()
         
     Utils.getTime = (objectId) -> (new ObjectID(objectId)).getTime()

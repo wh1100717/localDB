@@ -22,8 +22,8 @@ define(function(require, exports, module) {
       return expect(bar instanceof Collection).toEqual(true);
     });
     it("Insert", function() {
-      var data;
-      bar.insert({
+      bar = db.collection("insert");
+      return bar.insert({
         a: 1,
         b: "abc",
         c: /hell.*ld/,
@@ -35,22 +35,25 @@ define(function(require, exports, module) {
           return h * 3;
         },
         i: [1, 2, 3]
+      }, function() {
+        return bar.find(function(data) {
+          data = data[0];
+          expect(data.a).toEqual(1);
+          expect(data.b).toEqual("abc");
+          expect(data.c.test("hello world")).toEqual(true);
+          expect(data.d).toEqual({
+            e: 4,
+            f: "5"
+          });
+          expect(Utils.isFunction(data.g)).toEqual(true);
+          expect(data.g(100)).toEqual(300);
+          return expect(data.i).toEqual([1, 2, 3]);
+        });
       });
-      data = bar.find()[0];
-      expect(data.a).toEqual(1);
-      expect(data.b).toEqual("abc");
-      expect(data.c.test("hello world")).toEqual(true);
-      expect(data.d).toEqual({
-        e: 4,
-        f: "5"
-      });
-      expect(Utils.isFunction(data.g)).toEqual(true);
-      expect(data.g(100)).toEqual(300);
-      return expect(data.i).toEqual([1, 2, 3]);
     });
     it("Insert List", function() {
-      bar.drop();
-      bar.insert([
+      bar = db.collection("insertList");
+      return bar.insert([
         {
           a: 1,
           b: 2,
@@ -60,25 +63,30 @@ define(function(require, exports, module) {
           b: 3,
           c: 4
         }
-      ]);
-      expect(bar.find().length).toEqual(2);
-      bar.insert([
-        {
-          a: 1,
-          b: 2,
-          c: 3
-        }, 4, {
-          a: 2,
-          b: 3,
-          c: 4
-        }
-      ]);
-      return expect(bar.find().length).toEqual(4);
+      ], function() {
+        bar.find(function(data) {
+          return expect(data.length).toEqual(2);
+        });
+        return bar.insert([
+          {
+            a: 1,
+            b: 2,
+            c: 3
+          }, 4, {
+            a: 2,
+            b: 3,
+            c: 4
+          }
+        ], function() {
+          return bar.find(function(data) {
+            return expect(data.length).toEqual(4);
+          });
+        });
+      });
     });
     it("Update", function() {
-      var d, data, index, _i, _len, _results;
-      bar.drop();
-      bar.insert({
+      bar = db.collection("update");
+      return bar.insert({
         a: 1,
         b: 2,
         c: {
@@ -96,124 +104,143 @@ define(function(require, exports, module) {
         min1: 50,
         min2: 30,
         unchanged_val: 100
+      }, function() {
+        return bar.update({
+          $set: {
+            a: 4,
+            "c.d": 5
+          },
+          $inc: {
+            b: 2
+          },
+          $rename: {
+            f: "function"
+          },
+          $unset: {
+            h: ""
+          },
+          $mul: {
+            price: 1.25
+          },
+          $max: {
+            max1: 120,
+            max2: 150
+          },
+          $min: {
+            min1: 80,
+            min2: 10
+          },
+          unchanged_val: 119
+        }, function() {
+          return bar.find(function(data) {
+            data = data[0];
+            expect(data.a).toEqual(4);
+            expect(data.c.d).toEqual(5);
+            expect(data.b).toEqual(4);
+            expect(data.f).not.toBeDefined();
+            expect(Utils.isFunction(data["function"])).toEqual(true);
+            expect(data["function"](9)).toEqual(81);
+            expect(data.h).not.toBeDefined();
+            expect(data.max1).toEqual(120);
+            expect(data.max2).toEqual(200);
+            expect(data.min1).toEqual(50);
+            expect(data.min2).toEqual(10);
+            expect(data.unchanged_val).toEqual(100);
+            return bar.drop(function() {
+              return bar.insert({
+                a: 1
+              }, function() {
+                return bar.update({
+                  $set: {
+                    a: 2
+                  }
+                }, {
+                  where: {
+                    a: 2
+                  }
+                }, function() {
+                  return bar.find(function(data) {
+                    data = data[0];
+                    expect(data.a).toEqual(1);
+                    return bar.update({
+                      $set: {
+                        b: 2,
+                        "b.c": 1
+                      }
+                    }, {
+                      where: {
+                        a: 1
+                      }
+                    }, function() {
+                      return bar.find(function(data) {
+                        data = data[0];
+                        expect(data.b).not.toBeDefined();
+                        return bar.update({
+                          $set: {
+                            b: 2,
+                            "d.c": 3
+                          }
+                        }, {
+                          where: {
+                            a: 1
+                          },
+                          upsert: true
+                        }, function() {
+                          return bar.findOne(function(data) {
+                            console.log(data);
+                            expect(data.b).toEqual(2);
+                            return bar.drop(function() {
+                              return bar.insert([
+                                {
+                                  a: 1,
+                                  b: 2
+                                }, {
+                                  a: 1,
+                                  b: 3
+                                }, {
+                                  a: 1,
+                                  b: 4
+                                }
+                              ], function() {
+                                return bar.update({
+                                  $set: {
+                                    b: 5
+                                  }
+                                }, {
+                                  where: {
+                                    a: 1
+                                  },
+                                  multi: false
+                                }, function() {
+                                  return bar.find(function(data) {
+                                    var d, index, _i, _len, _results;
+                                    _results = [];
+                                    for (index = _i = 0, _len = data.length; _i < _len; index = ++_i) {
+                                      d = data[index];
+                                      if (index > 0) {
+                                        _results.push(expect(d.b).not.toEqual(5));
+                                      }
+                                    }
+                                    return _results;
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
       });
-      bar.update({
-        $set: {
-          a: 4,
-          "c.d": 5
-        },
-        $inc: {
-          b: 2
-        },
-        $rename: {
-          f: "function"
-        },
-        $unset: {
-          h: ""
-        },
-        $mul: {
-          price: 1.25
-        },
-        $max: {
-          max1: 120,
-          max2: 150
-        },
-        $min: {
-          min1: 80,
-          min2: 10
-        },
-        unchanged_val: 119
-      });
-      data = bar.find()[0];
-      expect(data.a).toEqual(4);
-      expect(data.c.d).toEqual(5);
-      expect(data.b).toEqual(4);
-      expect(data.f).not.toBeDefined();
-      expect(Utils.isFunction(data["function"])).toEqual(true);
-      expect(data["function"](9)).toEqual(81);
-      expect(data.h).not.toBeDefined();
-      expect(data.max1).toEqual(120);
-      expect(data.max2).toEqual(200);
-      expect(data.min1).toEqual(50);
-      expect(data.min2).toEqual(10);
-      expect(data.unchanged_val).toEqual(100);
-      bar.drop();
-      bar.insert({
-        a: 1
-      });
-      bar.update({
-        $set: {
-          a: 2
-        }
-      }, {
-        where: {
-          a: 2
-        }
-      });
-      data = bar.find()[0];
-      expect(data.a).toEqual(1);
-      bar.update({
-        $set: {
-          b: 2,
-          "b.c": 1
-        }
-      }, {
-        where: {
-          a: 1
-        }
-      });
-      data = bar.find()[0];
-      expect(data.b).not.toBeDefined();
-      bar.update({
-        $set: {
-          b: 2,
-          "d.c": 3
-        }
-      }, {
-        where: {
-          a: 1
-        },
-        upsert: true
-      });
-      data = bar.findOne();
-      expect(data.b).toEqual(2);
-      bar.drop();
-      bar.insert([
-        {
-          a: 1,
-          b: 2
-        }, {
-          a: 1,
-          b: 3
-        }, {
-          a: 1,
-          b: 4
-        }
-      ]);
-      bar.update({
-        $set: {
-          b: 5
-        }
-      }, {
-        where: {
-          a: 1
-        },
-        multi: false
-      });
-      data = bar.find();
-      _results = [];
-      for (index = _i = 0, _len = data.length; _i < _len; index = ++_i) {
-        d = data[index];
-        if (index > 0) {
-          _results.push(expect(d.b).not.toEqual(5));
-        }
-      }
-      return _results;
     });
     it("Remove", function() {
-      var data;
-      bar.drop();
-      bar.insert([
+      bar = db.collection("remove");
+      return bar.insert([
         {
           a: 1,
           b: 2
@@ -224,66 +251,80 @@ define(function(require, exports, module) {
           a: 2,
           b: 4
         }
-      ]);
-      bar.remove();
-      data = bar.find();
-      expect(bar.find()).toEqual([]);
-      bar.drop();
-      bar.insert([
-        {
-          a: 1,
-          b: 2
-        }, {
-          a: 1,
-          b: 3
-        }, {
-          a: 2,
-          b: 4
-        }
-      ]);
-      bar.remove({
-        where: {
-          a: 1
-        },
-        multi: false
+      ], function() {
+        return bar.remove(function() {
+          return bar.find(function(data) {
+            expect(data).toEqual([]);
+            return bar.drop(function() {
+              return bar.insert([
+                {
+                  a: 1,
+                  b: 2
+                }, {
+                  a: 1,
+                  b: 3
+                }, {
+                  a: 2,
+                  b: 4
+                }
+              ], function() {
+                return bar.remove({
+                  where: {
+                    a: 1
+                  },
+                  multi: false
+                }, function() {
+                  bar.find({
+                    where: {
+                      a: 1
+                    }
+                  }, function(data) {
+                    return expect(data.length).toEqual(1);
+                  });
+                  return bar.drop(function() {
+                    return bar.insert([
+                      {
+                        a: 1,
+                        b: 2
+                      }, {
+                        a: 1,
+                        b: 3
+                      }, {
+                        a: 2,
+                        b: 4
+                      }, {
+                        a: 3,
+                        b: 4
+                      }
+                    ], function() {
+                      return bar.remove({
+                        where: {
+                          a: 1
+                        }
+                      }, function() {
+                        bar.find({
+                          where: {
+                            a: 1
+                          }
+                        }, function(data) {
+                          return expect(data.length).toEqual(0);
+                        });
+                        return bar.find(function(data) {
+                          return expect(data.length).toEqual(2);
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
       });
-      expect(bar.find({
-        where: {
-          a: 1
-        }
-      }).length).toEqual(1);
-      bar.drop();
-      bar.insert([
-        {
-          a: 1,
-          b: 2
-        }, {
-          a: 1,
-          b: 3
-        }, {
-          a: 2,
-          b: 4
-        }, {
-          a: 3,
-          b: 4
-        }
-      ]);
-      bar.remove({
-        where: {
-          a: 1
-        }
-      });
-      expect(bar.find({
-        where: {
-          a: 1
-        }
-      }).length).toEqual(0);
-      return expect(bar.find().length).toEqual(2);
     });
     it("FindOne", function() {
-      var data;
-      bar.drop();
-      bar.insert([
+      bar = db.collection('findone');
+      return bar.insert([
         {
           a: 1,
           b: 2,
@@ -319,23 +360,26 @@ define(function(require, exports, module) {
           min1: 50,
           min2: 30
         }
-      ]);
-      data = bar.findOne({
-        where: {
-          a: 1
-        }
+      ], function() {
+        bar.findOne({
+          where: {
+            a: 1
+          }
+        }, function(data) {
+          console.log("findOne: ", data);
+          return expect(data.a).toEqual(1);
+        });
+        return bar.findOne({
+          where: {
+            no_val: 11111
+          }
+        }, function(data) {
+          return expect(data).not.toBeDefined();
+        });
       });
-      expect(data.a).toEqual(1);
-      data = bar.findOne({
-        where: {
-          no_val: 11111
-        }
-      });
-      return expect(data.a).not.toBeDefined();
     });
     return it("Projection", function() {
-      var d, data, _i, _len;
-      bar.drop();
+      bar = db.collection('projection');
       bar.insert([
         {
           a: 1,
@@ -372,51 +416,58 @@ define(function(require, exports, module) {
           min1: 50,
           min2: 30
         }
-      ]);
-      data = bar.findOne({
-        where: {
-          a: 1
-        },
-        projection: {
-          a: 1,
-          _id: -1
-        }
+      ], function() {
+        bar.findOne({
+          where: {
+            a: 1
+          },
+          projection: {
+            a: 1,
+            _id: -1
+          }
+        }, function(data) {
+          return expect(data).toEqual({
+            a: 1
+          });
+        });
+        bar.find({
+          where: {
+            a: 1
+          },
+          projection: {
+            "g.$": 1
+          }
+        }, function(data) {
+          var d, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = data.length; _i < _len; _i++) {
+            d = data[_i];
+            _results.push(expect(d.g).toEqual([1]));
+          }
+          return _results;
+        });
+        bar.find({
+          where: {
+            b: 1
+          },
+          projection: {
+            "g.$": 1
+          }
+        }, function(data) {
+          return expect(data).toEqual([]);
+        });
+        return bar.find({
+          where: {
+            a: 1
+          },
+          projection: {
+            "a.$": 1
+          }
+        }, function(data) {
+          return expect(data).toEqual([]);
+        });
       });
-      expect(data).toEqual({
-        a: 1
-      });
-      data = bar.find({
-        where: {
-          a: 1
-        },
-        projection: {
-          "g.$": 1
-        }
-      });
-      for (_i = 0, _len = data.length; _i < _len; _i++) {
-        d = data[_i];
-        expect(d.g).toEqual([1]);
-      }
-      data = bar.find({
-        where: {
-          b: 1
-        },
-        projection: {
-          "g.$": 1
-        }
-      });
-      expect(data).toEqual([]);
-      data = bar.find({
-        where: {
-          a: 1
-        },
-        projection: {
-          "a.$": 1
-        }
-      });
-      expect(data).toEqual([]);
-      bar.drop();
-      bar.insert([
+      return bar.insert([
         {
           _id: 1,
           zipcode: "63109",
@@ -478,35 +529,38 @@ define(function(require, exports, module) {
             }
           ]
         }
-      ]);
-      data = bar.find({
-        where: {
-          zipcode: "63109"
-        },
-        projection: {
-          _id: 1,
-          students: {
-            $elemMatch: {
-              school: 102
+      ], function() {
+        bar.find({
+          where: {
+            zipcode: "63109"
+          },
+          projection: {
+            _id: 1,
+            students: {
+              $elemMatch: {
+                school: 102
+              }
             }
           }
-        }
-      });
-      console.log(data);
-      data = bar.find({
-        where: {
-          zipcode: "63109"
-        },
-        projection: {
-          _id: 1,
-          unexist: {
-            $elemMatch: {
-              school: 102
+        }, function(data) {
+          return console.log(data);
+        });
+        return bar.find({
+          where: {
+            zipcode: "63109"
+          },
+          projection: {
+            _id: 1,
+            unexist: {
+              $elemMatch: {
+                school: 102
+              }
             }
           }
-        }
+        }, function(data) {
+          return console.log(data);
+        });
       });
-      return console.log(data);
     });
   });
 });

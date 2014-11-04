@@ -37,37 +37,11 @@ define(function(require, exports, module) {
     it("collection", function() {
       var collection;
       collection = db.collection("bar");
-      collection.insert({
+      return collection.insert({
         a: 1
+      }, function() {
+        return expect(collection instanceof Collection).toEqual(true);
       });
-      return expect(collection instanceof Collection).toEqual(true);
-    });
-    it("collections", function() {
-      var collections;
-      collections = db.collections();
-      console.log(db.ls.size());
-      console.log(db.collections());
-      return expect(collections).toEqual(["bar"]);
-    });
-    it("drop collection", function() {
-      var collections;
-      db.drop("bar");
-      collections = db.collections();
-      return expect(collections).toEqual([]);
-    });
-    it("drop db", function() {
-      var bar1, bar2, collections;
-      bar1 = db.collection("bar1");
-      bar2 = db.collection("bar2");
-      bar1.insert({
-        a: 1
-      });
-      bar2.insert({
-        b: 2
-      });
-      db.drop();
-      collections = db.collections();
-      return expect(collections).toEqual([]);
     });
     it("timestamp", function() {
       expect(LocalDB.getTimestamp("543509d5f3692b00001b2b61")).toBeDefined();

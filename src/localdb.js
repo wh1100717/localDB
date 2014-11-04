@@ -40,23 +40,6 @@ define(function(require, exports, module) {
 
 
     /*
-     *  Get Collection Names
-     *  db.collections()    //['foo','foo1','foo2','foo3',....]
-     */
-
-    LocalDB.prototype.collections = function() {
-      var i, _i, _ref, _results;
-      _results = [];
-      for (i = _i = 0, _ref = this.ls.size(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-        if (this.ls.key(i).indexOf("" + this.name + "_") === 0) {
-          _results.push(this.ls.key(i).substr(("" + this.name + "_").length));
-        }
-      }
-      return _results;
-    };
-
-
-    /*
      *  Get Collection
      *  var collection = db.collection('bar')
      */
@@ -70,26 +53,6 @@ define(function(require, exports, module) {
      *  Delete Collection: db.drop(collectionName)
      *  Delete DB: db.drop()
      */
-
-    LocalDB.prototype.drop = function(collectionName) {
-      var i, j, keys, _i, _len;
-      collectionName = collectionName != null ? "_" + collectionName : "";
-      keys = (function() {
-        var _i, _ref, _results;
-        _results = [];
-        for (i = _i = 0, _ref = this.ls.size(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          if (this.ls.key(i).indexOf(this.name + collectionName) === 0) {
-            _results.push(this.ls.key(i));
-          }
-        }
-        return _results;
-      }).call(this);
-      for (_i = 0, _len = keys.length; _i < _len; _i++) {
-        j = keys[_i];
-        this.ls.removeItem(j);
-      }
-      return true;
-    };
 
     return LocalDB;
 

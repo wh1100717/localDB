@@ -21,6 +21,7 @@ define(function(require, exports, module) {(function( global, factory ) {
   // the stack via arguments.caller.callee and Firefox dies if
   // you try to trace through "use strict" call chains. (#13335)
   //
+(function(self){
 
   /**
    * Binary Parser.
@@ -140,7 +141,10 @@ define(function(require, exports, module) {(function( global, factory ) {
 
   BinaryParser.Buffer = BinaryParserBuffer;
 
-  
+  self.BinaryParser = BinaryParser;
+})(this);
+
+(function(self){
 
   var MACHINE_ID, ObjectID, checkForHexRegExp, hexTable, i;
   hexTable = (function() {
@@ -212,7 +216,10 @@ define(function(require, exports, module) {(function( global, factory ) {
     }
     return new ObjectID(result, hexString);
   };
-  
+  self.ObjectID = ObjectID;
+})(this);
+
+(function(self){
 
   
   var Utils, eq, toString, _isType;
@@ -366,13 +373,36 @@ define(function(require, exports, module) {(function( global, factory ) {
       return value;
     });
   };
+  Utils.parseParas = function(paras) {
+    var callback, options;
+    options = {};
+    callback = null;
+    if (paras.length === 1) {
+      if (Utils.isObject(paras[0])) {
+        options = paras[0];
+      } else if (Utils.isFunction(paras[0])) {
+        callback = paras[0];
+      }
+    } else if (paras.length === 2) {
+      if (Utils.isObject(paras[0])) {
+        options = paras[0];
+      }
+      if (Utils.isFunction(paras[1])) {
+        callback = paras[1];
+      }
+    }
+    return [options, callback];
+  };
   Utils.getTimestamp = function(objectId) {
     return (new ObjectID(objectId)).getTimestamp();
   };
   Utils.getTime = function(objectId) {
     return (new ObjectID(objectId)).getTime();
   };
-  
+  self.Utils = Utils;
+})(this);
+
+(function(self){
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 
@@ -709,7 +739,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
       return true;
     }
   };
-  
+  self.Where = Where;
+})(this);
+
+(function(self){
 
   
   var Projection, generateItem;
@@ -788,7 +821,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     }
     return result;
   };
-  
+  self.Projection = Projection;
+})(this);
+
+(function(self){
 
   
   var Operation, Update;
@@ -939,7 +975,12 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
       return data;
     }
   };
-  
+  self.Operation = Operation;
+})(this);
+
+(function(self){
+var __slice = [].slice;
+
 
   
   var Collection;
@@ -956,7 +997,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
       }
       this.name = "" + db.name + "_" + collectionName;
       this.ls = db.ls;
-      this.deserialize();
     }
 
 
@@ -964,8 +1004,15 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  get data and tranfer into object from localStorage/sessionStorage
      */
 
-    Collection.prototype.deserialize = function() {
-      return this.data = Utils.parse(this.ls.getItem(this.name));
+    Collection.prototype.deserialize = function(callback) {
+      var self;
+      self = this;
+      return this.ls.getItem(this.name, function(data, err) {
+        data = Utils.parse(data);
+        if (callback != null) {
+          return callback(data, err);
+        }
+      });
     };
 
 
@@ -974,21 +1021,12 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  when catching error in setItem(), delete the oldest data and try again.
      */
 
-    Collection.prototype.serialize = function() {
-      var e, flag;
-      try {
-        this.ls.setItem(this.name, Utils.stringify(this.data));
-      } catch (_error) {
-        e = _error;
-        flag = true;
-        while (flag) {
-          try {
-            this.data.splice(0, 1);
-            this.ls.setItem(this.name, Utils.stringify(this.data));
-            flag = false;
-          } catch (_error) {}
+    Collection.prototype.serialize = function(data, callback) {
+      return this.ls.setItem(this.name, Utils.stringify(data), function(err) {
+        if (callback != null) {
+          return callback(err);
         }
-      }
+      });
     };
 
 
@@ -996,9 +1034,8 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  delete this collection
      */
 
-    Collection.prototype.drop = function() {
-      this.ls.removeItem(this.name);
-      return true;
+    Collection.prototype.drop = function(callback) {
+      return this.ls.removeItem(this.name, callback);
     };
 
 
@@ -1006,13 +1043,25 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  insert data into collection
      */
 
-    Collection.prototype.insert = function(rowData, options) {
-      if (options == null) {
-        options = {};
-      }
-      this.deserialize();
-      this.data = Operation.insert(this.data, rowData, options);
-      return this.serialize();
+    Collection.prototype.insert = function() {
+      var callback, options, paras, rowData, self, _ref;
+      rowData = arguments[0], paras = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
+      self = this;
+      return this.deserialize(function(data, err) {
+        if (err) {
+          if (callback != null) {
+            return callback(err);
+          }
+        } else {
+          data = Operation.insert(data, rowData, options);
+          return self.serialize(data, function(err) {
+            if (callback != null) {
+              return callback(err);
+            }
+          });
+        }
+      });
     };
 
 
@@ -1020,13 +1069,25 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  update collection
      */
 
-    Collection.prototype.update = function(actions, options) {
-      if (options == null) {
-        options = {};
-      }
-      this.deserialize();
-      this.data = Operation.update(this.data, actions, options);
-      return this.serialize();
+    Collection.prototype.update = function() {
+      var actions, callback, options, paras, self, _ref;
+      actions = arguments[0], paras = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
+      self = this;
+      return this.deserialize(function(data, err) {
+        if (err) {
+          if (callback != null) {
+            return callback(err);
+          }
+        } else {
+          data = Operation.update(data, actions, options);
+          return self.serialize(data, function(err) {
+            if (callback != null) {
+              return callback(err);
+            }
+          });
+        }
+      });
     };
 
 
@@ -1034,13 +1095,25 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  remove data from collection
      */
 
-    Collection.prototype.remove = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      this.deserialize();
-      this.data = Operation.remove(this.data, options);
-      return this.serialize();
+    Collection.prototype.remove = function() {
+      var callback, options, paras, self, _ref;
+      paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
+      self = this;
+      return this.deserialize(function(data, err) {
+        if (err) {
+          if (callback != null) {
+            return callback(err);
+          }
+        } else {
+          data = Operation.remove(data, options);
+          return self.serialize(data, function(err) {
+            if (callback != null) {
+              return callback(err);
+            }
+          });
+        }
+      });
     };
 
 
@@ -1048,12 +1121,23 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      * find data from collection
      */
 
-    Collection.prototype.find = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      this.deserialize();
-      return Operation.find(this.data, options);
+    Collection.prototype.find = function() {
+      var callback, options, paras, self, _ref;
+      paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
+      self = this;
+      return this.deserialize(function(data, err) {
+        if (err) {
+          if (callback != null) {
+            return callback([], err);
+          }
+        } else {
+          data = Operation.find(data, options);
+          if (callback != null) {
+            return callback(data, err);
+          }
+        }
+      });
     };
 
 
@@ -1061,24 +1145,33 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  find data and only return one data from collection
      */
 
-    Collection.prototype.findOne = function(options) {
-      var data;
-      if (options == null) {
-        options = {};
-      }
+    Collection.prototype.findOne = function() {
+      var callback, options, paras, self, _ref;
+      paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       options.limit = 1;
-      data = Operation.find(this.data, options)[0];
-      if (data != null) {
-        return data;
-      } else {
-        return {};
-      }
+      self = this;
+      return this.deserialize(function(data, err) {
+        if (err) {
+          if (callback != null) {
+            return callback([], err);
+          }
+        } else {
+          data = Operation.find(data, options);
+          if (callback != null) {
+            return callback((data.length === 0 ? void 0 : data[0]), err);
+          }
+        }
+      });
     };
 
     return Collection;
 
   })();
-  
+  self.Collection = Collection;
+})(this);
+
+(function(self){
 
   
   var Support, mod;
@@ -1107,118 +1200,27 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     }
   };
   Support.postmessage = function() {
-    return !!postMessage;
+    return typeof postMessage !== "undefined" && postMessage !== null;
   };
   Support.websqldatabase = function() {
-    return !!openDatabase;
+    return typeof openDatabase !== "undefined" && openDatabase !== null;
   };
   Support.indexedDB = function() {
-    return !!(indexedDB || webkitIndexedDB || mozIndexedDB || OIndexedDB || msIndexedDB);
+    return (typeof indexedDB !== "undefined" && indexedDB !== null) || (typeof webkitIndexedDB !== "undefined" && webkitIndexedDB !== null) || (typeof mozIndexedDB !== "undefined" && mozIndexedDB !== null) || (typeof OIndexedDB !== "undefined" && OIndexedDB !== null) || (typeof msIndexedDB !== "undefined" && msIndexedDB !== null);
   };
   Support.applicationcache = function() {
-    return !!applicationCache;
+    return typeof applicationCache !== "undefined" && applicationCache !== null;
   };
   Support.userdata = function() {
-    return !!document.documentElement.addBehavior;
+    return document.documentElement.addBehavior != null;
   };
-  
+  self.Support = Support;
+})(this);
+
+(function(self){
 
   
-  var Engine, UserData;
-  Engine = (function() {
-    function Engine(type) {
-      this.type = type === 2 ? 2 : 1;
-      if (!Support.sessionstorage()) {
-        if (type === 1) {
-          throw new Error("sessionStorage is not supported!");
-        }
-        if (Support.userdata()) {
-          throw new Error("no browser storage engine is supported in your browser!");
-        }
-        this.type = 2;
-      }
-      if (this.type === 2 && Support.localstorage()) {
-        this.userdata = new UserData();
-      }
-      return;
-    }
-
-    Engine.prototype.key = function(index) {
-      if (this.type === 1) {
-        return sessionStorage.key(index);
-      } else if (Support.localstorage()) {
-        return localStorage.key(index);
-      } else {
-        return this.userdata.key(index);
-      }
-    };
-
-    Engine.prototype.size = function() {
-      if (this.type === 1) {
-        return sessionStorage.length;
-      } else if (Support.localstorage()) {
-        return localStorage.length;
-      } else {
-        return this.userdata.size();
-      }
-    };
-
-    Engine.prototype.setItem = function(key, val) {
-      if (this.type === 1) {
-        return sessionStorage.setItem(key, val);
-      } else if (Support.localstorage()) {
-        return localStorage.setItem(key, val);
-      } else {
-        return this.userdata.setItem(key, val);
-      }
-    };
-
-    Engine.prototype.getItem = function(key) {
-      if (this.type === 1) {
-        return sessionStorage.getItem(key);
-      } else if (Support.localstorage()) {
-        return localStorage.getItem(key);
-      } else {
-        return this.userdata.getItem(key, val);
-      }
-    };
-
-    Engine.prototype.removeItem = function(key) {
-      if (this.type === 1) {
-        return sessionStorage.removeItem(key);
-      } else if (Support.localstorage()) {
-        return localStorage.removeItem(key);
-      } else {
-        return this.userdata.removeItem(key, val);
-      }
-    };
-
-    Engine.prototype.usage = function() {
-
-      /*
-       *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
-       */
-      var allStrings, key, val;
-      allStrings = "";
-      if (this.tyep === 1) {
-        for (key in sessionStorage) {
-          val = sessionStorage[key];
-          allStrings += val;
-        }
-      } else if (Support.localstorage()) {
-        for (key in localStorage) {
-          val = localStorage[key];
-          allStrings += val;
-        }
-      } else {
-        console.log("todo");
-      }
-      return allStrings.length / 512;
-    };
-
-    return Engine;
-
-  })();
+  var UserData;
   UserData = (function() {
 
     /* rewrite with coffee from https://github.com/marcuswestin/store.js
@@ -1300,7 +1302,189 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     return UserData;
 
   })();
+  self.UserData = UserData;
+})(this);
+
+(function(self){
+
   
+  var Storage, err;
+  err = null;
+  Storage = (function() {
+    function Storage(session) {
+      this.session = session;
+      if (this.session) {
+        if (!Support.sessionstorage()) {
+          throw new Error("sessionStorage is not supported!");
+        }
+      } else if (!Support.localstorage()) {
+        if (!Support.userdata()) {
+          throw new Error("no browser storage engine is supported in your browser!");
+        }
+        this.userdata = new UserData();
+      }
+    }
+
+    Storage.prototype.key = function(index, callback) {
+      var key;
+      key = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).key(index);
+      if (typeof callback === 'function') {
+        callback(key, err);
+      } else {
+        return key;
+      }
+    };
+
+    Storage.prototype.size = function(callback) {
+      var size;
+      if (this.session) {
+        size = sessionStorage.length;
+      } else if (Support.localstorage()) {
+        size = localStorage.length;
+      } else {
+        size = this.userdata.size();
+      }
+      if (typeof callback === 'function') {
+        callback(size, err);
+      } else {
+        return size;
+      }
+    };
+
+    Storage.prototype.setItem = function(key, val, callback) {
+      var data, e, flag, ls;
+      ls = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage));
+      try {
+        ls.setItem(key, val);
+      } catch (_error) {
+        e = _error;
+        flag = true;
+        data = Utils.parse(val);
+        while (flag) {
+          try {
+            data.splice(0, 1);
+            ls.setItem(key, Utils.stringify(data));
+            flag = false;
+          } catch (_error) {}
+        }
+      }
+      if (typeof callback === 'function') {
+        callback(err);
+      } else {
+
+      }
+    };
+
+    Storage.prototype.getItem = function(key, callback) {
+      var item;
+      item = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).getItem(key);
+      if (typeof callback === 'function') {
+        callback(item, err);
+      } else {
+
+      }
+    };
+
+    Storage.prototype.removeItem = function(key, callback) {
+      (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).removeItem(key);
+      if (typeof callback === 'function') {
+        callback(err);
+      } else {
+
+      }
+    };
+
+    Storage.prototype.usage = function(callback) {
+
+      /*
+       *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
+       */
+      var allStrings, key, u, val;
+      allStrings = "";
+      if (this.tyep === 1) {
+        for (key in sessionStorage) {
+          val = sessionStorage[key];
+          allStrings += val;
+        }
+      } else if (Support.localstorage()) {
+        for (key in localStorage) {
+          val = localStorage[key];
+          allStrings += val;
+        }
+      } else {
+        console.log("todo");
+      }
+      u = allStrings.length / 512;
+      if (typeof callback === 'function') {
+        callback(u, err);
+      } else {
+
+      }
+    };
+
+    return Storage;
+
+  })();
+  self.Storage = Storage;
+})(this);
+
+(function(self){
+
+  
+  var Proxy;
+  Proxy = {};
+  self.Proxy = Proxy;
+})(this);
+
+(function(self){
+
+  
+  var Engine;
+  Engine = (function() {
+    function Engine(options) {
+      this.session = options.session;
+      if (this.session == null) {
+        this.session = true;
+      }
+      if (options.proxy != null) {
+        this.proxy = new Proxy(options.proxy, this.session);
+      } else {
+        this.storage = new Storage(this.session);
+      }
+      return;
+    }
+
+    Engine.prototype.key = function(index, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).key(index, callback);
+    };
+
+    Engine.prototype.size = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).size(callback);
+    };
+
+    Engine.prototype.setItem = function(key, val, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).setItem(key, val, callback);
+    };
+
+    Engine.prototype.getItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).getItem(key, callback);
+    };
+
+    Engine.prototype.removeItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).removeItem(key, callback);
+    };
+
+    Engine.prototype.usage = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).usage(callback);
+    };
+
+    return Engine;
+
+  })();
+  self.Engine = Engine;
+})(this);
+
+(function(self){
 
   
   var LocalDB, dbPrefix;
@@ -1326,31 +1510,14 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
         throw new Error("dbName should be specified.");
       }
       this.name = dbPrefix + dbName;
-      this.ls = new Engine(options.type || 1);
+      this.ls = new Engine(options);
     }
 
     LocalDB.prototype.options = function() {
       return {
         name: this.name.substr(dbPrefix.length),
-        type: this.ls.type
+        session: this.ls.session
       };
-    };
-
-
-    /*
-     *  Get Collection Names
-     *  db.collections()    //['foo','foo1','foo2','foo3',....]
-     */
-
-    LocalDB.prototype.collections = function() {
-      var i, _i, _ref, _results;
-      _results = [];
-      for (i = _i = 0, _ref = this.ls.size(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-        if (this.ls.key(i).indexOf("" + this.name + "_") === 0) {
-          _results.push(this.ls.key(i).substr(("" + this.name + "_").length));
-        }
-      }
-      return _results;
     };
 
 
@@ -1369,26 +1536,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
      *  Delete DB: db.drop()
      */
 
-    LocalDB.prototype.drop = function(collectionName) {
-      var i, j, keys, _i, _len;
-      collectionName = collectionName != null ? "_" + collectionName : "";
-      keys = (function() {
-        var _i, _ref, _results;
-        _results = [];
-        for (i = _i = 0, _ref = this.ls.size(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          if (this.ls.key(i).indexOf(this.name + collectionName) === 0) {
-            _results.push(this.ls.key(i));
-          }
-        }
-        return _results;
-      }).call(this);
-      for (_i = 0, _len = keys.length; _i < _len; _i++) {
-        j = keys[_i];
-        this.ls.removeItem(j);
-      }
-      return true;
-    };
-
     return LocalDB;
 
   })();
@@ -1399,9 +1546,13 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
    */
   LocalDB.support = function() {
     return {
-      localStorage: typeof localStorage !== "undefined" && localStorage !== null ? true : false,
-      sessionStorage: typeof sessionStorage !== "undefined" && sessionStorage !== null ? true : false,
-      indexedDB: false
+      localStorage: Support.localstorage(),
+      sessionStorage: Support.sessionstorage(),
+      postMessage: Support.postmessage(),
+      webSql: Support.websqldatabase(),
+      indexedDB: Support.indexedDB(),
+      applicationCache: Support.applicationcache(),
+      userdata: Support.userdata()
     };
   };
 
@@ -1420,7 +1571,9 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
   LocalDB.getTime = function(objectId) {
     return Utils.getTime(objectId);
   };
-  
+  self.LocalDB = LocalDB;
+})(this);
+
   if ( typeof define === "function" && define.amd ) {
     define( "localdb", [], function() {
       return LocalDB;

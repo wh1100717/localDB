@@ -19,28 +19,28 @@ define(function(require, exports, module) {
       return;
     }
 
-    Engine.prototype.key = function(index) {
-      return (this.proxy != null ? this.proxy : this.storage).key(index);
+    Engine.prototype.key = function(index, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).key(index, callback);
     };
 
-    Engine.prototype.size = function() {
-      return (this.proxy != null ? this.proxy : this.storage).size();
+    Engine.prototype.size = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).size(callback);
     };
 
-    Engine.prototype.setItem = function(key, val) {
-      return (this.proxy != null ? this.proxy : this.storage).setItem(key, val);
+    Engine.prototype.setItem = function(key, val, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).setItem(key, val, callback);
     };
 
-    Engine.prototype.getItem = function(key) {
-      return (this.proxy != null ? this.proxy : this.storage).getItem(key);
+    Engine.prototype.getItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).getItem(key, callback);
     };
 
-    Engine.prototype.removeItem = function(key) {
-      return (this.proxy != null ? this.proxy : this.storage).removeItem(key);
+    Engine.prototype.removeItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).removeItem(key, callback);
     };
 
-    Engine.prototype.usage = function() {
-      return (this.proxy != null ? this.proxy : this.storage).usage();
+    Engine.prototype.usage = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).usage(callback);
     };
 
     return Engine;
