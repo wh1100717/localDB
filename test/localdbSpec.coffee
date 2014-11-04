@@ -6,9 +6,9 @@ define (require, exports, module) ->
 
     describe "LocalDB", ->
         it "LocalStorage Support", ->
-            expect(LocalDB.support().localStorage).toEqual(true)
+            expect(LocalDB.support.localstorage()).toEqual(true)
         it "SessionStorage Support", ->
-            expect(LocalDB.support().sessionStorage).toEqual(true)
+            expect(LocalDB.support.sessionstorage()).toEqual(true)
         it "wrong usage", ->
             try
                 db = new LocalDB()

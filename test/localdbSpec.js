@@ -7,10 +7,10 @@ define(function(require, exports, module) {
   return describe("LocalDB", function() {
     var db;
     it("LocalStorage Support", function() {
-      return expect(LocalDB.support().localStorage).toEqual(true);
+      return expect(LocalDB.support.localstorage()).toEqual(true);
     });
     it("SessionStorage Support", function() {
-      return expect(LocalDB.support().sessionStorage).toEqual(true);
+      return expect(LocalDB.support.sessionstorage()).toEqual(true);
     });
     it("wrong usage", function() {
       var db, e;

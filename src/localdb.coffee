@@ -56,18 +56,9 @@ define (require, exports, module) ->
         #     return true
 
     ###
-     *  Check Browser Compatibility
-     *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
+     *  Check Browser Feature Compatibility
     ###
-    LocalDB.support = -> {
-        localStorage: Support.localstorage()
-        sessionStorage: Support.sessionstorage()
-        postMessage: Support.postmessage()
-        webSql: Support.websqldatabase()
-        indexedDB: Support.indexedDB()
-        applicationCache: Support.applicationcache()
-        userdata: Support.userdata()
-    }
+    LocalDB.support = Support
 
     ###
      *  Get Timestamp

@@ -59,20 +59,9 @@ define(function(require, exports, module) {
   })();
 
   /*
-   *  Check Browser Compatibility
-   *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
+   *  Check Browser Feature Compatibility
    */
-  LocalDB.support = function() {
-    return {
-      localStorage: Support.localstorage(),
-      sessionStorage: Support.sessionstorage(),
-      postMessage: Support.postmessage(),
-      webSql: Support.websqldatabase(),
-      indexedDB: Support.indexedDB(),
-      applicationCache: Support.applicationcache(),
-      userdata: Support.userdata()
-    };
-  };
+  LocalDB.support = Support;
 
   /*
    *  Get Timestamp
