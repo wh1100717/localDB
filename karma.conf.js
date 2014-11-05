@@ -27,7 +27,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome', 'PhantomJS', 'Firefox'],
+    browsers: ['PhantomJS'],
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
