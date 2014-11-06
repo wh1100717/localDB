@@ -17,27 +17,25 @@ define (require, exports, module) ->
                 @userdata = new UserData()
 
         key: (index, callback) ->
-            key = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).key(index)
-
-            if typeof callback is 'function'
-                callback(key, err)
-                return
-            else
-                return key
+            try
+                key = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).key(index)
+            catch e
+                callback(-1, err)
+            callback(key)
+            return
 
         size: (callback) ->
-            if @session
-                size = sessionStorage.length
-            else if Support.localstorage()
-                size = localStorage.length
-            else
-                size = @userdata.size()
-
-            if typeof callback is 'function'
-                callback(size, err)
-                return
-            else
-                return size
+            try
+                if @session
+                    size = sessionStorage.length
+                else if Support.localstorage()
+                    size = localStorage.length
+                else
+                    size = @userdata.size()
+            catch e
+                callback(-1, err)
+            callback(size)
+            return
 
         setItem: (key, val, callback) ->
             ls = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage))
@@ -51,46 +49,45 @@ define (require, exports, module) ->
                         data.splice(0, 1)
                         ls.setItem(key, Utils.stringify(data))
                         flag = false
-            if typeof callback is 'function'
-                callback(err)
-                return
-            else
-                return
+            ### TODO
+             *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
+             *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回err
+            ###
+            callback()
+            return
 
         getItem: (key, callback) ->
-            item = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).getItem(key)
-            if typeof callback is 'function'
-                callback(item, err)
-                return
-            else
-                return
+            try
+                item = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).getItem(key)
+            catch e
+                callback(null, err)            
+            callback(item)
+            return
 
         removeItem: (key, callback) ->
-            (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).removeItem(key)
-            if typeof callback is 'function'
-                callback(err)
-                return
-            else
-                return
+            try
+                (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).removeItem(key)
+            catch e
+                callback(e)
+            callback()
+            return
 
         usage: (callback) ->
             ###
              *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
             ###
-            allStrings = ""
-            if @tyep is 1
-                for key, val of sessionStorage
-                    allStrings += val
-            else if Support.localstorage()
-                for key, val of localStorage
-                    allStrings += val
-            else
-                console.log "todo"
-            u = allStrings.length / 512
-            if typeof callback is 'function'
-                callback(u, err)
-                return
-            else
-                return
+            try
+                allStrings = ""
+                if @tyep is 1
+                    for key, val of sessionStorage
+                        allStrings += val
+                else if Support.localstorage()
+                    for key, val of localStorage
+                        allStrings += val
+                else
+                    console.log "todo"
+            catch e
+                callback(-1, err)
+            callback(allStrings.length / 512)
 
     module.exports = Storage
