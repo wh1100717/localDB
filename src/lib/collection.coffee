@@ -3,7 +3,7 @@ define (require, exports, module) ->
 
     Utils = require('lib/utils')
     Operation = require('lib/operation')
-
+    Promise = require('lib/promise')
     class Collection
 
         ###
@@ -44,13 +44,20 @@ define (require, exports, module) ->
         insert: (rowData, paras...) ->
             [options, callback] = Utils.parseParas(paras)
             self = @
-            @deserialize (data, err) ->
-                if err
-                    callback(err) if callback?
-                else
-                    data = Operation.insert data, rowData, options
-                    self.serialize data, (err) ->
+            promiseFn = (resolve, reject) ->
+                self.deserialize (data, err) ->
+                    if err
                         callback(err) if callback?
+                        reject(err)
+                    else
+                        data = Operation.insert data, rowData, options
+                        self.serialize data, (err) ->
+                        callback(err) if callback?
+                        if err
+                            reject(err)
+                        else
+                            resolve(1)
+            new Promise(promiseFn)
 
         ###
          *  update collection
@@ -58,13 +65,20 @@ define (require, exports, module) ->
         update: (actions, paras...) ->
             [options, callback] = Utils.parseParas(paras)
             self = @
-            @deserialize (data, err) ->
-                if err
-                    callback(err) if callback?
-                else
-                    data = Operation.update data, actions, options
-                    self.serialize data, (err) ->
+            promiseFn = (resolve, reject) ->
+                self.deserialize (data, err) ->
+                    if err
                         callback(err) if callback?
+                        reject(err)
+                    else
+                        data = Operation.update data, actions, options
+                        self.serialize data, (err) ->
+                            callback(err) if callback?
+                            if err
+                                reject(err)
+                            else
+                                resolve(data)
+            new Promise(promiseFn)
 
         ###
          *  remove data from collection
@@ -72,13 +86,20 @@ define (require, exports, module) ->
         remove: (paras...) ->
             [options, callback] = Utils.parseParas(paras)
             self = @
-            @deserialize (data, err) ->
+            promiseFn = (resolve, reject) ->
+                self.deserialize (data, err) ->
                 if err
                     callback(err) if callback?
+                    reject(err)
                 else
                     data = Operation.remove data, options
                     self.serialize data, (err) ->
                         callback(err) if callback?
+                        if err
+                            reject(err)
+                        else
+                            resolve(data)
+            new Promise(promiseFn)
 
         ###
          * find data from collection
@@ -86,12 +107,19 @@ define (require, exports, module) ->
         find: (paras...) ->
             [options, callback] = Utils.parseParas(paras)
             self = @
-            @deserialize (data, err) ->
-                if err
-                    callback([], err) if callback?
-                else
-                    data = Operation.find data, options
-                    callback(data, err) if callback?
+            promiseFn = (resolve, reject) ->
+                self.deserialize (data, err) ->
+                    if err
+                        callback([], err) if callback?
+                        reject(err)
+                    else
+                        data = Operation.find data, options
+                        callback(data, err) if callback?
+                        if err
+                            reject(err)
+                        else
+                            resolve(data)
+            new Promise(promiseFn)
 
         ###
          *  find data and only return one data from collection
@@ -100,11 +128,20 @@ define (require, exports, module) ->
             [options, callback] = Utils.parseParas(paras)
             options.limit = 1
             self = @
-            @deserialize (data, err) ->
-                if err
-                    callback([], err) if callback?
-                else
-                    data = Operation.find data, options
-                    callback((if data.length is 0 then undefined else data[0]), err) if callback?
+            promiseFn = (resolve, reject) ->
+                self.deserialize (data, err) ->
+                    if err
+                        callback([], err) if callback?
+                        reject(err)
+                    else
+                        data = Operation.find data, options
+                        data.push(undefined) if data.length is 0
+                        callback((data[0]), err) if callback?
+                        if err
+                            reject(err)
+                        else
+                            resolve(data[0])
+            new Promise(promiseFn)
+
 
     module.exports = Collection
