@@ -501,9 +501,9 @@ define(function(require, exports, module) {
       var promise = new Promise(function(resolve, reject){ 
       		resolve(1);
       }).then(function(val){ 
-      /**	return new Promise(function(resolve, reject){ 
+      return new Promise(function(resolve, reject){ 
       		resolve(2);
-      	});**/
+      	});
       return val;
       }).then(function(val){ 
       	console.log('1111111111111111111111111111'+val);
