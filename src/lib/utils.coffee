@@ -114,4 +114,22 @@ define (require, exports, module) ->
         
     Utils.getTime = (objectId) -> (new ObjectID(objectId)).getTime()
 
+    Utils.toUnicode = (string) ->
+        result = ['']
+        index = 1
+        len = string.length
+        (
+            char = string.charCodeAt(index - 1)
+            uniChar = "00" + char.toString(16)
+            uniChar = uniChar.slice(-4)
+            result.push(uniChar)
+            index += 1
+        ) while index <= len
+        result.join('\\u')
+
+    Utils.fromUnicode = (string) ->
+        repStr = string.replace(/\\/g,"%")
+        unescape(repStr);
+
+
     module.exports = Utils

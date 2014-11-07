@@ -103,6 +103,13 @@ define (require, exports, module) ->
             expect(Utils.isEqual(NaN,1)).toBe(false)
         it 'keys', ->
             expect(Utils.keys([])).toEqual([])
+        it 'toUnicode&fromUnicode', ->
+            string = ' '
+            toUnicode = Utils.toUnicode(string)
+            fromUnicode = Utils.fromUnicode(toUnicode)
+            console.log('---------------' + toUnicode)
+            console.log('---------------' + fromUnicode)
+            expect(fromUnicode).toEqual(string)
 
 
 
