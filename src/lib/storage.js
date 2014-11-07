@@ -7,8 +7,9 @@ define(function(require, exports, module) {
   Utils = require('lib/utils');
   err = null;
   Storage = (function() {
-    function Storage(session) {
+    function Storage(session, encrypt) {
       this.session = session;
+      this.encrypt = encrypt;
       if (this.session) {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");

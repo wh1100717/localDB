@@ -25,12 +25,16 @@ define (require, exports, module) ->
             #TODO 如果以后增加一些新的配置项，比如说size，则需要将db带着options内容存储起来，执行构造函数的时候也需要先通过@name和@ls来查看该db是否已经存在。
             throw new Error("dbName should be specified.") if dbName is undefined
             @name = dbPrefix + dbName
-            @ls = new Engine(options)
+            @session = if options.session? then options.session else true
+            @encrypt = if options.encrypt? then options.encrypt else true
+            @proxy = if options.proxy? then options.proxy else null
+            @ls = new Engine(@session, @encrypt, @proxy)
 
         # get options
         options: -> {
             name: @name.substr(dbPrefix.length)
-            session: @ls.session
+            session: @session
+            encrypt: @encrypt
         }
 
         # ###

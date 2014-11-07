@@ -8,13 +8,11 @@ define (require, exports, module) ->
 
     class Engine
 
-        constructor: (options) ->
-            @session = options.session
-            @session = true if not @session?
-            if options.proxy?
-                @proxy = new Proxy(options.proxy, @session)
+        constructor: (@session, @encrypt, @proxy) ->
+            if @proxy?
+                @proxy = new Proxy(@session, @encrypt, @proxy)
             else
-                @storage = new Storage(@session)
+                @storage = new Storage(@session, @encrypt)
             return
 
         key: (index, callback) -> (if @proxy? then @proxy else @storage).key(index, callback)

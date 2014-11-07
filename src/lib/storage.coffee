@@ -9,7 +9,7 @@ define (require, exports, module) ->
 
     class Storage
 
-        constructor: (@session) ->
+        constructor: (@session, @encrypt) ->
             if @session
                 throw new Error("sessionStorage is not supported!") if not Support.sessionstorage()
             else if not Support.localstorage()
@@ -60,7 +60,7 @@ define (require, exports, module) ->
             try
                 item = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).getItem(key)
             catch e
-                callback(null, err)            
+                callback(null, err)
             callback(item)
             return
 

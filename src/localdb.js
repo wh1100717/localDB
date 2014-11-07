@@ -28,13 +28,17 @@ define(function(require, exports, module) {
         throw new Error("dbName should be specified.");
       }
       this.name = dbPrefix + dbName;
-      this.ls = new Engine(options);
+      this.session = options.session != null ? options.session : true;
+      this.encrypt = options.encrypt != null ? options.encrypt : true;
+      this.proxy = options.proxy != null ? options.proxy : null;
+      this.ls = new Engine(this.session, this.encrypt, this.proxy);
     }
 
     LocalDB.prototype.options = function() {
       return {
         name: this.name.substr(dbPrefix.length),
-        session: this.ls.session
+        session: this.session,
+        encrypt: this.encrypt
       };
     };
 

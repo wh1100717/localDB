@@ -16,9 +16,8 @@ define (require, exports, module) ->
                 expect(e.message).toEqual("dbName should be specified.")
         db = new LocalDB('foo', {
             session: false
-            #TODO size && allow
+            #TODO size
             #size: 500
-            #allow: ['baidu.com', 'pt.aliexpress.com','www.qq.com']
         })
         it "new LocalDB", ->
             expect(db instanceof LocalDB).toEqual(true)
