@@ -103,7 +103,6 @@ define (require, exports, module) ->
                     c:4
                 }
             ]).then((val) ->
-                bar = db.collection("InsertListPromise")
                 bar.find (data) ->
                     expect(data.length).toEqual(2)
                 bar.insert([
@@ -228,7 +227,6 @@ define (require, exports, module) ->
                 {a: 1,b: 3}
                 {a: 2,b: 4}
             ]).then((val) ->
-                bar = db.collection("UpdatePromise")
                 bar.update {
                     $set: {
                         a:3
@@ -238,7 +236,6 @@ define (require, exports, module) ->
                     }
                 }
             ).then((val) ->
-                bar = db.collection("UpdatePromise")
                 bar.findOne()
             ).then((data) ->
                 expect(data.a).toEqual(3)
@@ -286,10 +283,8 @@ define (require, exports, module) ->
                 {a: 1,b: 3}
                 {a: 2,b: 4}
             ]).then((val) ->
-                bar = db.collection("RemovePromise")
                 bar.remove()
             ).then((val) ->
-                bar = db.collection("RemovePromise")
                 bar.find()
             ).then((data) ->
                 expect(data).toEqual([])
@@ -353,7 +348,6 @@ define (require, exports, module) ->
                 min1: 50
                 min2: 30
             }]).then((val) ->
-                bar = db.collection('FindOnePromise')
                 bar.findOne {where: {a:1}})
                 .then((val) ->
                     console.log("---------belong----------" + val))
