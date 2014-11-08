@@ -11,17 +11,17 @@ define (require, exports, module) ->
          *  db = new LocalDB('foo')
          *  var collection = db.collection('bar')
         ###
-        constructor: (collectionName, db) ->
+        constructor: (collectionName, engine) ->
             throw new Error("collectionName should be specified.") if collectionName is undefined
-            @name = "#{db.name}_#{collectionName}"
-            @ls = db.ls
+            @name = "#{engine.name}_#{collectionName}"
+            @engine = engine
 
         ###
          *  get data and tranfer into object from localStorage/sessionStorage
         ###
         deserialize: (callback) ->
             self = @
-            @ls.getItem @name, (data, err) ->
+            @engine.getItem @name, (data, err) ->
                 data = Utils.parse data
                 callback(data, err) if callback?
 
@@ -30,13 +30,13 @@ define (require, exports, module) ->
          *  when catching error in setItem(), delete the oldest data and try again.
         ###
         serialize: (data, callback) ->
-            @ls.setItem @name, Utils.stringify(data), (err) ->
+            @engine.setItem @name, Utils.stringify(data), (err) ->
                 callback(err) if callback?
 
         ###
          *  delete this collection
         ###
-        drop: (callback) -> @ls.removeItem @name, callback
+        drop: (callback) -> @engine.removeItem @name, callback
 
         ###
          *  insert data into collection

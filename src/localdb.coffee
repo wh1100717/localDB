@@ -13,28 +13,32 @@ define (require, exports, module) ->
         ###
          *  Constructor
          *  var db = new LocalDB('foo')
-         *  var db = new LocalDB('foo', {type: 1})
-         *  var db = new LocalDB('foo', {type: 2})
+         *  var db = new LocaoDB('foo', {
+                session: true,
+                encrypt: true,
+                proxy: "http://www.foo.com/getProxy.html"
+            })
          *
          *  Engine will decide to choose the best waty to handle the data automatically.
-         *  when type is 1, the data will be alive while browser stay open. e.g. sessionStorage
-         *  when type is 2, the data will be alive even after browser is closed. e.g. localStorage
-         *  1 by default
+         *  when session is true, the data will be alive while browser stay open. e.g. sessionStorage
+         *  when session is false, the data will be alive even after browser is closed. e.g. localStorage
+         *  true by default
+         *  The data will be stored encrypted if the encrpyt options is true, true by default.
         ###
         constructor: (dbName, options = {}) ->
-            #TODO 如果以后增加一些新的配置项，比如说size，则需要将db带着options内容存储起来，执行构造函数的时候也需要先通过@name和@ls来查看该db是否已经存在。
             throw new Error("dbName should be specified.") if dbName is undefined
             @name = dbPrefix + dbName
             @session = if options.session? then options.session else true
             @encrypt = if options.encrypt? then options.encrypt else true
             @proxy = if options.proxy? then options.proxy else null
-            @ls = new Engine(@session, @encrypt, @name, @proxy)
+            @engine = new Engine(@session, @encrypt, @name, @proxy)
 
         # get options
         options: -> {
             name: @name.substr(dbPrefix.length)
             session: @session
             encrypt: @encrypt
+            proxy: @proxy
         }
 
         # ###
@@ -47,7 +51,7 @@ define (require, exports, module) ->
          *  Get Collection
          *  var collection = db.collection('bar')
         ###
-        collection: (collectionName) -> new Collection(collectionName, @)
+        collection: (collectionName) -> new Collection(collectionName, @engine)
 
         ###
          *  Delete Collection: db.drop(collectionName)
