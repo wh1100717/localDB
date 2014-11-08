@@ -5,6 +5,7 @@ define (require, exports, module) ->
     Support = require('lib/support')
     UserData = require('lib/userdata')
     Utils = require('lib/utils')
+    Encrypt = require('lib/encrypt')
     err = null
 
     class Storage
@@ -40,6 +41,8 @@ define (require, exports, module) ->
         setItem: (key, val, callback) ->
             ls = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage))
             try
+                if @encrypt
+                    val = Encrypt.encode(val, @token)
                 ls.setItem(key, val)
             catch e
                 flag = true
@@ -59,6 +62,8 @@ define (require, exports, module) ->
         getItem: (key, callback) ->
             try
                 item = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).getItem(key)
+                if @encrypt
+                    item = Encrypt.decode(item, @token)
             catch e
                 callback(null, err)
             callback(item)
