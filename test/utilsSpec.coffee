@@ -104,11 +104,9 @@ define (require, exports, module) ->
         it 'keys', ->
             expect(Utils.keys([])).toEqual([])
         it 'toUnicode&fromUnicode', ->
-            string = ' '
+            string = ' 京东买奶茶——=+~！@#￥%……&*（）'
             toUnicode = Utils.toUnicode(string)
             fromUnicode = Utils.fromUnicode(toUnicode)
-            console.log('---------------' + toUnicode)
-            console.log('---------------' + fromUnicode)
             expect(fromUnicode).toEqual(string)
 
 

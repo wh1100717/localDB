@@ -123,11 +123,9 @@ define(function(require, exports, module) {
     });
     return it('toUnicode&fromUnicode', function() {
       var fromUnicode, string, toUnicode;
-      string = ' ';
+      string = ' 京东买奶茶——=+~！@#￥%……&*（）';
       toUnicode = Utils.toUnicode(string);
       fromUnicode = Utils.fromUnicode(toUnicode);
-      console.log('---------------' + toUnicode);
-      console.log('---------------' + fromUnicode);
       return expect(fromUnicode).toEqual(string);
     });
   });
