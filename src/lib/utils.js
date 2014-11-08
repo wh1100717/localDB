@@ -181,8 +181,7 @@ define(function(require, exports, module) {
   };
   Utils.toUnicode = function(string) {
     var char, index, len, result, uniChar;
-    result = [];
-    result.push('');
+    result = [''];
     index = 1;
     len = string.length;
     while (index <= len) {

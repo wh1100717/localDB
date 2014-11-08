@@ -27,7 +27,16 @@ define (require, exports, module) ->
         ###
          *  delete this collection
         ###
-        drop: (callback) -> @engine.removeItem @name, callback
+        drop: (callback) ->
+            self = @
+            promiseFn = (resolve, reject) ->
+                self.engine.removeItem self.name, (err) ->
+                    callback(err) if callback?
+                    if err?
+                        reject(err)
+                    else
+                        resolve()
+            new Promise(promiseFn)
 
         ###
          *  insert data into collection

@@ -19,8 +19,8 @@ define (require, exports, module) ->
         it "Init", ->
             expect(bar instanceof Collection).toEqual(true)
         it "Insert", ->
-            bar = db.collection("insert")
-            bar.insert {
+            insert_bar = db.collection("insert")
+            insert_bar.insert {
                 a: 1
                 b: "abc"
                 c: /hell.*ld/
@@ -28,7 +28,7 @@ define (require, exports, module) ->
                 g: (h) -> return h * 3
                 i: [1,2,3]
             }, ->
-                bar.find (data) ->
+                insert_bar.find (data) ->
                     data = data[0]
                     expect(data.a).toEqual(1)
                     expect(data.b).toEqual("abc")
@@ -38,17 +38,23 @@ define (require, exports, module) ->
                     expect(data.g(100)).toEqual(300)
                     expect(data.i).toEqual([1,2,3])
         it "InsertPromise", ->
-            bar = db.collection("InsertPromise")
-            bar.insert({
-                a: 1
-                b: "abc"
-                c: /hell.*ld/
-                d: {e: 4, f: "5"}
-                g: (h) -> return h * 3
-                i: [1,2,3]
-            }).then((val) ->
-                bar = db.collection("InsertPromise")
-                bar.find (data) ->
+            InsertPromise_bar = db.collection("InsertPromise")
+            InsertPromise_bar.drop()
+                .then( -> InsertPromise_bar.find())
+                .then( (data) -> console.log "InsertPromise --->", data.length)
+                .then( ->
+                    InsertPromise_bar.insert {
+                        a: 1
+                        b: "abc"
+                        c: /hell.*ld/
+                        d: {e: 4, f: "5"}
+                        g: (h) -> return h * 3
+                        i: [1,2,3]
+                    }
+                )
+                .then( -> InsertPromise_bar.find())
+                .then( (data) ->
+                    console.log data.length, data[0]
                     data = data[0]
                     expect(data.a).toEqual(1)
                     expect(data.b).toEqual("abc")
@@ -59,70 +65,82 @@ define (require, exports, module) ->
                     expect(data.i).toEqual([1,2,3])
                 )
         it "Insert List", ->
-            bar = db.collection("insertList")
-            bar.insert [
-                {
-                    a:1
-                    b:2
-                    c:3
-                },
-                {
-                    a:2
-                    b:3
-                    c:4
-                }
-            ], ->
-                bar.find (data) ->
-                    expect(data.length).toEqual(2)
-                bar.insert [
+            insertList_bar = db.collection("insertList")
+            insertList_bar.drop ->
+                insertList_bar.insert [
                     {
                         a:1
                         b:2
                         c:3
-                    }
-                    4 #只能插入对象，该数据将被过滤掉，不会被插入
+                    },
                     {
                         a:2
                         b:3
                         c:4
                     }
                 ], ->
-                    bar.find (data) ->
-                        expect(data.length).toEqual(4)
+                    insertList_bar.find (data) ->
+                        expect(data.length).toEqual(2)
+                    insertList_bar.insert [
+                        {
+                            a:1
+                            b:2
+                            c:3
+                        }
+                        4 #只能插入对象，该数据将被过滤掉，不会被插入
+                        {
+                            a:2
+                            b:3
+                            c:4
+                        }
+                    ], ->
+                        insertList_bar.find (data) ->
+                            expect(data.length).toEqual(4)
         it "InsertListPromise", ->
-            bar = db.collection("InsertListPromise")
-            bar.insert([
-                {
-                    a:1
-                    b:2
-                    c:3
-                },
-                {
-                    a:2
-                    b:3
-                    c:4
-                }
-            ]).then((val) ->
-                bar.find (data) ->
+            InsertListPromise_bar = db.collection("InsertListPromise")
+            InsertListPromise_bar.drop()
+                .then( ->
+                    InsertListPromise_bar.insert [
+                        {
+                            a:1
+                            b:2
+                            c:3
+                        },
+                        {
+                            a:2
+                            b:3
+                            c:4
+                        }
+                    ]
+                )
+                .then( ->
+                    InsertListPromise_bar.find()
+                )
+                .then( (data) ->
                     expect(data.length).toEqual(2)
-                bar.insert([
-                    {
-                        a:1
-                        b:2
-                        c:3
-                    }
-                    4 #只能插入对象，该数据将被过滤掉，不会被插入
-                    {
-                        a:2
-                        b:3
-                        c:4
-                    }
-                ]).then((val) ->
-                    bar.find (data) ->
-                        expect(data.length).toEqual(4)))
+                    InsertListPromise_bar.insert [
+                        {
+                            a:1
+                            b:2
+                            c:3
+                        }
+                        4 #只能插入对象，该数据将被过滤掉，不会被插入
+                        {
+                            a:2
+                            b:3
+                            c:4
+                        }
+                    ]
+                )
+                .then( ->
+                    InsertListPromise_bar.find()
+                )
+                .then( (data) ->
+                    expect(data.length).toEqual(4)
+                )
         it "Update", ->
-            bar = db.collection("update")
-            bar.insert {
+            update_bar = db.collection("update")
+            update_bar.insert {
                 a: 1
                 b: 2
                 c: {d: 3, e:4}
@@ -136,7 +154,7 @@ define (require, exports, module) ->
                 min2: 30
                 unchanged_val: 100
             }, ->
-                bar.update {
+                update_bar.update {
                     $set: {
                         a:4
                         "c.d": 5
@@ -151,7 +169,7 @@ define (require, exports, module) ->
                     $min: {min1:80, min2: 10}
                     unchanged_val: 119 #it will be ignored
                 }, ->
-                    bar.find (data) ->
+                    update_bar.find (data) ->
                         data = data[0]
                         expect(data.a).toEqual(4)
                         expect(data.c.d).toEqual(5)
@@ -165,21 +183,21 @@ define (require, exports, module) ->
                         expect(data.min1).toEqual(50)
                         expect(data.min2).toEqual(10)
                         expect(data.unchanged_val).toEqual(100)
-                        bar.drop ->
-                            bar.insert {
+                        update_bar.drop ->
+                            update_bar.insert {
                                 a: 1
                             }, ->
-                                bar.update {
+                                update_bar.update {
                                     $set: {
                                         a: 2
                                     }
                                 }, {
                                     where: {a:2}
                                 }, ->
-                                    bar.find (data) ->
+                                    update_bar.find (data) ->
                                         data = data[0]
                                         expect(data.a).toEqual(1)
-                                        bar.update {
+                                        update_bar.update {
                                             $set: {
                                                 b: 2
                                                 "b.c": 1
@@ -187,10 +205,10 @@ define (require, exports, module) ->
                                         }, {
                                             where: {a:1}
                                         }, ->
-                                            bar.find (data) ->
+                                            update_bar.find (data) ->
                                                 data = data[0]
                                                 expect(data.b).not.toBeDefined()
-                                                bar.update {
+                                                update_bar.update {
                                                     $set: {
                                                         b: 2
                                                         "d.c": 3
@@ -199,16 +217,16 @@ define (require, exports, module) ->
                                                     where: {a: 1}
                                                     upsert: true
                                                 }, ->
-                                                    bar.findOne (data) ->
+                                                    update_bar.findOne (data) ->
                                                         console.log data
                                                         expect(data.b).toEqual(2)
-                                                        bar.drop ->
-                                                            bar.insert [
+                                                        update_bar.drop ->
+                                                            update_bar.insert [
                                                                 {a:1, b:2}
                                                                 {a:1, b:3}
                                                                 {a:1, b:4}
                                                             ], ->
-                                                                bar.update {
+                                                                update_bar.update {
                                                                     $set: {
                                                                         b: 5
                                                                     }
@@ -218,80 +236,86 @@ define (require, exports, module) ->
                                                                     }
                                                                     multi: false
                                                                 }, ->
-                                                                    bar.find (data) ->
+                                                                    update_bar.find (data) ->
                                                                         expect(d.b).not.toEqual(5) for d,index in data  when index > 0
         it "UpdatePromise", ->
-            bar = db.collection("UpdatePromise")
-            bar.insert([
-                {a: 1,b: 2}
-                {a: 1,b: 3}
-                {a: 2,b: 4}
-            ]).then((val) ->
-                bar.update {
-                    $set: {
-                        a:3
+            UpdatePromise_bar = db.collection("UpdatePromise")
+            UpdatePromise_bar.drop()
+                .then( ->
+                    UpdatePromise_bar.insert [
+                        {a: 1,b: 2}
+                        {a: 1,b: 3}
+                        {a: 2,b: 4}
+                    ]
+                )
+                .then( ->
+                    UpdatePromise_bar.update {
+                        $set: {
+                            a:3
+                        }
+                        $inc: {
+                            b: 2
+                        }
                     }
-                    $inc: {
-                        b: 2
-                    }
-                }
-            ).then((val) ->
-                bar.findOne()
-            ).then((data) ->
-                expect(data.a).toEqual(3)
-            )
+                )
+                .then( ->
+                    UpdatePromise_bar.findOne()
+                )
+                .then( (data) ->
+                    expect(data.a).toEqual(3)
+                )
         it "Remove", ->
-            bar = db.collection("remove")
-            bar.insert [
+            remove_bar = db.collection("remove")
+            remove_bar.insert [
                 {a: 1,b: 2}
                 {a: 1,b: 3}
                 {a: 2,b: 4}
             ], ->
-                bar.remove ->
-                    bar.find (data) ->
+                remove_bar.remove ->
+                    remove_bar.find (data) ->
                         expect(data).toEqual([])
-                        bar.drop ->
-                            bar.insert [
+                        remove_bar.drop ->
+                            remove_bar.insert [
                                 {a: 1,b: 2}
                                 {a: 1,b: 3}
                                 {a: 2,b: 4}
                             ], ->
-                                bar.remove {
+                                remove_bar.remove {
                                     where: {a:1}
                                     multi: false
                                 }, ->
-                                    bar.find {where: {a: 1}}, (data) ->
+                                    remove_bar.find {where: {a: 1}}, (data) ->
                                         expect(data.length).toEqual(1)
-                                    bar.drop ->
-                                        bar.insert [
+                                    remove_bar.drop ->
+                                        remove_bar.insert [
                                             {a: 1,b: 2}
                                             {a: 1,b: 3}
                                             {a: 2,b: 4}
                                             {a: 3,b: 4}
                                         ], ->
-                                            bar.remove {
+                                            remove_bar.remove {
                                                 where: {a:1}
                                             }, ->
-                                                bar.find {where: {a: 1}}, (data) ->
+                                                remove_bar.find {where: {a: 1}}, (data) ->
                                                     expect(data.length).toEqual(0)
-                                                bar.find (data) ->
+                                                remove_bar.find (data) ->
                                                     expect(data.length).toEqual(2)
         it "RemovePromise", ->
-            bar = db.collection("RemovePromise")
-            bar.insert([
-                {a: 1,b: 2}
-                {a: 1,b: 3}
-                {a: 2,b: 4}
-            ]).then((val) ->
-                bar.remove()
-            ).then((val) ->
-                bar.find()
-            ).then((data) ->
-                expect(data).toEqual([])
-            )
+            RemovePromise_bar = db.collection("RemovePromise")
+            RemovePromise_bar.drop()
+                .then( ->
+                    RemovePromise_bar.insert [
+                        {a: 1,b: 2}
+                        {a: 1,b: 3}
+                        {a: 2,b: 4}
+                    ]
+                )
+                .then( -> RemovePromise_bar.remove())
+                .then( -> RemovePromise_bar.find())
+                .then( (data) -> expect(data).toEqual([]))
         it "FindOne", ->
-            bar = db.collection('findone')
-            bar.insert [{
+            findone_bar = db.collection('findone')
+            findone_bar.insert [{
                 a: 1
                 b: 2
                 c: {d: 3, e:4}
@@ -316,44 +340,48 @@ define (require, exports, module) ->
                 min1: 50
                 min2: 30
             }], ->
-                bar.findOne {where: {a:1}}, (data) ->
+                findone_bar.findOne {where: {a:1}}, (data) ->
                     console.log "findOne: ", data
                     expect(data.a).toEqual(1)
-                bar.findOne {where: {no_val: 11111}}, (data) ->
+                findone_bar.findOne {where: {no_val: 11111}}, (data) ->
                     expect(data).not.toBeDefined()
         it "FindOnePromise", ->
-            bar = db.collection('FindOnePromise')
-            bar.insert([{
-                a: 1
-                b: 2
-                c: {d: 3, e:4}
-                f: (x) -> x * x
-                g: [1,2,3,4]
-                h: "abc"
-                price: 10.99
-                max1: 100
-                max2: 200
-                min1: 50
-                min2: 30
-            },{
-                a: 1
-                b: 2
-                c: {d: 3, e:4}
-                f: (x) -> x * x
-                g: [1,2,3,4]
-                h: "abc"
-                price: 10.99
-                max1: 100
-                max2: 200
-                min1: 50
-                min2: 30
-            }]).then((val) ->
-                bar.findOne {where: {a:1}})
-                .then((val) ->
-                    console.log("---------belong----------" + val))
+            FindOnePromise_bar = db.collection('FindOnePromise')
+            FindOnePromise_bar.drop()
+                .then( ->
+                    FindOnePromise_bar.insert [
+                        {
+                            a: 1
+                            b: 2
+                            c: {d: 3, e:4}
+                            f: (x) -> x * x
+                            g: [1,2,3,4]
+                            h: "abc"
+                            price: 10.99
+                            max1: 100
+                            max2: 200
+                            min1: 50
+                            min2: 30
+                        },{
+                            a: 1
+                            b: 2
+                            c: {d: 3, e:4}
+                            f: (x) -> x * x
+                            g: [1,2,3,4]
+                            h: "abc"
+                            price: 10.99
+                            max1: 100
+                            max2: 200
+                            min1: 50
+                            min2: 30
+                        }
+                    ]
+                )
+                .then( -> FindOnePromise_bar.findOne {where: {a:1}})
+                .then( (data) -> expect(data.a).toEqual(1))
         it "Projection", ->
-            bar = db.collection('projection')
-            bar.insert [{
+            projection_bar = db.collection('projection')
+            projection_bar.insert [{
                 a: 1
                 b: 2
                 c: {d: 3, e:4}
@@ -378,27 +406,28 @@ define (require, exports, module) ->
                 min1: 50
                 min2: 30
             }], ->
-                bar.findOne {
+                projection_bar.findOne {
                     where: {a: 1}
                     projection: {a: 1, _id: -1}
                 }, (data) ->
                     expect(data).toEqual({a:1})
-                bar.find {
+                projection_bar.find {
                     where: {a: 1}
                     projection: {"g.$": 1}
                 }, (data) ->
                     expect(d.g).toEqual([1]) for d in data
-                bar.find {
+                projection_bar.find {
                     where: {b: 1}
                     projection: {"g.$": 1}
                 }, (data) ->
                     expect(data).toEqual([])
-                bar.find {
+                projection_bar.find {
                     where: {a: 1}
                     projection: {"a.$": 1}
                 }, (data) ->
                     expect(data).toEqual([])
-            bar.insert [{
+            projection2_bar = db.collection("projection2")
+            projection2_bar.insert [{
                 _id: 1,
                 zipcode: "63109",
                 students: [
@@ -427,11 +456,11 @@ define (require, exports, module) ->
                 _id: 4,
                 zipcode: "63109",
                 students: [
-                    { name: "barney", school: 102, age: 7 },
+                    { name: "baney", school: 102, age: 7 },
                     { name: "ruth", school: 102, age: 16 },
                 ]
             }], ->
-                bar.find {
+                projection2_bar.find {
                     where: { zipcode: "63109"}
                     projection: {
                         _id: 1
@@ -439,7 +468,7 @@ define (require, exports, module) ->
                     }
                 }, (data) ->
                     console.log data
-                bar.find {
+                projection2_bar.find {
                     where: { zipcode: "63109"}
                     projection: {
                         _id: 1
