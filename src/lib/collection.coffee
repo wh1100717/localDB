@@ -11,10 +11,8 @@ define (require, exports, module) ->
          *  db = new LocalDB('foo')
          *  var collection = db.collection('bar')
         ###
-        constructor: (collectionName, engine) ->
-            throw new Error("collectionName should be specified.") if collectionName is undefined
+        constructor: (collectionName, @engine) ->
             @name = "#{engine.name}_#{collectionName}"
-            @engine = engine
 
         ###
          *  get data and tranfer into object from localStorage/sessionStorage
@@ -52,11 +50,11 @@ define (require, exports, module) ->
                     else
                         data = Operation.insert data, rowData, options
                         self.serialize data, (err) ->
-                        callback(err) if callback?
-                        if err
-                            reject(err)
-                        else
-                            resolve(1)
+                            callback(err) if callback?
+                            if err
+                                reject(err)
+                            else
+                                resolve(data)
             new Promise(promiseFn)
 
         ###

@@ -28,7 +28,7 @@ define(function(require, exports, module) {
       if (options == null) {
         options = {};
       }
-      if (dbName === void 0) {
+      if (dbName == null) {
         throw new Error("dbName should be specified.");
       }
       this.name = dbPrefix + dbName;
@@ -54,6 +54,9 @@ define(function(require, exports, module) {
      */
 
     LocalDB.prototype.collection = function(collectionName) {
+      if (collectionName == null) {
+        throw new Error("collectionName should be specified.");
+      }
       return new Collection(collectionName, this.engine);
     };
 

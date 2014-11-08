@@ -15,11 +15,8 @@ define(function(require, exports, module) {
      *  var collection = db.collection('bar')
      */
     function Collection(collectionName, engine) {
-      if (collectionName === void 0) {
-        throw new Error("collectionName should be specified.");
-      }
-      this.name = "" + engine.name + "_" + collectionName;
       this.engine = engine;
+      this.name = "" + engine.name + "_" + collectionName;
     }
 
 
@@ -80,15 +77,16 @@ define(function(require, exports, module) {
             return reject(err);
           } else {
             data = Operation.insert(data, rowData, options);
-            self.serialize(data, function(err) {});
-            if (callback != null) {
-              callback(err);
-            }
-            if (err) {
-              return reject(err);
-            } else {
-              return resolve(1);
-            }
+            return self.serialize(data, function(err) {
+              if (callback != null) {
+                callback(err);
+              }
+              if (err) {
+                return reject(err);
+              } else {
+                return resolve(data);
+              }
+            });
           }
         });
       };

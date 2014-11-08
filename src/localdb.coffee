@@ -26,7 +26,7 @@ define (require, exports, module) ->
          *  The data will be stored encrypted if the encrpyt options is true, true by default.
         ###
         constructor: (dbName, options = {}) ->
-            throw new Error("dbName should be specified.") if dbName is undefined
+            throw new Error("dbName should be specified.") if not dbName?
             @name = dbPrefix + dbName
             @session = if options.session? then options.session else true
             @encrypt = if options.encrypt? then options.encrypt else true
@@ -51,7 +51,9 @@ define (require, exports, module) ->
          *  Get Collection
          *  var collection = db.collection('bar')
         ###
-        collection: (collectionName) -> new Collection(collectionName, @engine)
+        collection: (collectionName) ->
+            throw new Error("collectionName should be specified.") if not collectionName?
+            new Collection(collectionName, @engine)
 
         ###
          *  Delete Collection: db.drop(collectionName)
