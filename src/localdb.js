@@ -31,7 +31,7 @@ define(function(require, exports, module) {
       this.session = options.session != null ? options.session : true;
       this.encrypt = options.encrypt != null ? options.encrypt : true;
       this.proxy = options.proxy != null ? options.proxy : null;
-      this.ls = new Engine(this.session, this.encrypt, this.proxy);
+      this.ls = new Engine(this.session, this.encrypt, this.name, this.proxy);
     }
 
     LocalDB.prototype.options = function() {

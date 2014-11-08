@@ -28,7 +28,7 @@ define (require, exports, module) ->
             @session = if options.session? then options.session else true
             @encrypt = if options.encrypt? then options.encrypt else true
             @proxy = if options.proxy? then options.proxy else null
-            @ls = new Engine(@session, @encrypt, @proxy)
+            @ls = new Engine(@session, @encrypt, @name, @proxy)
 
         # get options
         options: -> {
