@@ -25,13 +25,8 @@ define(function(require, exports, module) {
      */
 
     Collection.prototype.deserialize = function(callback) {
-      var self;
-      self = this;
       return this.engine.getItem(this.name, function(data, err) {
-        data = Utils.parse(data);
-        if (callback != null) {
-          return callback(data, err);
-        }
+        return callback(Utils.parse(data), err);
       });
     };
 
@@ -42,11 +37,7 @@ define(function(require, exports, module) {
      */
 
     Collection.prototype.serialize = function(data, callback) {
-      return this.engine.setItem(this.name, Utils.stringify(data), function(err) {
-        if (callback != null) {
-          return callback(err);
-        }
-      });
+      return this.engine.setItem(this.name, Utils.stringify(data), callback);
     };
 
 
@@ -70,7 +61,7 @@ define(function(require, exports, module) {
       self = this;
       promiseFn = function(resolve, reject) {
         return self.deserialize(function(data, err) {
-          if (err) {
+          if (err != null) {
             if (callback != null) {
               callback(err);
             }
@@ -81,10 +72,10 @@ define(function(require, exports, module) {
               if (callback != null) {
                 callback(err);
               }
-              if (err) {
+              if (err != null) {
                 return reject(err);
               } else {
-                return resolve(data);
+                return resolve();
               }
             });
           }
@@ -116,10 +107,10 @@ define(function(require, exports, module) {
               if (callback != null) {
                 callback(err);
               }
-              if (err) {
+              if (err != null) {
                 return reject(err);
               } else {
-                return resolve(data);
+                return resolve();
               }
             });
           }
@@ -139,26 +130,26 @@ define(function(require, exports, module) {
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       self = this;
       promiseFn = function(resolve, reject) {
-        var data;
-        self.deserialize(function(data, err) {});
-        if (err) {
-          if (callback != null) {
-            callback(err);
-          }
-          return reject(err);
-        } else {
-          data = Operation.remove(data, options);
-          return self.serialize(data, function(err) {
+        return self.deserialize(function(data, err) {
+          if (err != null) {
             if (callback != null) {
               callback(err);
             }
-            if (err) {
-              return reject(err);
-            } else {
-              return resolve(data);
-            }
-          });
-        }
+            return reject(err);
+          } else {
+            data = Operation.remove(data, options);
+            return self.serialize(data, function(err) {
+              if (callback != null) {
+                callback(err);
+              }
+              if (err != null) {
+                return reject(err);
+              } else {
+                return resolve();
+              }
+            });
+          }
+        });
       };
       return new Promise(promiseFn);
     };
@@ -175,7 +166,7 @@ define(function(require, exports, module) {
       self = this;
       promiseFn = function(resolve, reject) {
         return self.deserialize(function(data, err) {
-          if (err) {
+          if (err != null) {
             if (callback != null) {
               callback([], err);
             }
@@ -185,7 +176,7 @@ define(function(require, exports, module) {
             if (callback != null) {
               callback(data, err);
             }
-            if (err) {
+            if (err != null) {
               return reject(err);
             } else {
               return resolve(data);
@@ -209,20 +200,17 @@ define(function(require, exports, module) {
       self = this;
       promiseFn = function(resolve, reject) {
         return self.deserialize(function(data, err) {
-          if (err) {
+          if (err != null) {
             if (callback != null) {
-              callback([], err);
+              callback(void 0, err);
             }
             return reject(err);
           } else {
             data = Operation.find(data, options);
-            if (data.length === 0) {
-              data.push(void 0);
-            }
             if (callback != null) {
               callback(data[0], err);
             }
-            if (err) {
+            if (err != null) {
               return reject(err);
             } else {
               return resolve(data[0]);
