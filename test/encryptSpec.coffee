@@ -10,5 +10,5 @@ define (require, exports, module) ->
             str = Encrypt.encode(value, key)
             console.log(value + '加密后：' + str)
             str2 = Encrypt.decode(str, key)
-            console.log(value + '解密后：' + str2)
+            console.log(str + '解密后：' + str2)
             expect(str2).toEqual(value)

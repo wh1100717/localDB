@@ -6,14 +6,15 @@ define(function(require, exports, module) {
   Storage = require('lib/storage');
   Proxy = require('lib/proxy');
   Engine = (function() {
-    function Engine(session, encrypt, proxy) {
+    function Engine(session, encrypt, name, proxy) {
       this.session = session;
       this.encrypt = encrypt;
+      this.name = name;
       this.proxy = proxy;
       if (this.proxy != null) {
-        this.proxy = new Proxy(this.session, this.encrypt, this.proxy);
+        this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
       } else {
-        this.storage = new Storage(this.session, this.encrypt);
+        this.storage = new Storage(this.session, this.encrypt, this.name);
       }
       return;
     }

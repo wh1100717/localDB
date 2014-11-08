@@ -9,7 +9,7 @@ define (require, exports, module) ->
 
     class Storage
 
-        constructor: (@session, @encrypt) ->
+        constructor: (@session, @encrypt, @token) ->
             if @session
                 throw new Error("sessionStorage is not supported!") if not Support.sessionstorage()
             else if not Support.localstorage()
