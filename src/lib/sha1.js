@@ -24,33 +24,6 @@ sha1.hex_sha1 = function(s) {
     return binb2hex(core_sha1(str2binb(s), s.length * chrsz));
 }
 
-sha1.b64_sha1 = function(s) {
-    return binb2b64(core_sha1(str2binb(s), s.length * chrsz));
-}
-
-sha1.str_sha1 = function(s) {
-    return binb2str(core_sha1(str2binb(s), s.length * chrsz));
-}
-
-sha1.hex_hmac_sha1 = function(key, data) {
-    return binb2hex(core_hmac_sha1(key, data));
-}
-
-sha1.b64_hmac_sha1 = function(key, data) {
-    return binb2b64(core_hmac_sha1(key, data));
-}
-
-sha1.str_hmac_sha1 = function(key, data) {
-    return binb2str(core_hmac_sha1(key, data));
-}
-
-/*   
- *   Perform   a   simple   self-test   to   see   if   the   VM   is   working   
- */
-function sha1_vm_test() {
-    return hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";
-}
-
 /*   
  *   Calculate   the   SHA-1   of   an   array   of   big-endian   words,   and   a   bit   length   
  */
@@ -113,24 +86,6 @@ function sha1_kt(t) {
 }
 
 /*   
- *   Calculate   the   HMAC-SHA1   of   a   key   and   some   data   
- */
-function core_hmac_sha1(key, data) {
-    var bkey = str2binb(key);
-    if (bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
-
-    var ipad = Array(16),
-        opad = Array(16);
-    for (var i = 0; i < 16; i++) {
-        ipad[i] = bkey[i] ^ 0x36363636;
-        opad[i] = bkey[i] ^ 0x5C5C5C5C;
-    }
-
-    var hash = core_sha1(ipad.concat(str2binb(data)), 512 + data.length * chrsz);
-    return core_sha1(opad.concat(hash), 512 + 160);
-}
-
-/*   
  *   Add   integers,   wrapping   at   2^32.   This   uses   16-bit   operations   internally   
  *   to   work   around   bugs   in   some   JS   interpreters.   
  */
@@ -160,17 +115,6 @@ function str2binb(str) {
 }
 
 /*   
- *   Convert   an   array   of   big-endian   words   to   a   string   
- */
-function binb2str(bin) {
-    var str = "";
-    var mask = (1 << chrsz) - 1;
-    for (var i = 0; i < bin.length * 32; i += chrsz)
-    str += String.fromCharCode((bin[i >> 5] >>> (24 - i % 32)) & mask);
-    return str;
-}
-
-/*   
  *   Convert   an   array   of   big-endian   words   to   a   hex   string.   
  */
 function binb2hex(binarray) {
@@ -178,22 +122,6 @@ function binb2hex(binarray) {
     var str = "";
     for (var i = 0; i < binarray.length * 4; i++) {
         str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) + hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
-    }
-    return str;
-}
-
-/*   
- *   Convert   an   array   of   big-endian   words   to   a   base-64   string   
- */
-function binb2b64(binarray) {
-    var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    var str = "";
-    for (var i = 0; i < binarray.length * 4; i += 3) {
-        var triplet = (((binarray[i >> 2] >> 8 * (3 - i % 4)) & 0xFF) << 16) | (((binarray[i + 1 >> 2] >> 8 * (3 - (i + 1) % 4)) & 0xFF) << 8) | ((binarray[i + 2 >> 2] >> 8 * (3 - (i + 2) % 4)) & 0xFF);
-        for (var j = 0; j < 4; j++) {
-            if (i * 8 + j * 6 > binarray.length * 32) str += b64pad;
-            else str += tab.charAt((triplet >> 6 * (3 - j)) & 0x3F);
-        }
     }
     return str;
 }
