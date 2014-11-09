@@ -6,7 +6,6 @@ define (require, exports, module) ->
     UserData = require('lib/userdata')
     Utils = require('lib/utils')
     Encrypt = require('lib/encrypt')
-    err = null
 
     class Storage
 
@@ -21,7 +20,7 @@ define (require, exports, module) ->
             try
                 key = (if @session then sessionStorage else (if @userdata? then @userdata else localStorage)).key(index)
             catch e
-                callback(-1, err)
+                callback(-1, e)
             callback(key)
             return
 
@@ -34,7 +33,7 @@ define (require, exports, module) ->
                 else
                     size = @userdata.size()
             catch e
-                callback(-1, err)
+                callback(-1, e)
             callback(size)
             return
 
@@ -54,7 +53,7 @@ define (require, exports, module) ->
                         flag = false
             ### TODO
              *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
-             *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回err
+             *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回e
             ###
             callback()
             return
@@ -65,7 +64,7 @@ define (require, exports, module) ->
                 if @encrypt
                     item = Encrypt.decode(item, @token)
             catch e
-                callback(null, err)
+                callback(null, e)
             callback(item)
             return
 
@@ -92,7 +91,7 @@ define (require, exports, module) ->
                 else
                     console.log "todo"
             catch e
-                callback(-1, err)
+                callback(-1, e)
             callback(allStrings.length / 512)
 
     module.exports = Storage

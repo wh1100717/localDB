@@ -1,12 +1,6 @@
 define (require, exports, module) ->
     BinaryParser = require('lib/binary-parser')
 
-    hexTable = ((if i <= 15 then '0' else '') + i.toString(16) for i in [0...256])
-
-    MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10)
-
-    checkForHexRegExp = /^[0-9a-fA-F]{24}$/
-
     ObjectID = (id, _hex) ->
         @_bsontype = 'ObjectID'
         if id? and id.length isnt 12 and id.length isnt 24
@@ -15,7 +9,7 @@ define (require, exports, module) ->
             @id = @generate()
         else if id? and id.length is 12
             @id = id
-        else if checkForHexRegExp.test(id)
+        else if /^[0-9a-fA-F]{24}$/.test(id)
             return ObjectID.createFromHexString(id)
         else
             throw new Error("Value passed in is not a valid 24 character hex string")
@@ -23,12 +17,13 @@ define (require, exports, module) ->
     ObjectID.prototype.generate = ->
         unixTime = parseInt(Date.now() / 1000, 10)
         time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true)
-        machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false)
+        machine3Bytes = BinaryParser.encodeInt(parseInt(Math.random() * 0xFFFFFF, 10), 24, false)
         pid2Bytes = BinaryParser.fromShort(if typeof process is 'undefined' then Math.floor(Math.random() * 100000) else process.pid)
         index3Bytes = BinaryParser.encodeInt(@get_inc(), 24, false, true)
         return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes
 
     ObjectID.prototype.toHexString = ->
+        hexTable = ((if i <= 15 then '0' else '') + i.toString(16) for i in [0...256])
         hexString = ''
         for i in [0...@id.length]
             hexString += hexTable[@id.charCodeAt(i)]
