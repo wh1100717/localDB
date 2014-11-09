@@ -2,6 +2,7 @@ module.exports = (grunt) ->
     'use strict'
 
     convert = (name, path, contents) ->
+        pkg = grunt.file.readJSON 'package.json'
         while true
             item = contents.match(/(.+) = require\('.+'\);/)
             break if not item?
@@ -15,6 +16,7 @@ module.exports = (grunt) ->
         contents = contents.replace(/(.+) = require\(['"]$/, "")
         contents = contents.replace(/define\([^{]*?{/, "").replace(/\}\);[^}\w]*$/, "")
         contents = contents.replace(/define\(\[[^\]]+\]\)[\W\n]+$/, "")
+        contents = contents.replace(/LocalDB.version = \'\';/, "LocalDB.version = '#{pkg.version}'")
         contents = "(function(self){\n" + contents
         contents += "\n})(this);\n"
         return contents

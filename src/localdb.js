@@ -76,6 +76,11 @@ define(function(require, exports, module) {
   LocalDB.support = Support;
 
   /*
+   *  Version
+   */
+  LocalDB.version = '';
+
+  /*
    *  Get Timestamp
    *  Convert ObjectId to timestamp
    */

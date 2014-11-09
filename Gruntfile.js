@@ -3,7 +3,8 @@ module.exports = function(grunt) {
   'use strict';
   var convert;
   convert = function(name, path, contents) {
-    var item, k, moduleName, v;
+    var item, k, moduleName, pkg, v;
+    pkg = grunt.file.readJSON('package.json');
     while (true) {
       item = contents.match(/(.+) = require\('.+'\);/);
       if (item == null) {
@@ -24,6 +25,7 @@ module.exports = function(grunt) {
     contents = contents.replace(/(.+) = require\(['"]$/, "");
     contents = contents.replace(/define\([^{]*?{/, "").replace(/\}\);[^}\w]*$/, "");
     contents = contents.replace(/define\(\[[^\]]+\]\)[\W\n]+$/, "");
+    contents = contents.replace(/LocalDB.version = \'\';/, "LocalDB.version = '" + pkg.version + "'");
     contents = "(function(self){\n" + contents;
     contents += "\n})(this);\n";
     return contents;

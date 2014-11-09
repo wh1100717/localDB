@@ -1,4 +1,3 @@
-  LocalDB.version = '0.0.1'
 
   if ( typeof define === "function" && define.amd ) {
     define( "localdb", [], function() {
