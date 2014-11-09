@@ -1,8 +1,9 @@
 module.exports = (grunt) ->
     'use strict'
 
+    pkg = grunt.file.readJSON 'package.json'
+
     convert = (name, path, contents) ->
-        pkg = grunt.file.readJSON 'package.json'
         while true
             item = contents.match(/(.+) = require\('.+'\);/)
             break if not item?
@@ -25,7 +26,7 @@ module.exports = (grunt) ->
     require('load-grunt-tasks')(grunt)
 
     grunt.initConfig {
-        pkg: grunt.file.readJSON 'package.json'
+        pkg: pkg
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %>\n' + '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' + ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n'
         karma: {
             unit: {
