@@ -4,6 +4,7 @@ define (require, exports, module) ->
     Utils = require('lib/utils')
     Operation = require('lib/operation')
     Promise = require('lib/promise')
+    
     class Collection
 
         ###

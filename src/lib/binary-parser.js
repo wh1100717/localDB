@@ -4,7 +4,7 @@ define(function(require, exports, module) {
    * Jonas Raoni Soares Silva
    * http://jsfromhell.com/classes/binary-parser [v1.0]
    */
-  var chr = String.fromCharCode;
+  'use strict'
 
   var maxBits = [];
   for (var i = 0; i < 64; i++) {

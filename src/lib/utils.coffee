@@ -1,5 +1,4 @@
 define (require, exports, module) ->
-
     'use strict'
 
     ObjectID = require('lib/bson')

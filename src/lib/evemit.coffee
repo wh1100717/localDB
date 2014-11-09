@@ -1,6 +1,6 @@
 define (require, exports, module) ->
-
     'use strict'
+    
     ###
      *  https://github.com/wh1100717/evemit
     ###
