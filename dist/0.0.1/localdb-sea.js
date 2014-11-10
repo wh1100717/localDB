@@ -21,7 +21,6 @@ define(function(require, exports, module) {(function( global, factory ) {
   // the stack via arguments.caller.callee and Firefox dies if
   // you try to trace through "use strict" call chains. (#13335)
   //
-(function(self){
 
   /**
    * Binary Parser.
@@ -142,9 +141,6 @@ define(function(require, exports, module) {(function( global, factory ) {
   BinaryParser.Buffer = BinaryParserBuffer;
 
   self.BinaryParser = BinaryParser;
-})(this);
-
-(function(self){
 
   
   var ObjectID, hexTable, i;
@@ -232,9 +228,6 @@ define(function(require, exports, module) {(function( global, factory ) {
   })();
   ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
   self.ObjectID = ObjectID;
-})(this);
-
-(function(self){
 
   
   var Utils, eq, toString, _isType;
@@ -434,9 +427,6 @@ define(function(require, exports, module) {(function( global, factory ) {
     return unescape(repStr);
   };
   self.Utils = Utils;
-})(this);
-
-(function(self){
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 
@@ -774,9 +764,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     }
   };
   self.Where = Where;
-})(this);
-
-(function(self){
 
   
   var Projection, generateItem;
@@ -856,9 +843,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     return result;
   };
   self.Projection = Projection;
-})(this);
-
-(function(self){
 
   
   var Operation, Update;
@@ -1010,9 +994,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     }
   };
   self.Operation = Operation;
-})(this);
-
-(function(self){
 
   /**
    * https://github.com/then/promise [v6.0.1]
@@ -1401,9 +1382,6 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
   }
 
   self.Promise = Promise;
-})(this);
-
-(function(self){
 var __slice = [].slice;
 
 
@@ -1641,9 +1619,6 @@ var __slice = [].slice;
 
   })();
   self.Collection = Collection;
-})(this);
-
-(function(self){
 
   
   var Support, mod;
@@ -1687,9 +1662,6 @@ var __slice = [].slice;
     return document.documentElement.addBehavior != null;
   };
   self.Support = Support;
-})(this);
-
-(function(self){
 
   
   var UserData;
@@ -1775,39 +1747,36 @@ var __slice = [].slice;
 
   })();
   self.UserData = UserData;
-})(this);
-
-(function(self){
 /*   
- *   A   JavaScript   implementation   of   the   Secure   Hash   Algorithm,   SHA-1,   as   defined   
- *   in   FIPS   PUB   180-1   
- *   Version   2.1-BETA   Copyright   Paul   Johnston   2000   -   2002.   
- *   Other   contributors:   Greg   Holt,   Andrew   Kepert,   Ydnar,   Lostinet   
- *   Distributed   under   the   BSD   License   
- *   See   http://pajhome.org.uk/crypt/md5   for   details.   
+ *   A   JavaScript   implementation   of   the   Secure   Hash   Algorithm,   SHA-1,   as   defined
+ *   in   FIPS   PUB   180-1
+ *   Version   2.1-BETA   Copyright   Paul   Johnston   2000   -   2002.
+ *   Other   contributors:   Greg   Holt,   Andrew   Kepert,   Ydnar,   Lostinet
+ *   Distributed   under   the   BSD   License
+ *   See   http://pajhome.org.uk/crypt/md5   for   details.
  */
 /*   
- *   Configurable   variables.   You   may   need   to   tweak   these   to   be   compatible   with   
- *   the   server-side,   but   the   defaults   work   in   most   cases.   
+ *   Configurable   variables.   You   may   need   to   tweak   these   to   be   compatible   with
+ *   the   server-side,   but   the   defaults   work   in   most   cases.
  */
 
   
-var hexcase = 0; /*   hex   output   format.   0   -   lowercase;   1   -   uppercase                 */
-var b64pad = ""; /*   base-64   pad   character.   "="   for   strict   RFC   compliance       */
-var chrsz = 8; /*   bits   per   input   character.   8   -   ASCII;   16   -   Unicode             */
-var sha1 = {};
-/*   
- *   These   are   the   functions   you'll   usually   want   to   call   
- *   They   take   string   arguments   and   return   either   hex   or   base-64   encoded   strings   
- */
-sha1.hex_sha1 = function(s) {
+  var hexcase = 0; /*   hex   output   format.   0   -   lowercase;   1   -   uppercase                 */
+  var b64pad = ""; /*   base-64   pad   character.   "="   for   strict   RFC   compliance       */
+  var chrsz = 8; /*   bits   per   input   character.   8   -   ASCII;   16   -   Unicode             */
+  var Sha1 = {};
+  /*   
+   *   These   are   the   functions   you'll   usually   want   to   call
+   *   They   take   string   arguments   and   return   either   hex   or   base-64   encoded   strings
+   */
+  Sha1.hex_sha1 = function(s) {
     return binb2hex(core_sha1(str2binb(s), s.length * chrsz));
-}
+  }
 
-/*   
- *   Calculate   the   SHA-1   of   an   array   of   big-endian   words,   and   a   bit   length   
- */
-function core_sha1(x, len) {
+  /*   
+   *   Calculate   the   SHA-1   of   an   array   of   big-endian   words,   and   a   bit   length
+   */
+  function core_sha1(x, len) {
     /*   append   padding   */
     x[len >> 5] |= 0x80 << (24 - len % 32);
     x[((len + 64 >> 9) << 4) + 15] = len;
@@ -1820,96 +1789,93 @@ function core_sha1(x, len) {
     var e = -1009589776;
 
     for (var i = 0; i < x.length; i += 16) {
-        var olda = a;
-        var oldb = b;
-        var oldc = c;
-        var oldd = d;
-        var olde = e;
+      var olda = a;
+      var oldb = b;
+      var oldc = c;
+      var oldd = d;
+      var olde = e;
 
-        for (var j = 0; j < 80; j++) {
-            if (j < 16) w[j] = x[i + j];
-            else w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
-            var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)), safe_add(safe_add(e, w[j]), sha1_kt(j)));
-            e = d;
-            d = c;
-            c = rol(b, 30);
-            b = a;
-            a = t;
-        }
+      for (var j = 0; j < 80; j++) {
+        if (j < 16) w[j] = x[i + j];
+        else w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+        var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)), safe_add(safe_add(e, w[j]), sha1_kt(j)));
+        e = d;
+        d = c;
+        c = rol(b, 30);
+        b = a;
+        a = t;
+      }
 
-        a = safe_add(a, olda);
-        b = safe_add(b, oldb);
-        c = safe_add(c, oldc);
-        d = safe_add(d, oldd);
-        e = safe_add(e, olde);
+      a = safe_add(a, olda);
+      b = safe_add(b, oldb);
+      c = safe_add(c, oldc);
+      d = safe_add(d, oldd);
+      e = safe_add(e, olde);
     }
     return Array(a, b, c, d, e);
 
-}
+  }
 
-/*   
- *   Perform   the   appropriate   triplet   combination   function   for   the   current   
- *   iteration   
- */
-function sha1_ft(t, b, c, d) {
+  /*   
+   *   Perform   the   appropriate   triplet   combination   function   for   the   current
+   *   iteration
+   */
+  function sha1_ft(t, b, c, d) {
     if (t < 20) return (b & c) | ((~b) & d);
     if (t < 40) return b ^ c ^ d;
     if (t < 60) return (b & c) | (b & d) | (c & d);
     return b ^ c ^ d;
-}
+  }
 
-/*   
- *   Determine   the   appropriate   additive   constant   for   the   current   iteration   
- */
-function sha1_kt(t) {
+  /*   
+   *   Determine   the   appropriate   additive   constant   for   the   current   iteration
+   */
+  function sha1_kt(t) {
     return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 : (t < 60) ? -1894007588 : -899497514;
-}
+  }
 
-/*   
- *   Add   integers,   wrapping   at   2^32.   This   uses   16-bit   operations   internally   
- *   to   work   around   bugs   in   some   JS   interpreters.   
- */
-function safe_add(x, y) {
+  /*   
+   *   Add   integers,   wrapping   at   2^32.   This   uses   16-bit   operations   internally
+   *   to   work   around   bugs   in   some   JS   interpreters.
+   */
+  function safe_add(x, y) {
     var lsw = (x & 0xFFFF) + (y & 0xFFFF);
     var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
     return (msw << 16) | (lsw & 0xFFFF);
-}
+  }
 
-/*   
- *   Bitwise   rotate   a   32-bit   number   to   the   left.   
- */
-function rol(num, cnt) {
+  /*   
+   *   Bitwise   rotate   a   32-bit   number   to   the   left.
+   */
+  function rol(num, cnt) {
     return (num << cnt) | (num >>> (32 - cnt));
-}
+  }
 
-/*   
- *   Convert   an   8-bit   or   16-bit   string   to   an   array   of   big-endian   words   
- *   In   8-bit   function,   characters   >255   have   their   hi-byte   silently   ignored.   
- */
-function str2binb(str) {
+  /*   
+   *   Convert   an   8-bit   or   16-bit   string   to   an   array   of   big-endian   words
+   *   In   8-bit   function,   characters   >255   have   their   hi-byte   silently   ignored.
+   */
+  function str2binb(str) {
     var bin = Array();
     var mask = (1 << chrsz) - 1;
     for (var i = 0; i < str.length * chrsz; i += chrsz)
-    bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i % 32);
+      bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i % 32);
     return bin;
-}
+  }
 
-/*   
- *   Convert   an   array   of   big-endian   words   to   a   hex   string.   
- */
-function binb2hex(binarray) {
+  /*   
+   *   Convert   an   array   of   big-endian   words   to   a   hex   string.
+   */
+  function binb2hex(binarray) {
     var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
     var str = "";
     for (var i = 0; i < binarray.length * 4; i++) {
-        str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) + hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
+      str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) + hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
     }
     return str;
-}
-module.exports = sha1;
+  }
 
-})(this);
-
-(function(self){
+  self.Sha1 = Sha1;
 
   
   var Encrypt;
@@ -1975,9 +1941,6 @@ module.exports = sha1;
     return Utils.fromUnicode(resultStr);
   };
   self.Encrypt = Encrypt;
-})(this);
-
-(function(self){
 
   
   var Storage;
@@ -2111,17 +2074,11 @@ module.exports = sha1;
 
   })();
   self.Storage = Storage;
-})(this);
-
-(function(self){
 
   
   var Proxy;
   Proxy = {};
   self.Proxy = Proxy;
-})(this);
-
-(function(self){
 
   
   var Engine;
@@ -2167,9 +2124,6 @@ module.exports = sha1;
 
   })();
   self.Engine = Engine;
-})(this);
-
-(function(self){
 
   
   var LocalDB, dbPrefix;
@@ -2263,8 +2217,6 @@ module.exports = sha1;
     return Utils.getTime(objectId);
   };
   self.LocalDB = LocalDB;
-})(this);
-
 
   if ( typeof define === "function" && define.amd ) {
     define( "localdb", [], function() {

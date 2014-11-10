@@ -18,8 +18,6 @@ module.exports = (grunt) ->
         contents = contents.replace(/define\([^{]*?{/, "").replace(/\}\);[^}\w]*$/, "")
         contents = contents.replace(/define\(\[[^\]]+\]\)[\W\n]+$/, "")
         contents = contents.replace(/LocalDB.version = \'\';/, "LocalDB.version = '#{pkg.version}'")
-        contents = "(function(self){\n" + contents
-        contents += "\n})(this);\n"
         return contents
 
 
