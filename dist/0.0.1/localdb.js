@@ -21,6 +21,7 @@
   // the stack via arguments.caller.callee and Firefox dies if
   // you try to trace through "use strict" call chains. (#13335)
   //
+var BinaryParser = (function(){
 
   /**
    * Binary Parser.
@@ -140,7 +141,10 @@
 
   BinaryParser.Buffer = BinaryParserBuffer;
 
-  self.BinaryParser = BinaryParser;
+  return BinaryParser;
+})();
+
+var ObjectID = (function(){
 
   
   var ObjectID, hexTable, i;
@@ -227,7 +231,10 @@
 
   })();
   ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
-  self.ObjectID = ObjectID;
+  return ObjectID;
+})();
+
+var Utils = (function(){
 
   
   var Utils, eq, toString, _isType;
@@ -426,7 +433,10 @@
     repStr = string.replace(/\\/g, "%");
     return unescape(repStr);
   };
-  self.Utils = Utils;
+  return Utils;
+})();
+
+var Where = (function(){
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 
@@ -763,7 +773,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
       return true;
     }
   };
-  self.Where = Where;
+  return Where;
+})();
+
+var Projection = (function(){
 
   
   var Projection, generateItem;
@@ -842,7 +855,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     }
     return result;
   };
-  self.Projection = Projection;
+  return Projection;
+})();
+
+var Operation = (function(){
 
   
   var Operation, Update;
@@ -993,7 +1009,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
       return data;
     }
   };
-  self.Operation = Operation;
+  return Operation;
+})();
+
+var Promise = (function(){
 
   /**
    * https://github.com/then/promise [v6.0.1]
@@ -1381,7 +1400,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     })
   }
 
-  self.Promise = Promise;
+  return Promise;
+})();
+
+var Collection = (function(){
 var __slice = [].slice;
 
 
@@ -1618,7 +1640,10 @@ var __slice = [].slice;
     return Collection;
 
   })();
-  self.Collection = Collection;
+  return Collection;
+})();
+
+var Support = (function(){
 
   
   var Support, mod;
@@ -1661,7 +1686,10 @@ var __slice = [].slice;
   Support.userdata = function() {
     return document.documentElement.addBehavior != null;
   };
-  self.Support = Support;
+  return Support;
+})();
+
+var UserData = (function(){
 
   
   var UserData;
@@ -1746,7 +1774,10 @@ var __slice = [].slice;
     return UserData;
 
   })();
-  self.UserData = UserData;
+  return UserData;
+})();
+
+var Sha1 = (function(){
 /*   
  *   A   JavaScript   implementation   of   the   Secure   Hash   Algorithm,   SHA-1,   as   defined
  *   in   FIPS   PUB   180-1
@@ -1875,7 +1906,10 @@ var __slice = [].slice;
     return str;
   }
 
-  self.Sha1 = Sha1;
+  return Sha1;
+})();
+
+var Encrypt = (function(){
 
   
   var Encrypt;
@@ -1940,7 +1974,10 @@ var __slice = [].slice;
     resultStr = resultArr.join('\\u');
     return Utils.fromUnicode(resultStr);
   };
-  self.Encrypt = Encrypt;
+  return Encrypt;
+})();
+
+var Storage = (function(){
 
   
   var Storage;
@@ -2073,12 +2110,18 @@ var __slice = [].slice;
     return Storage;
 
   })();
-  self.Storage = Storage;
+  return Storage;
+})();
+
+var Proxy = (function(){
 
   
   var Proxy;
   Proxy = {};
-  self.Proxy = Proxy;
+  return Proxy;
+})();
+
+var Engine = (function(){
 
   
   var Engine;
@@ -2123,7 +2166,10 @@ var __slice = [].slice;
     return Engine;
 
   })();
-  self.Engine = Engine;
+  return Engine;
+})();
+
+var LocalDB = (function(){
 
   
   var LocalDB, dbPrefix;
@@ -2216,7 +2262,9 @@ var __slice = [].slice;
   LocalDB.getTime = function(objectId) {
     return Utils.getTime(objectId);
   };
-  self.LocalDB = LocalDB;
+  return LocalDB;
+})();
+
 
   if ( typeof define === "function" && define.amd ) {
     define( "localdb", [], function() {
