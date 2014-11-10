@@ -8,6 +8,7 @@ define (require, exports, module) ->
     class Server
         constructor: (@config) ->
             self = @
+            self.Storage = null
             window.addEventListener('message', (e) ->
                 origin = e.origin
                 isWhite = self.checkOrigin(origin)
@@ -17,22 +18,22 @@ define (require, exports, module) ->
                     mes.type = result.type
                     mes.eve = result.eve
                     session = result.session
+                    if self.session is not session or self.Storage is null
+                        self.Storage = new Storage(session)
+                    self.session = session
                     switch mes.type
                         when "key" 
-                            self.Storage = new Storage(session)
                             index = result.index
                             self.Storage.key index, (data) ->
                                 mes.data = data
                                 self.postParent(mes, origin)
 
                         when "size" 
-                            self.Storage = new Storage(session)
                             self.Storage.size  (data ) ->
                                 mes.data = data
                                 self.postParent(mes, origin)
 
                         when "setItem"
-                            self.Storage = new Storage(session) 
                             key = result.key
                             val = result.val
                             self.Storage.setItem  key, val, (data ) ->
@@ -40,21 +41,18 @@ define (require, exports, module) ->
                                 self.postParent(mes, origin)
 
                         when "getItem"
-                            self.Storage = new Storage(session) 
                             key = result.key
                             self.Storage.getItem  key, (data ) ->
                                 mes.data = data
                                 self.postParent(mes, origin)
 
                         when "removeItem"
-                            self.Storage = new Storage(session) 
                             key = result.key
                             self.Storage.removeItem  key, (data ) ->
                                 mes.data = data
                                 self.postParent(mes, origin)
 
                          when "usage"
-                            self.Storage = new Storage(session) 
                             self.Storage.usage (data ) ->
                                 mes.data = data
                                 self.postParent(mes, origin)
@@ -75,4 +73,5 @@ define (require, exports, module) ->
                     isWhite = true
                     break
             return isWhite
+
     module.exports = Server

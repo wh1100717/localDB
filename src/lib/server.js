@@ -9,6 +9,7 @@ define(function(require, exports, module) {
       var self;
       this.config = config;
       self = this;
+      self.Storage = null;
       window.addEventListener('message', function(e) {
         var index, isWhite, key, mes, origin, result, session, val;
         origin = e.origin;
@@ -19,22 +20,23 @@ define(function(require, exports, module) {
           mes.type = result.type;
           mes.eve = result.eve;
           session = result.session;
+          if (self.session === !session || self.Storage === null) {
+            self.Storage = new Storage(session);
+          }
+          self.session = session;
           switch (mes.type) {
             case "key":
-              self.Storage = new Storage(session);
               index = result.index;
               return self.Storage.key(index, function(data) {
                 mes.data = data;
                 return self.postParent(mes, origin);
               });
             case "size":
-              self.Storage = new Storage(session);
               return self.Storage.size(function(data) {
                 mes.data = data;
                 return self.postParent(mes, origin);
               });
             case "setItem":
-              self.Storage = new Storage(session);
               key = result.key;
               val = result.val;
               return self.Storage.setItem(key, val, function(data) {
@@ -42,21 +44,18 @@ define(function(require, exports, module) {
                 return self.postParent(mes, origin);
               });
             case "getItem":
-              self.Storage = new Storage(session);
               key = result.key;
               return self.Storage.getItem(key, function(data) {
                 mes.data = data;
                 return self.postParent(mes, origin);
               });
             case "removeItem":
-              self.Storage = new Storage(session);
               key = result.key;
               return self.Storage.removeItem(key, function(data) {
                 mes.data = data;
                 return self.postParent(mes, origin);
               });
             case "usage":
-              self.Storage = new Storage(session);
               return self.Storage.usage(function(data) {
                 mes.data = data;
                 return self.postParent(mes, origin);
