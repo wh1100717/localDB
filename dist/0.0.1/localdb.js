@@ -28,7 +28,7 @@
    * Jonas Raoni Soares Silva
    * http://jsfromhell.com/classes/binary-parser [v1.0]
    */
-  var chr = String.fromCharCode;
+  'use strict'
 
   var maxBits = [];
   for (var i = 0; i < 64; i++) {
@@ -146,7 +146,8 @@
 
 (function(self){
 
-  var MACHINE_ID, ObjectID, checkForHexRegExp, hexTable, i;
+  
+  var ObjectID, hexTable, i;
   hexTable = (function() {
     var _i, _results;
     _results = [];
@@ -155,67 +156,81 @@
     }
     return _results;
   })();
-  MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10);
-  checkForHexRegExp = /^[0-9a-fA-F]{24}$/;
-  ObjectID = function(id, _hex) {
-    this._bsontype = 'ObjectID';
-    if ((id != null) && id.length !== 12 && id.length !== 24) {
-      throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
-    }
-    if (id == null) {
-      return this.id = this.generate();
-    } else if ((id != null) && id.length === 12) {
-      return this.id = id;
-    } else if (checkForHexRegExp.test(id)) {
-      return ObjectID.createFromHexString(id);
-    } else {
-      throw new Error("Value passed in is not a valid 24 character hex string");
-    }
-  };
-  ObjectID.prototype.generate = function() {
-    var index3Bytes, machine3Bytes, pid2Bytes, time4Bytes, unixTime;
-    unixTime = parseInt(Date.now() / 1000, 10);
-    time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
-    machine3Bytes = BinaryParser.encodeInt(MACHINE_ID, 24, false);
-    pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
-    index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
-    return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes;
-  };
-  ObjectID.prototype.toHexString = function() {
-    var hexString, _i, _ref;
-    hexString = '';
-    for (i = _i = 0, _ref = this.id.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      hexString += hexTable[this.id.charCodeAt(i)];
-    }
-    return hexString;
-  };
-  ObjectID.prototype.toString = function() {
-    return this.toHexString();
-  };
-  ObjectID.prototype.inspect = ObjectID.prototype.toString;
-  ObjectID.prototype.getTime = function() {
-    return Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000;
-  };
-  ObjectID.prototype.getTimestamp = function() {
-    var timestamp;
-    timestamp = new Date();
-    timestamp.setTime(this.getTime());
-    return timestamp;
-  };
-  ObjectID.prototype.get_inc = function() {
-    return ObjectID.index = (ObjectID.index + 1) % 0xFFFFFF;
-  };
-  ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
-  ObjectID.createFromHexString = function(hexString) {
-    var result, _i;
-    result = '';
-    for (i = _i = 0; _i < 24; i = ++_i) {
-      if (i % 2 === 0) {
-        result += BinaryParser.fromByte(parseInt(hexString.substr(i, 2), 16));
+  ObjectID = (function() {
+    function ObjectID(id, _hex) {
+      this._bsontype = 'ObjectID';
+      this.MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10);
+      if ((id != null) && id.length !== 12 && id.length !== 24) {
+        throw new Error("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
+      }
+      if (id == null) {
+        this.id = this.generate();
+      } else if ((id != null) && id.length === 12) {
+        this.id = id;
+      } else if (/^[0-9a-fA-F]{24}$/.test(id)) {
+        return this.createFromHexString(id);
+      } else {
+        throw new Error("Value passed in is not a valid 24 character hex string");
       }
     }
-    return new ObjectID(result, hexString);
-  };
+
+    ObjectID.prototype.generate = function() {
+      var index3Bytes, machine3Bytes, pid2Bytes, time4Bytes, unixTime;
+      unixTime = parseInt(Date.now() / 1000, 10);
+      time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true);
+      machine3Bytes = BinaryParser.encodeInt(this.MACHINE_ID, 24, false);
+      pid2Bytes = BinaryParser.fromShort(typeof process === 'undefined' ? Math.floor(Math.random() * 100000) : process.pid);
+      index3Bytes = BinaryParser.encodeInt(this.get_inc(), 24, false, true);
+      return time4Bytes + machine3Bytes + pid2Bytes + index3Bytes;
+    };
+
+    ObjectID.prototype.toHexString = function() {
+      var hexString, _i, _ref;
+      hexString = '';
+      for (i = _i = 0, _ref = this.id.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        hexString += hexTable[this.id.charCodeAt(i)];
+      }
+      return hexString;
+    };
+
+    ObjectID.prototype.toString = function() {
+      return this.toHexString();
+    };
+
+    ObjectID.prototype.inspect = function() {
+      return this.toHexString();
+    };
+
+    ObjectID.prototype.getTime = function() {
+      return Math.floor(BinaryParser.decodeInt(this.id.substring(0, 4), 32, true, true)) * 1000;
+    };
+
+    ObjectID.prototype.getTimestamp = function() {
+      var timestamp;
+      timestamp = new Date();
+      timestamp.setTime(this.getTime());
+      return timestamp;
+    };
+
+    ObjectID.prototype.get_inc = function() {
+      return ObjectID.index = (ObjectID.index + 1) % 0xFFFFFF;
+    };
+
+    ObjectID.prototype.createFromHexString = function(hexString) {
+      var result, _i;
+      result = '';
+      for (i = _i = 0; _i < 24; i = ++_i) {
+        if (i % 2 === 0) {
+          result += BinaryParser.fromByte(parseInt(hexString.substr(i, 2), 16));
+        }
+      }
+      return new ObjectID(result, hexString);
+    };
+
+    return ObjectID;
+
+  })();
+  ObjectID.index = parseInt(Math.random() * 0xFFFFFF, 10);
   self.ObjectID = ObjectID;
 })(this);
 
@@ -398,6 +413,25 @@
   };
   Utils.getTime = function(objectId) {
     return (new ObjectID(objectId)).getTime();
+  };
+  Utils.toUnicode = function(string) {
+    var char, index, len, result, uniChar;
+    result = [''];
+    index = 1;
+    len = string.length;
+    while (index <= len) {
+      char = string.charCodeAt(index - 1);
+      uniChar = "00" + char.toString(16);
+      uniChar = uniChar.slice(-4);
+      result.push(uniChar);
+      index += 1;
+    }
+    return result.join('\\u');
+  };
+  Utils.fromUnicode = function(string) {
+    var repStr;
+    repStr = string.replace(/\\/g, "%");
+    return unescape(repStr);
   };
   self.Utils = Utils;
 })(this);
@@ -979,6 +1013,397 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 })(this);
 
 (function(self){
+
+  /**
+   * https://github.com/then/promise [v6.0.1]
+   */
+
+  // Use the fastest possible means to execute a task in a future turn
+  // of the event loop.
+
+  // linked list of tasks (single, with head node)
+  var head = {
+    task: void 0,
+    next: null
+  };
+  var tail = head;
+  var flushing = false;
+  var requestFlush = void 0;
+  var isNodeJS = false;
+
+  function flush() {
+    /* jshint loopfunc: true */
+
+    while (head.next) {
+      head = head.next;
+      var task = head.task;
+      head.task = void 0;
+      var domain = head.domain;
+
+      if (domain) {
+        head.domain = void 0;
+        domain.enter();
+      }
+
+      try {
+        task();
+
+      } catch (e) {
+        if (isNodeJS) {
+          // In node, uncaught exceptions are considered fatal errors.
+          // Re-throw them synchronously to interrupt flushing!
+
+          // Ensure continuation if the uncaught exception is suppressed
+          // listening "uncaughtException" events (as domains does).
+          // Continue in next event to avoid tick recursion.
+          if (domain) {
+            domain.exit();
+          }
+          setTimeout(flush, 0);
+          if (domain) {
+            domain.enter();
+          }
+
+          throw e;
+
+        } else {
+          // In browsers, uncaught exceptions are not fatal.
+          // Re-throw them asynchronously to avoid slow-downs.
+          setTimeout(function() {
+            throw e;
+          }, 0);
+        }
+      }
+
+      if (domain) {
+        domain.exit();
+      }
+    }
+
+    flushing = false;
+  }
+
+  if (typeof process !== "undefined" && process.nextTick) {
+    // Node.js before 0.9. Note that some fake-Node environments, like the
+    // Mocha test runner, introduce a `process` global without a `nextTick`.
+    isNodeJS = true;
+
+    requestFlush = function() {
+      process.nextTick(flush);
+    };
+
+  } else if (typeof setImmediate === "function") {
+    // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
+    if (typeof window !== "undefined") {
+      requestFlush = setImmediate.bind(window, flush);
+    } else {
+      requestFlush = function() {
+        setImmediate(flush);
+      };
+    }
+
+  } else if (typeof MessageChannel !== "undefined") {
+    // modern browsers
+    // http://www.nonblocking.io/2011/06/windownexttick.html
+    var channel = new MessageChannel();
+    channel.port1.onmessage = flush;
+    requestFlush = function() {
+      channel.port2.postMessage(0);
+    };
+
+  } else {
+    // old browsers
+    requestFlush = function() {
+      setTimeout(flush, 0);
+    };
+  }
+
+  function asap(task) {
+    tail = tail.next = {
+      task: task,
+      domain: isNodeJS && process.domain,
+      next: null
+    };
+
+    if (!flushing) {
+      flushing = true;
+      requestFlush();
+    }
+  };
+
+
+  function Promise(fn) {
+    if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new')
+    if (typeof fn !== 'function') throw new TypeError('not a function')
+    var state = null
+    var value = null
+    var deferreds = []
+    var self = this
+
+    this.then = function(onFulfilled, onRejected) {
+      return new self.constructor(function(resolve, reject) {
+        handle(new Handler(onFulfilled, onRejected, resolve, reject))
+      })
+    }
+
+    function handle(deferred) {
+      if (state === null) {
+        deferreds.push(deferred)
+        return
+      }
+      asap(function() {
+        var cb = state ? deferred.onFulfilled : deferred.onRejected
+        if (cb === null) {
+          (state ? deferred.resolve : deferred.reject)(value)
+          return
+        }
+        var ret
+        try {
+          ret = cb(value)
+        } catch (e) {
+          deferred.reject(e)
+          return
+        }
+        deferred.resolve(ret)
+      })
+    }
+
+    function resolve(newValue) {
+      try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+        if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.')
+        if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+          var then = newValue.then
+          if (typeof then === 'function') {
+            doResolve(then.bind(newValue), resolve, reject)
+            return
+          }
+        }
+        state = true
+        value = newValue
+        finale()
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    function reject(newValue) {
+      state = false
+      value = newValue
+      finale()
+    }
+
+    function finale() {
+      for (var i = 0, len = deferreds.length; i < len; i++)
+        handle(deferreds[i])
+      deferreds = null
+    }
+
+    doResolve(fn, resolve, reject)
+  }
+
+
+  function Handler(onFulfilled, onRejected, resolve, reject) {
+    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null
+    this.onRejected = typeof onRejected === 'function' ? onRejected : null
+    this.resolve = resolve
+    this.reject = reject
+  }
+
+  /**
+   * Take a potentially misbehaving resolver function and make sure
+   * onFulfilled and onRejected are only called once.
+   *
+   * Makes no guarantees about asynchrony.
+   */
+  function doResolve(fn, onFulfilled, onRejected) {
+    var done = false;
+    try {
+      fn(function(value) {
+        if (done) return
+        done = true
+        onFulfilled(value)
+      }, function(reason) {
+        if (done) return
+        done = true
+        onRejected(reason)
+      })
+    } catch (ex) {
+      if (done) return
+      done = true
+      onRejected(ex)
+    }
+  }
+
+  Promise.prototype.done = function(onFulfilled, onRejected) {
+    var self = arguments.length ? this.then.apply(this, arguments) : this
+    self.then(null, function(err) {
+      asap(function() {
+        throw err
+      })
+    })
+  }
+
+  /* Static Functions */
+
+  function ValuePromise(value) {
+    this.then = function(onFulfilled) {
+      if (typeof onFulfilled !== 'function') return this
+      return new Promise(function(resolve, reject) {
+        asap(function() {
+          try {
+            resolve(onFulfilled(value))
+          } catch (ex) {
+            reject(ex);
+          }
+        })
+      })
+    }
+  }
+  ValuePromise.prototype = Promise.prototype
+
+  var TRUE = new ValuePromise(true)
+  var FALSE = new ValuePromise(false)
+  var NULL = new ValuePromise(null)
+  var UNDEFINED = new ValuePromise(undefined)
+  var ZERO = new ValuePromise(0)
+  var EMPTYSTRING = new ValuePromise('')
+
+  Promise.resolve = function(value) {
+    if (value instanceof Promise) return value
+
+    if (value === null) return NULL
+    if (value === undefined) return UNDEFINED
+    if (value === true) return TRUE
+    if (value === false) return FALSE
+    if (value === 0) return ZERO
+    if (value === '') return EMPTYSTRING
+
+    if (typeof value === 'object' || typeof value === 'function') {
+      try {
+        var then = value.then
+        if (typeof then === 'function') {
+          return new Promise(then.bind(value))
+        }
+      } catch (ex) {
+        return new Promise(function(resolve, reject) {
+          reject(ex)
+        })
+      }
+    }
+
+    return new ValuePromise(value)
+  }
+
+  Promise.all = function(arr) {
+    var args = Array.prototype.slice.call(arr)
+
+    return new Promise(function(resolve, reject) {
+      if (args.length === 0) return resolve([])
+      var remaining = args.length
+
+      function res(i, val) {
+        try {
+          if (val && (typeof val === 'object' || typeof val === 'function')) {
+            var then = val.then
+            if (typeof then === 'function') {
+              then.call(val, function(val) {
+                res(i, val)
+              }, reject)
+              return
+            }
+          }
+          args[i] = val
+          if (--remaining === 0) {
+            resolve(args);
+          }
+        } catch (ex) {
+          reject(ex)
+        }
+      }
+      for (var i = 0; i < args.length; i++) {
+        res(i, args[i])
+      }
+    })
+  }
+
+  Promise.reject = function(value) {
+    return new Promise(function(resolve, reject) {
+      reject(value);
+    });
+  }
+
+  Promise.race = function(values) {
+    return new Promise(function(resolve, reject) {
+      values.forEach(function(value) {
+        Promise.resolve(value).then(resolve, reject);
+      })
+    });
+  }
+
+  /* Prototype Methods */
+
+  Promise.prototype['catch'] = function(onRejected) {
+    return this.then(null, onRejected);
+  }
+
+  /* Static Functions */
+
+  Promise.denodeify = function(fn, argumentCount) {
+    argumentCount = argumentCount || Infinity
+    return function() {
+      var self = this
+      var args = Array.prototype.slice.call(arguments)
+      return new Promise(function(resolve, reject) {
+        while (args.length && args.length > argumentCount) {
+          args.pop()
+        }
+        args.push(function(err, res) {
+          if (err) reject(err)
+          else resolve(res)
+        })
+        fn.apply(self, args)
+      })
+    }
+  }
+  Promise.nodeify = function(fn) {
+    return function() {
+      var args = Array.prototype.slice.call(arguments)
+      var callback = typeof args[args.length - 1] === 'function' ? args.pop() : null
+      var ctx = this
+      try {
+        return fn.apply(this, arguments).nodeify(callback, ctx)
+      } catch (ex) {
+        if (callback === null || typeof callback == 'undefined') {
+          return new Promise(function(resolve, reject) {
+            reject(ex)
+          })
+        } else {
+          asap(function() {
+            callback.call(ctx, ex)
+          })
+        }
+      }
+    }
+  }
+
+  Promise.prototype.nodeify = function(callback, ctx) {
+    if (typeof callback != 'function') return this
+
+    this.then(function(value) {
+      asap(function() {
+        callback.call(ctx, null, value)
+      })
+    }, function(err) {
+      asap(function() {
+        callback.call(ctx, err)
+      })
+    })
+  }
+
+  self.Promise = Promise;
+})(this);
+
+(function(self){
 var __slice = [].slice;
 
 
@@ -991,12 +1416,9 @@ var __slice = [].slice;
      *  db = new LocalDB('foo')
      *  var collection = db.collection('bar')
      */
-    function Collection(collectionName, db) {
-      if (collectionName === void 0) {
-        throw new Error("collectionName should be specified.");
-      }
-      this.name = "" + db.name + "_" + collectionName;
-      this.ls = db.ls;
+    function Collection(collectionName, engine) {
+      this.engine = engine;
+      this.name = "" + engine.name + "_" + collectionName;
     }
 
 
@@ -1005,13 +1427,8 @@ var __slice = [].slice;
      */
 
     Collection.prototype.deserialize = function(callback) {
-      var self;
-      self = this;
-      return this.ls.getItem(this.name, function(data, err) {
-        data = Utils.parse(data);
-        if (callback != null) {
-          return callback(data, err);
-        }
+      return this.engine.getItem(this.name, function(data, err) {
+        return callback(Utils.parse(data), err);
       });
     };
 
@@ -1022,11 +1439,7 @@ var __slice = [].slice;
      */
 
     Collection.prototype.serialize = function(data, callback) {
-      return this.ls.setItem(this.name, Utils.stringify(data), function(err) {
-        if (callback != null) {
-          return callback(err);
-        }
-      });
+      return this.engine.setItem(this.name, Utils.stringify(data), callback);
     };
 
 
@@ -1035,7 +1448,21 @@ var __slice = [].slice;
      */
 
     Collection.prototype.drop = function(callback) {
-      return this.ls.removeItem(this.name, callback);
+      var promiseFn, self;
+      self = this;
+      promiseFn = function(resolve, reject) {
+        return self.engine.removeItem(self.name, function(err) {
+          if (callback != null) {
+            callback(err);
+          }
+          if (err != null) {
+            return reject(err);
+          } else {
+            return resolve();
+          }
+        });
+      };
+      return new Promise(promiseFn);
     };
 
 
@@ -1044,24 +1471,33 @@ var __slice = [].slice;
      */
 
     Collection.prototype.insert = function() {
-      var callback, options, paras, rowData, self, _ref;
+      var callback, options, paras, promiseFn, rowData, self, _ref;
       rowData = arguments[0], paras = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       self = this;
-      return this.deserialize(function(data, err) {
-        if (err) {
-          if (callback != null) {
-            return callback(err);
-          }
-        } else {
-          data = Operation.insert(data, rowData, options);
-          return self.serialize(data, function(err) {
+      promiseFn = function(resolve, reject) {
+        return self.deserialize(function(data, err) {
+          if (err != null) {
             if (callback != null) {
-              return callback(err);
+              callback(err);
             }
-          });
-        }
-      });
+            return reject(err);
+          } else {
+            data = Operation.insert(data, rowData, options);
+            return self.serialize(data, function(err) {
+              if (callback != null) {
+                callback(err);
+              }
+              if (err != null) {
+                return reject(err);
+              } else {
+                return resolve();
+              }
+            });
+          }
+        });
+      };
+      return new Promise(promiseFn);
     };
 
 
@@ -1070,24 +1506,33 @@ var __slice = [].slice;
      */
 
     Collection.prototype.update = function() {
-      var actions, callback, options, paras, self, _ref;
+      var actions, callback, options, paras, promiseFn, self, _ref;
       actions = arguments[0], paras = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       self = this;
-      return this.deserialize(function(data, err) {
-        if (err) {
-          if (callback != null) {
-            return callback(err);
-          }
-        } else {
-          data = Operation.update(data, actions, options);
-          return self.serialize(data, function(err) {
+      promiseFn = function(resolve, reject) {
+        return self.deserialize(function(data, err) {
+          if (err) {
             if (callback != null) {
-              return callback(err);
+              callback(err);
             }
-          });
-        }
-      });
+            return reject(err);
+          } else {
+            data = Operation.update(data, actions, options);
+            return self.serialize(data, function(err) {
+              if (callback != null) {
+                callback(err);
+              }
+              if (err != null) {
+                return reject(err);
+              } else {
+                return resolve();
+              }
+            });
+          }
+        });
+      };
+      return new Promise(promiseFn);
     };
 
 
@@ -1096,24 +1541,33 @@ var __slice = [].slice;
      */
 
     Collection.prototype.remove = function() {
-      var callback, options, paras, self, _ref;
+      var callback, options, paras, promiseFn, self, _ref;
       paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       self = this;
-      return this.deserialize(function(data, err) {
-        if (err) {
-          if (callback != null) {
-            return callback(err);
-          }
-        } else {
-          data = Operation.remove(data, options);
-          return self.serialize(data, function(err) {
+      promiseFn = function(resolve, reject) {
+        return self.deserialize(function(data, err) {
+          if (err != null) {
             if (callback != null) {
-              return callback(err);
+              callback(err);
             }
-          });
-        }
-      });
+            return reject(err);
+          } else {
+            data = Operation.remove(data, options);
+            return self.serialize(data, function(err) {
+              if (callback != null) {
+                callback(err);
+              }
+              if (err != null) {
+                return reject(err);
+              } else {
+                return resolve();
+              }
+            });
+          }
+        });
+      };
+      return new Promise(promiseFn);
     };
 
 
@@ -1122,22 +1576,31 @@ var __slice = [].slice;
      */
 
     Collection.prototype.find = function() {
-      var callback, options, paras, self, _ref;
+      var callback, options, paras, promiseFn, self, _ref;
       paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       self = this;
-      return this.deserialize(function(data, err) {
-        if (err) {
-          if (callback != null) {
-            return callback([], err);
+      promiseFn = function(resolve, reject) {
+        return self.deserialize(function(data, err) {
+          if (err != null) {
+            if (callback != null) {
+              callback([], err);
+            }
+            return reject(err);
+          } else {
+            data = Operation.find(data, options);
+            if (callback != null) {
+              callback(data, err);
+            }
+            if (err != null) {
+              return reject(err);
+            } else {
+              return resolve(data);
+            }
           }
-        } else {
-          data = Operation.find(data, options);
-          if (callback != null) {
-            return callback(data, err);
-          }
-        }
-      });
+        });
+      };
+      return new Promise(promiseFn);
     };
 
 
@@ -1146,23 +1609,32 @@ var __slice = [].slice;
      */
 
     Collection.prototype.findOne = function() {
-      var callback, options, paras, self, _ref;
+      var callback, options, paras, promiseFn, self, _ref;
       paras = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _ref = Utils.parseParas(paras), options = _ref[0], callback = _ref[1];
       options.limit = 1;
       self = this;
-      return this.deserialize(function(data, err) {
-        if (err) {
-          if (callback != null) {
-            return callback([], err);
+      promiseFn = function(resolve, reject) {
+        return self.deserialize(function(data, err) {
+          if (err != null) {
+            if (callback != null) {
+              callback(void 0, err);
+            }
+            return reject(err);
+          } else {
+            data = Operation.find(data, options);
+            if (callback != null) {
+              callback(data[0], err);
+            }
+            if (err != null) {
+              return reject(err);
+            } else {
+              return resolve(data[0]);
+            }
           }
-        } else {
-          data = Operation.find(data, options);
-          if (callback != null) {
-            return callback((data.length === 0 ? void 0 : data[0]), err);
-          }
-        }
-      });
+        });
+      };
+      return new Promise(promiseFn);
     };
 
     return Collection;
@@ -1306,13 +1778,214 @@ var __slice = [].slice;
 })(this);
 
 (function(self){
+/*   
+ *   A   JavaScript   implementation   of   the   Secure   Hash   Algorithm,   SHA-1,   as   defined   
+ *   in   FIPS   PUB   180-1   
+ *   Version   2.1-BETA   Copyright   Paul   Johnston   2000   -   2002.   
+ *   Other   contributors:   Greg   Holt,   Andrew   Kepert,   Ydnar,   Lostinet   
+ *   Distributed   under   the   BSD   License   
+ *   See   http://pajhome.org.uk/crypt/md5   for   details.   
+ */
+/*   
+ *   Configurable   variables.   You   may   need   to   tweak   these   to   be   compatible   with   
+ *   the   server-side,   but   the   defaults   work   in   most   cases.   
+ */
 
   
-  var Storage, err;
-  err = null;
+var hexcase = 0; /*   hex   output   format.   0   -   lowercase;   1   -   uppercase                 */
+var b64pad = ""; /*   base-64   pad   character.   "="   for   strict   RFC   compliance       */
+var chrsz = 8; /*   bits   per   input   character.   8   -   ASCII;   16   -   Unicode             */
+var sha1 = {};
+/*   
+ *   These   are   the   functions   you'll   usually   want   to   call   
+ *   They   take   string   arguments   and   return   either   hex   or   base-64   encoded   strings   
+ */
+sha1.hex_sha1 = function(s) {
+    return binb2hex(core_sha1(str2binb(s), s.length * chrsz));
+}
+
+/*   
+ *   Calculate   the   SHA-1   of   an   array   of   big-endian   words,   and   a   bit   length   
+ */
+function core_sha1(x, len) {
+    /*   append   padding   */
+    x[len >> 5] |= 0x80 << (24 - len % 32);
+    x[((len + 64 >> 9) << 4) + 15] = len;
+
+    var w = Array(80);
+    var a = 1732584193;
+    var b = -271733879;
+    var c = -1732584194;
+    var d = 271733878;
+    var e = -1009589776;
+
+    for (var i = 0; i < x.length; i += 16) {
+        var olda = a;
+        var oldb = b;
+        var oldc = c;
+        var oldd = d;
+        var olde = e;
+
+        for (var j = 0; j < 80; j++) {
+            if (j < 16) w[j] = x[i + j];
+            else w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+            var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)), safe_add(safe_add(e, w[j]), sha1_kt(j)));
+            e = d;
+            d = c;
+            c = rol(b, 30);
+            b = a;
+            a = t;
+        }
+
+        a = safe_add(a, olda);
+        b = safe_add(b, oldb);
+        c = safe_add(c, oldc);
+        d = safe_add(d, oldd);
+        e = safe_add(e, olde);
+    }
+    return Array(a, b, c, d, e);
+
+}
+
+/*   
+ *   Perform   the   appropriate   triplet   combination   function   for   the   current   
+ *   iteration   
+ */
+function sha1_ft(t, b, c, d) {
+    if (t < 20) return (b & c) | ((~b) & d);
+    if (t < 40) return b ^ c ^ d;
+    if (t < 60) return (b & c) | (b & d) | (c & d);
+    return b ^ c ^ d;
+}
+
+/*   
+ *   Determine   the   appropriate   additive   constant   for   the   current   iteration   
+ */
+function sha1_kt(t) {
+    return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 : (t < 60) ? -1894007588 : -899497514;
+}
+
+/*   
+ *   Add   integers,   wrapping   at   2^32.   This   uses   16-bit   operations   internally   
+ *   to   work   around   bugs   in   some   JS   interpreters.   
+ */
+function safe_add(x, y) {
+    var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+    var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+    return (msw << 16) | (lsw & 0xFFFF);
+}
+
+/*   
+ *   Bitwise   rotate   a   32-bit   number   to   the   left.   
+ */
+function rol(num, cnt) {
+    return (num << cnt) | (num >>> (32 - cnt));
+}
+
+/*   
+ *   Convert   an   8-bit   or   16-bit   string   to   an   array   of   big-endian   words   
+ *   In   8-bit   function,   characters   >255   have   their   hi-byte   silently   ignored.   
+ */
+function str2binb(str) {
+    var bin = Array();
+    var mask = (1 << chrsz) - 1;
+    for (var i = 0; i < str.length * chrsz; i += chrsz)
+    bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i % 32);
+    return bin;
+}
+
+/*   
+ *   Convert   an   array   of   big-endian   words   to   a   hex   string.   
+ */
+function binb2hex(binarray) {
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var str = "";
+    for (var i = 0; i < binarray.length * 4; i++) {
+        str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) + hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
+    }
+    return str;
+}
+module.exports = sha1;
+
+})(this);
+
+(function(self){
+
+  
+  var Encrypt;
+  Encrypt = {};
+
+  /*
+    * 加密
+   */
+  Encrypt.encode = function(value, key) {
+    var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
+    if (value === null) {
+      return null;
+    }
+    resultArr = [''];
+    key = Sha1.hex_sha1(key);
+    unicodeValue = Utils.toUnicode(value);
+    unicodeKey = Utils.toUnicode(key);
+    uniValueArr = unicodeValue.split('\\u').slice(1);
+    uniKeyArr = unicodeKey.split('\\u').slice(1);
+    len = uniKeyArr.length;
+    for (index = _i = 0, _len = uniValueArr.length; _i < _len; index = ++_i) {
+      uniValue = uniValueArr[index];
+      mod = index % len;
+      uniKey = uniKeyArr[mod];
+      encodeVal = parseInt(uniValue, 16) + parseInt(uniKey, 16);
+      if (encodeVal > 65536) {
+        encodeVal = encodeVal - 65536;
+      }
+      comEncodeVal = ('00' + encodeVal.toString(16)).slice(-4);
+      resultArr.push(comEncodeVal);
+    }
+    resultStr = resultArr.join('\\u');
+    return Utils.fromUnicode(resultStr);
+  };
+
+  /*
+    * 解密
+   */
+  Encrypt.decode = function(value, key) {
+    var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
+    if (value === null) {
+      return null;
+    }
+    resultArr = [''];
+    key = Sha1.hex_sha1(key);
+    unicodeValue = Utils.toUnicode(value);
+    unicodeKey = Utils.toUnicode(key);
+    uniValueArr = unicodeValue.split('\\u').slice(1);
+    uniKeyArr = unicodeKey.split('\\u').slice(1);
+    len = uniKeyArr.length;
+    for (index = _i = 0, _len = uniValueArr.length; _i < _len; index = ++_i) {
+      uniValue = uniValueArr[index];
+      mod = index % len;
+      uniKey = uniKeyArr[mod];
+      encodeVal = parseInt(uniValue, 16) - parseInt(uniKey, 16);
+      if (encodeVal < 0) {
+        encodeVal = 65536 + encodeVal;
+      }
+      comEncodeVal = ('00' + encodeVal.toString(16)).slice(-4);
+      resultArr.push(comEncodeVal);
+    }
+    resultStr = resultArr.join('\\u');
+    return Utils.fromUnicode(resultStr);
+  };
+  self.Encrypt = Encrypt;
+})(this);
+
+(function(self){
+
+  
+  var Storage;
   Storage = (function() {
-    function Storage(session) {
+    function Storage(session, encrypt, token) {
       this.session = session;
+      this.encrypt = encrypt;
+      this.token = token;
       if (this.session) {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");
@@ -1326,35 +1999,40 @@ var __slice = [].slice;
     }
 
     Storage.prototype.key = function(index, callback) {
-      var key;
-      key = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).key(index);
-      if (typeof callback === 'function') {
-        callback(key, err);
-      } else {
-        return key;
+      var e, key;
+      try {
+        key = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).key(index);
+      } catch (_error) {
+        e = _error;
+        callback(-1, e);
       }
+      callback(key);
     };
 
     Storage.prototype.size = function(callback) {
-      var size;
-      if (this.session) {
-        size = sessionStorage.length;
-      } else if (Support.localstorage()) {
-        size = localStorage.length;
-      } else {
-        size = this.userdata.size();
+      var e, size;
+      try {
+        if (this.session) {
+          size = sessionStorage.length;
+        } else if (Support.localstorage()) {
+          size = localStorage.length;
+        } else {
+          size = this.userdata.size();
+        }
+      } catch (_error) {
+        e = _error;
+        callback(-1, e);
       }
-      if (typeof callback === 'function') {
-        callback(size, err);
-      } else {
-        return size;
-      }
+      callback(size);
     };
 
     Storage.prototype.setItem = function(key, val, callback) {
       var data, e, flag, ls;
       ls = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage));
       try {
+        if (this.encrypt) {
+          val = Encrypt.encode(val, this.token);
+        }
         ls.setItem(key, val);
       } catch (_error) {
         e = _error;
@@ -1368,30 +2046,37 @@ var __slice = [].slice;
           } catch (_error) {}
         }
       }
-      if (typeof callback === 'function') {
-        callback(err);
-      } else {
 
-      }
+      /* TODO
+       *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
+       *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回e
+       */
+      callback();
     };
 
     Storage.prototype.getItem = function(key, callback) {
-      var item;
-      item = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).getItem(key);
-      if (typeof callback === 'function') {
-        callback(item, err);
-      } else {
-
+      var e, item;
+      try {
+        item = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).getItem(key);
+        if (this.encrypt) {
+          item = Encrypt.decode(item, this.token);
+        }
+      } catch (_error) {
+        e = _error;
+        callback(null, e);
       }
+      callback(item);
     };
 
     Storage.prototype.removeItem = function(key, callback) {
-      (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).removeItem(key);
-      if (typeof callback === 'function') {
-        callback(err);
-      } else {
-
+      var e;
+      try {
+        (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).removeItem(key);
+      } catch (_error) {
+        e = _error;
+        callback(e);
       }
+      callback();
     };
 
     Storage.prototype.usage = function(callback) {
@@ -1399,27 +2084,27 @@ var __slice = [].slice;
       /*
        *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
        */
-      var allStrings, key, u, val;
-      allStrings = "";
-      if (this.tyep === 1) {
-        for (key in sessionStorage) {
-          val = sessionStorage[key];
-          allStrings += val;
+      var allStrings, e, key, val;
+      try {
+        allStrings = "";
+        if (this.tyep === 1) {
+          for (key in sessionStorage) {
+            val = sessionStorage[key];
+            allStrings += val;
+          }
+        } else if (Support.localstorage()) {
+          for (key in localStorage) {
+            val = localStorage[key];
+            allStrings += val;
+          }
+        } else {
+          console.log("todo");
         }
-      } else if (Support.localstorage()) {
-        for (key in localStorage) {
-          val = localStorage[key];
-          allStrings += val;
-        }
-      } else {
-        console.log("todo");
+      } catch (_error) {
+        e = _error;
+        callback(-1, e);
       }
-      u = allStrings.length / 512;
-      if (typeof callback === 'function') {
-        callback(u, err);
-      } else {
-
-      }
+      return callback(allStrings.length / 512);
     };
 
     return Storage;
@@ -1441,15 +2126,15 @@ var __slice = [].slice;
   
   var Engine;
   Engine = (function() {
-    function Engine(options) {
-      this.session = options.session;
-      if (this.session == null) {
-        this.session = true;
-      }
-      if (options.proxy != null) {
-        this.proxy = new Proxy(options.proxy, this.session);
+    function Engine(session, encrypt, name, proxy) {
+      this.session = session;
+      this.encrypt = encrypt;
+      this.name = name;
+      this.proxy = proxy;
+      if (this.proxy != null) {
+        this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
       } else {
-        this.storage = new Storage(this.session);
+        this.storage = new Storage(this.session, this.encrypt, this.name);
       }
       return;
     }
@@ -1494,29 +2179,38 @@ var __slice = [].slice;
     /*
      *  Constructor
      *  var db = new LocalDB('foo')
-     *  var db = new LocalDB('foo', {type: 1})
-     *  var db = new LocalDB('foo', {type: 2})
+     *  var db = new LocaoDB('foo', {
+            session: true,
+            encrypt: true,
+            proxy: "http://www.foo.com/getProxy.html"
+        })
      *
      *  Engine will decide to choose the best waty to handle the data automatically.
-     *  when type is 1, the data will be alive while browser stay open. e.g. sessionStorage
-     *  when type is 2, the data will be alive even after browser is closed. e.g. localStorage
-     *  1 by default
+     *  when session is true, the data will be alive while browser stay open. e.g. sessionStorage
+     *  when session is false, the data will be alive even after browser is closed. e.g. localStorage
+     *  true by default
+     *  The data will be stored encrypted if the encrpyt options is true, true by default.
      */
     function LocalDB(dbName, options) {
       if (options == null) {
         options = {};
       }
-      if (dbName === void 0) {
+      if (dbName == null) {
         throw new Error("dbName should be specified.");
       }
       this.name = dbPrefix + dbName;
-      this.ls = new Engine(options);
+      this.session = options.session != null ? options.session : true;
+      this.encrypt = options.encrypt != null ? options.encrypt : true;
+      this.proxy = options.proxy != null ? options.proxy : null;
+      this.engine = new Engine(this.session, this.encrypt, this.name, this.proxy);
     }
 
     LocalDB.prototype.options = function() {
       return {
         name: this.name.substr(dbPrefix.length),
-        session: this.ls.session
+        session: this.session,
+        encrypt: this.encrypt,
+        proxy: this.proxy
       };
     };
 
@@ -1527,7 +2221,10 @@ var __slice = [].slice;
      */
 
     LocalDB.prototype.collection = function(collectionName) {
-      return new Collection(collectionName, this);
+      if (collectionName == null) {
+        throw new Error("collectionName should be specified.");
+      }
+      return new Collection(collectionName, this.engine);
     };
 
 
@@ -1541,20 +2238,14 @@ var __slice = [].slice;
   })();
 
   /*
-   *  Check Browser Compatibility
-   *  use LocalDB.isSupport() to check whether the browser support LocalDB or not.
+   *  Check Browser Feature Compatibility
    */
-  LocalDB.support = function() {
-    return {
-      localStorage: Support.localstorage(),
-      sessionStorage: Support.sessionstorage(),
-      postMessage: Support.postmessage(),
-      webSql: Support.websqldatabase(),
-      indexedDB: Support.indexedDB(),
-      applicationCache: Support.applicationcache(),
-      userdata: Support.userdata()
-    };
-  };
+  LocalDB.support = Support;
+
+  /*
+   *  Version
+   */
+  LocalDB.version = '0.0.1'
 
   /*
    *  Get Timestamp
@@ -1573,6 +2264,7 @@ var __slice = [].slice;
   };
   self.LocalDB = LocalDB;
 })(this);
+
 
   if ( typeof define === "function" && define.amd ) {
     define( "localdb", [], function() {

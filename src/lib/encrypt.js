@@ -11,6 +11,9 @@ define(function(require, exports, module) {
    */
   Encrypt.encode = function(value, key) {
     var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
+    if (value === null) {
+      return null;
+    }
     resultArr = [''];
     key = Sha1.hex_sha1(key);
     unicodeValue = Utils.toUnicode(value);
@@ -38,6 +41,9 @@ define(function(require, exports, module) {
    */
   Encrypt.decode = function(value, key) {
     var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
+    if (value === null) {
+      return null;
+    }
     resultArr = [''];
     key = Sha1.hex_sha1(key);
     unicodeValue = Utils.toUnicode(value);
