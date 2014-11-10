@@ -3,89 +3,88 @@ var __slice = [].slice;
 
 define(function(require, exports, module) {
   'use strict';
+  var Evemit, Utils, _isIE;
+  Utils = require('lib/utils');
 
   /*
    *  https://github.com/wh1100717/evemit
    */
-  var evemit, _isIE;
   _isIE = window.addEventListener != null ? false : true;
-  evemit = evemit || function(obj) {
-    var i, j, _ref;
-    _ref = evemit.prototype;
-    for (i in _ref) {
-      j = _ref[i];
-      obj[i] = j;
+  Evemit = (function() {
+    function Evemit(obj) {
+      var i, j, _ref;
+      if (!Utils.isObject(obj)) {
+        throw new Error("input type error: Input should be object");
+      }
+      this.events = {};
+      _ref = Evemit.prototype;
+      for (i in _ref) {
+        j = _ref[i];
+        obj[i] = j;
+      }
+      return obj;
     }
-    return obj;
-  };
-  evemit.bind = function(el, eve, fn, priority) {
+
+    Evemit.prototype.on = function(eve, fn) {
+      this.events[eve] = this.events[eve] || [];
+      return this.events[eve].push(fn);
+    };
+
+    Evemit.prototype.once = function(eve, fn) {
+      var self;
+      self = this;
+      return this.on(eve, function() {
+        self.off(eve);
+        return fn.apply(this, arguments);
+      });
+    };
+
+    Evemit.prototype.off = function(eve) {
+      return delete this.events[eve];
+    };
+
+    Evemit.prototype.emit = function() {
+      var args, e, eve, _i, _len, _ref, _results;
+      eve = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if (this.events[eve] != null) {
+        _ref = this.events[eve];
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          e = _ref[_i];
+          _results.push(e.apply(this, args));
+        }
+        return _results;
+      }
+    };
+
+    Evemit.prototype.events = function() {
+      var e, _results;
+      _results = [];
+      for (e in this.events) {
+        _results.push(e);
+      }
+      return _results;
+    };
+
+    Evemit.prototype.listeners = function(eve) {
+      var l, _i, _len, _ref, _results;
+      _ref = this.events[eve];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        l = _ref[_i];
+        _results.push(l);
+      }
+      return _results;
+    };
+
+    return Evemit;
+
+  })();
+  Evemit.bind = function(el, eve, fn, priority) {
     return el[_isIE ? "attachEvent" : "addEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
   };
-  evemit.unbind = function(el, eve, fn, priority) {
+  Evemit.unbind = function(el, eve, fn, priority) {
     return el[_isIE ? "detachEvent" : "removeEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
   };
-  evemit.prototype.on = function(eve, fn) {
-    if (this.events == null) {
-      this.events = {};
-    }
-    if (this.events[eve] == null) {
-      this.events[eve] = [];
-    }
-    this.events[eve].push(fn);
-    return this;
-  };
-  evemit.prototype.once = function(eve, fn) {
-    if (this.events == null) {
-      this.events = {};
-    }
-    this.on(eve, function() {
-      evemit.prototype.off(eve);
-      return fn.apply(this, arguments);
-    });
-    return this;
-  };
-  evemit.prototype.off = function(eve) {
-    if (this.events != null) {
-      delete this.events[eve];
-      return this;
-    } else {
-      return this;
-    }
-  };
-  evemit.prototype.emit = function() {
-    var args, e, eve, _i, _len, _ref;
-    eve = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    if ((this.events != null) && (this.events[eve] != null)) {
-      _ref = this.events[eve];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        e = _ref[_i];
-        e.apply(this, args);
-      }
-      return this;
-    } else {
-      return this;
-    }
-  };
-  evemit.prototype.events = function() {
-    var e, _results;
-    _results = [];
-    for (e in this.events) {
-      _results.push(e);
-    }
-    return _results;
-  };
-  evemit.prototype.listeners = function(eve) {
-    var l, _i, _len, _ref, _results;
-    if (this.events == null) {
-      this.events = {};
-    }
-    _ref = this.events[eve];
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      l = _ref[_i];
-      _results.push(l);
-    }
-    return _results;
-  };
-  return module.exports = evemit;
+  return module.exports = Evemit;
 });

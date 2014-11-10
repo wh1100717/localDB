@@ -1,39 +1,45 @@
 define (require, exports, module) ->
     'use strict'
+
+    Utils = require('lib/utils')
     
     ###
      *  https://github.com/wh1100717/evemit
     ###
     _isIE = if window.addEventListener? then false else true
 
-    evemit = evemit or (obj) -> obj[i] = j for i,j of evemit.prototype;obj
+    class Evemit
 
-    evemit.bind = (el, eve, fn, priority) ->
+        constructor: (obj) ->
+            throw new Error("input type error: Input should be object") if not Utils.isObject(obj)
+            @events = {}
+            obj[i] = j for i,j of Evemit.prototype
+            return obj
+
+        on: (eve, fn) ->
+            @events[eve] = @events[eve] or []
+            @events[eve].push(fn)
+
+        once: (eve, fn) ->
+            self = @
+            @on eve, ->
+                self.off(eve)
+                fn.apply @, arguments
+
+        off: (eve) -> delete @events[eve]
+
+        emit: (eve, args...) ->
+            if @events[eve]?
+                e.apply(@, args) for e in @events[eve]
+
+        events: -> e for e of @events
+
+        listeners: (eve) -> l for l in @events[eve]
+
+    Evemit.bind = (el, eve, fn, priority) ->
         el[if _isIE then "attachEvent" else "addEventListener"]("#{if _isIE then 'on' else ''}#{eve}", fn, priority or false)
 
-    evemit.unbind = (el, eve, fn, priority) ->
+    Evemit.unbind = (el, eve, fn, priority) ->
         el[if _isIE then "detachEvent" else "removeEventListener"]("#{if _isIE then 'on' else ''}#{eve}", fn, priority or false)
 
-    evemit.prototype.on = (eve, fn) ->
-        @events = {} if not @events?
-        @events[eve] = [] if not @events[eve]?
-        @events[eve].push(fn);@
-
-    evemit.prototype.once = (eve, fn) ->
-        @events = {} if not @events?
-        @.on(eve, -> evemit.prototype.off(eve);fn.apply(@, arguments));@
-
-    evemit.prototype.off = (eve) ->
-        if @events? then delete @events[eve];@ else @
-
-    evemit.prototype.emit = (eve, args...) ->
-        if @events? and @events[eve]? then (e.apply(this, args) for e in @events[eve]);@ else @
-
-    evemit.prototype.events = ->
-        e for e of @events
-
-    evemit.prototype.listeners = (eve) ->
-        @events = {} if not @events?
-        l for l in @events[eve]
-
-    module.exports = evemit
+    module.exports = Evemit
