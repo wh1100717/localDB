@@ -198,5 +198,21 @@ define(function(require, exports, module) {
     repStr = string.replace(/\\/g, "%");
     return unescape(repStr);
   };
+  Utils.getSubValue = function(value, key) {
+    var k, keyArr, result, _i, _len;
+    if (value == null) {
+      return value;
+    }
+    keyArr = key.split(".");
+    result = value;
+    for (_i = 0, _len = keyArr.length; _i < _len; _i++) {
+      k = keyArr[_i];
+      result = result[k];
+      if (result == null) {
+        return result;
+      }
+    }
+    return result;
+  };
   return module.exports = Utils;
 });

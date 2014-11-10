@@ -128,7 +128,16 @@ define (require, exports, module) ->
 
     Utils.fromUnicode = (string) ->
         repStr = string.replace(/\\/g,"%")
-        unescape(repStr);
+        unescape(repStr)
+
+    Utils.getSubValue = (value, key) ->
+        return value if not value?
+        keyArr = key.split(".")
+        result = value
+        for k in keyArr
+            result = result[k]
+            return result if not result?
+        result
 
 
     module.exports = Utils
