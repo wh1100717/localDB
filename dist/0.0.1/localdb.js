@@ -480,6 +480,9 @@ var Utils = (function(){
    */
   Utils.sortObj = function(data, sortObj) {
     var key, order, result, sort, sortArr, _i, _len;
+    if (sortObj == null) {
+      return data;
+    }
     result = data;
     sortArr = [];
     for (key in sortObj) {
@@ -997,6 +1000,7 @@ var Operation = (function(){
       limit -= 1;
       result.push(d);
     }
+    result = Utils.sortObj(result, options.sort);
     return Projection.generate(result, projection);
   };
   Update = {
