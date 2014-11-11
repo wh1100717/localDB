@@ -4,13 +4,61 @@ define(function(require, exports, module) {
   var Promise;
   Promise = require("lib/promise");
   return describe("Promise", function() {
-    return it("Init", function() {
+    it("then resolve", function() {
       var promise;
       promise = new Promise(function(resolve, reject) {
-        return resolve(100);
+        return setTimeout(function() {
+          return resolve(100);
+        }, 300);
       });
-      return promise.then(function(x) {
-        return expect(x).toEqual(100);
+      return promise.then(function(val) {
+        expect(val).toEqual(100);
+        return val;
+      }).then(function(val) {
+        return expect(val).toEqual(100);
+      }).then(function(val) {
+        return expect(val).toBeUndefined();
+      });
+    });
+    it("then reject", function() {
+      var promise;
+      promise = new Promise(function(resolve, reject) {
+        return setTimeout(function() {
+          return reject('reject:err');
+        }, 300);
+      });
+      return promise.then(function() {}, function(err) {
+        return expect(err).toEqual({
+          reject: err
+        });
+      }).then(function() {}, function(err) {
+        return expect(err).toBeUndefined();
+      });
+    });
+    it("done", function() {
+      var promise;
+      promise = new Promise(function(resolve, reject) {
+        return setTimeout(function() {
+          return resolve(100);
+        }, 300);
+      });
+      return promise.done(function(val) {
+        return expect(val).toEqual(100);
+      });
+    });
+    return it("return promise", function() {
+      var promise;
+      promise = new Promise(function(resolve, reject) {
+        return setTimeout(function() {
+          return resolve(100);
+        }, 300);
+      });
+      return promise.then(function(val) {
+        return new Promise(function(resolve, reject) {
+          return resolve(val);
+        });
+      }).then(function(val) {
+        return expect(val).toEqual(100);
       });
     });
   });
