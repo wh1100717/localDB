@@ -199,18 +199,65 @@ define(function(require, exports, module) {
     return unescape(repStr);
   };
   Utils.getSubValue = function(value, key) {
-    var k, keyArr, result, _i, _len;
+    var k, keyArr, _i, _len;
     if (value == null) {
       return value;
     }
     keyArr = key.split(".");
-    result = value;
     for (_i = 0, _len = keyArr.length; _i < _len; _i++) {
       k = keyArr[_i];
-      result = result[k];
-      if (result == null) {
-        return result;
+      value = value[k];
+      if (value == null) {
+        return value;
       }
+    }
+    return value;
+  };
+
+  /*
+    * 快速排序
+    * @param array 待排序数组
+    * @param key 排序字段
+    * @param order 排序方式（1:升序，-1降序）
+   */
+  Utils.quickSort = function(array, key, order) {
+    var compareValue, leftArr, pointCompareValue, pointValue, rightArr, value, _i, _len;
+    if (!Utils.isString(key)) {
+      throw new Error("type Error: key");
+    }
+    if (array.length <= 1) {
+      return array;
+    }
+    pointValue = array.splice(0, 1)[0];
+    pointCompareValue = Utils.getSubValue(pointValue, key);
+    leftArr = [];
+    rightArr = [];
+    for (_i = 0, _len = array.length; _i < _len; _i++) {
+      value = array[_i];
+      compareValue = Utils.getSubValue(value, key);
+      ((compareValue == null) || compareValue < pointCompareValue ? leftArr : rightArr).push(value);
+    }
+    return Utils.quickSort((order === 1 ? leftArr : rightArr), key, order).concat([pointValue], Utils.quickSort((order === 1 ? rightArr : leftArr), key, order));
+  };
+
+  /*
+    * 数据排序
+   */
+  Utils.sortObj = function(data, sortObj) {
+    var key, order, result, sort, sortArr, _i, _len;
+    result = data;
+    sortArr = [];
+    for (key in sortObj) {
+      order = sortObj[key];
+      sortArr.unshift({
+        key: key,
+        order: order
+      });
+    }
+    for (_i = 0, _len = sortArr.length; _i < _len; _i++) {
+      sort = sortArr[_i];
+      result = Utils.quickSort(result, sort.key, sort.order);
+      console.log(result);
     }
     return result;
   };

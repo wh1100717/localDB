@@ -1,8 +1,7 @@
 define (require, exports, module) ->
-    Sort = require('lib/sort')
     Utils = require('lib/utils')
 
-    describe 'sort', -> 
+    describe 'sort', ->
         it 'quickSort simple asc', ->
             array = [{count:1},{count:3},{},{count:2}]
             sortArray = [
@@ -10,8 +9,8 @@ define (require, exports, module) ->
                 {count:1}
                 {count:2}
                 {count:3}
-            ]            
-            result = Sort.quickSort(array,'count',1)            
+            ]
+            result = Utils.quickSort(array,'count',1)
             expect(sortArray).toEqual(result)
         it 'quickSort simple desc', ->
             array = [{count:1},{count:3},{},{count:2}]
@@ -21,7 +20,7 @@ define (require, exports, module) ->
                 {count:1}
                 {}
             ]
-            result = Sort.quickSort(array,'count',-1)            
+            result = Utils.quickSort(array,'count',-1)
             expect(result).toEqual(sortArray)
         it 'quickSort complex asc', ->
             array = [
@@ -29,17 +28,17 @@ define (require, exports, module) ->
                 {obj:{obj:{}}}
                 {obj:{obj:{count:1}}}
                 {obj:{obj:{count:2}}}
-                {obj:{}}                
+                {obj:{}}
             ]
             sortArray = [
-                {obj:{}}  
-                {obj:{obj:{}}}                                              
+                {obj:{}}
+                {obj:{obj:{}}}
                 {obj:{obj:{count:1}}}
                 {obj:{obj:{count:2}}}
                 {obj:{obj:{count:3}}}
             ]
-            result = Sort.quickSort(array,'obj.obj.count',1)
-            expect(sortArray).toEqual(result)              
+            result = Utils.quickSort(array,'obj.obj.count',1)
+            expect(sortArray).toEqual(result)
         it 'quickSort complex desc', ->
             array = [
                 {obj:{obj:{count:3}}}
@@ -47,15 +46,15 @@ define (require, exports, module) ->
                 {obj:{obj:{count:1}}}
                 {obj:{obj:{count:2}}}
                 {obj:{}}
-            ] 
+            ]
             sortArray = [
                 {obj:{obj:{count:3}}}
                 {obj:{obj:{count:2}}}
                 {obj:{obj:{count:1}}}
                 {obj:{obj:{}}}
                 {obj:{}}
-            ]                      
-            result = Sort.quickSort(array,'obj.obj.count',-1)
+            ]
+            result = Utils.quickSort(array,'obj.obj.count',-1)
             expect(sortArray).toEqual(result)
         it 'sort complex', ->
             data = [
@@ -74,8 +73,8 @@ define (require, exports, module) ->
                 {obj:{obj:{count:2,age:1}}}
                 {obj:{obj:{count:3,age:3}}}
             ]
-            sort = {"obj.obj.count":1,"obj.obj.age":-1} 
-            result = Sort.sort(data, sort)
+            sort = {"obj.obj.count":1,"obj.obj.age":-1}
+            result = Utils.sortObj(data, sort)
             expect(result).toEqual(sortData)
         it 'sort simple', ->
             data = [
@@ -94,8 +93,8 @@ define (require, exports, module) ->
                 {count:2,age:1}
                 {count:3,age:3}
             ]
-            sort = {"count":1,"age":-1} 
-            result = Sort.sort(data, sort)
-            expect(sortData).toEqual(result)           
+            sort = {"count":1,"age":-1}
+            result = Utils.sortObj(data, sort)
+            expect(sortData).toEqual(result)
 
 

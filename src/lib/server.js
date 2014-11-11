@@ -19,6 +19,12 @@ define(function(require, exports, module) {
       return parent.window.postParent(JSON.stringify(mes), this.origin);
     };
 
+
+    /* TODO
+     *  目前只是简单的判断一下origin是否在allow对应的List里面，只是简单的功能实现
+     *  需要讨论实现具体的域白名单和黑名单的解析方案
+     */
+
     Server.prototype.checkOrigin = function(origin) {
       return __indexOf.call(this.allow, origin) >= 0;
     };

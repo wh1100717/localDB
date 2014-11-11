@@ -133,11 +133,40 @@ define (require, exports, module) ->
     Utils.getSubValue = (value, key) ->
         return value if not value?
         keyArr = key.split(".")
-        result = value
         for k in keyArr
-            result = result[k]
-            return result if not result?
-        result
+            value = value[k]
+            return value if not value?
+        return value
 
+    ###
+      * 快速排序
+      * @param array 待排序数组
+      * @param key 排序字段
+      * @param order 排序方式（1:升序，-1降序）
+    ###
+    Utils.quickSort = (array, key, order) ->
+        throw new Error("type Error: key") if not Utils.isString(key)
+        return array if array.length <= 1
+        pointValue = array.splice(0, 1)[0]
+        pointCompareValue = Utils.getSubValue(pointValue, key)
+        leftArr = []
+        rightArr = []
+        for value in array
+            compareValue = Utils.getSubValue(value, key)
+            ##属性不存在则算最小值
+            (if not compareValue? or compareValue < pointCompareValue then leftArr else rightArr).push value
+        Utils.quickSort((if order is 1 then leftArr else rightArr), key, order).concat([pointValue], Utils.quickSort((if order is 1 then rightArr else leftArr), key, order))
+
+    ###
+      * 数据排序
+    ###
+    Utils.sortObj = (data, sortObj) ->
+        result = data
+        sortArr = []
+        sortArr.unshift {key: key, order: order} for key, order of sortObj
+        for sort in sortArr
+            result = Utils.quickSort(result, sort.key, sort.order)
+            console.log(result)
+        return result
 
     module.exports = Utils
