@@ -7,8 +7,7 @@
         "value" : 4
     },
     "cyclomatic_complexity" : {
-        "level" : "warn",
-        "value" : 11
+        "level" : "ignore"
     },
     "line_endings" : {
         "value" : "unix",

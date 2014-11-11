@@ -77,6 +77,7 @@ define(function(require, exports, module) {
       limit -= 1;
       result.push(d);
     }
+    result = Utils.sortObj(result, options.sort);
     return Projection.generate(result, projection);
   };
   Update = {

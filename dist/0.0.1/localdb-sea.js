@@ -433,6 +433,69 @@ var Utils = (function(){
     repStr = string.replace(/\\/g, "%");
     return unescape(repStr);
   };
+  Utils.getSubValue = function(value, key) {
+    var k, keyArr, _i, _len;
+    if (value == null) {
+      return value;
+    }
+    keyArr = key.split(".");
+    for (_i = 0, _len = keyArr.length; _i < _len; _i++) {
+      k = keyArr[_i];
+      value = value[k];
+      if (value == null) {
+        return value;
+      }
+    }
+    return value;
+  };
+
+  /*
+    * 快速排序
+    * @param array 待排序数组
+    * @param key 排序字段
+    * @param order 排序方式（1:升序，-1降序）
+   */
+  Utils.quickSort = function(array, key, order) {
+    var compareValue, leftArr, pointCompareValue, pointValue, rightArr, value, _i, _len;
+    if (!Utils.isString(key)) {
+      throw new Error("type Error: key");
+    }
+    if (array.length <= 1) {
+      return array;
+    }
+    pointValue = array.splice(0, 1)[0];
+    pointCompareValue = Utils.getSubValue(pointValue, key);
+    leftArr = [];
+    rightArr = [];
+    for (_i = 0, _len = array.length; _i < _len; _i++) {
+      value = array[_i];
+      compareValue = Utils.getSubValue(value, key);
+      ((compareValue == null) || compareValue < pointCompareValue ? leftArr : rightArr).push(value);
+    }
+    return Utils.quickSort((order === 1 ? leftArr : rightArr), key, order).concat([pointValue], Utils.quickSort((order === 1 ? rightArr : leftArr), key, order));
+  };
+
+  /*
+    * 数据排序
+   */
+  Utils.sortObj = function(data, sortObj) {
+    var key, order, result, sort, sortArr, _i, _len;
+    result = data;
+    sortArr = [];
+    for (key in sortObj) {
+      order = sortObj[key];
+      sortArr.unshift({
+        key: key,
+        order: order
+      });
+    }
+    for (_i = 0, _len = sortArr.length; _i < _len; _i++) {
+      sort = sortArr[_i];
+      result = Utils.quickSort(result, sort.key, sort.order);
+      console.log(result);
+    }
+    return result;
+  };
   return Utils;
 })();
 
@@ -2169,6 +2232,181 @@ var Engine = (function(){
   return Engine;
 })();
 
+var Evemit = (function(){
+var __slice = [].slice;
+
+
+  
+  var Evemit, _isIE;
+
+  /*
+   *  https://github.com/wh1100717/evemit
+   */
+  _isIE = window.addEventListener != null ? false : true;
+  Evemit = (function() {
+    function Evemit(obj) {
+      var i, j, _ref;
+      if (!Utils.isObject(obj)) {
+        throw new Error("input type error: Input should be object");
+      }
+      this.events = {};
+      _ref = Evemit.prototype;
+      for (i in _ref) {
+        j = _ref[i];
+        obj[i] = j;
+      }
+      return obj;
+    }
+
+    Evemit.prototype.on = function(eve, fn) {
+      this.events[eve] = this.events[eve] || [];
+      return this.events[eve].push(fn);
+    };
+
+    Evemit.prototype.once = function(eve, fn) {
+      var self;
+      self = this;
+      return this.on(eve, function() {
+        self.off(eve);
+        return fn.apply(this, arguments);
+      });
+    };
+
+    Evemit.prototype.off = function(eve) {
+      return delete this.events[eve];
+    };
+
+    Evemit.prototype.emit = function() {
+      var args, e, eve, _i, _len, _ref, _results;
+      eve = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if (this.events[eve] != null) {
+        _ref = this.events[eve];
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          e = _ref[_i];
+          _results.push(e.apply(this, args));
+        }
+        return _results;
+      }
+    };
+
+    Evemit.prototype.events = function() {
+      var e, _results;
+      _results = [];
+      for (e in this.events) {
+        _results.push(e);
+      }
+      return _results;
+    };
+
+    Evemit.prototype.listeners = function(eve) {
+      var l, _i, _len, _ref, _results;
+      _ref = this.events[eve];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        l = _ref[_i];
+        _results.push(l);
+      }
+      return _results;
+    };
+
+    return Evemit;
+
+  })();
+  Evemit.bind = function(el, eve, fn, priority) {
+    return el[_isIE ? "attachEvent" : "addEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
+  };
+  Evemit.unbind = function(el, eve, fn, priority) {
+    return el[_isIE ? "detachEvent" : "removeEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
+  };
+  return Evemit;
+})();
+
+var Server = (function(){
+var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+
+  
+  var Server;
+  Server = (function() {
+    function Server(config) {
+      this.config = config;
+      this.allow = this.config.allow || "*";
+      this.deny = this.config.deny || [];
+      this.ss = new Storage(true);
+      this.ls = new Storage(false);
+    }
+
+    Server.prototype.postParent = function(mes, origin) {
+      return parent.window.postParent(JSON.stringify(mes), this.origin);
+    };
+
+
+    /* TODO
+     *  目前只是简单的判断一下origin是否在allow对应的List里面，只是简单的功能实现
+     *  需要讨论实现具体的域白名单和黑名单的解析方案
+     */
+
+    Server.prototype.checkOrigin = function(origin) {
+      return __indexOf.call(this.allow, origin) >= 0;
+    };
+
+    Server.prototype.init = function() {
+      var self;
+      self = this;
+      return Evemit.bind('message', function(e) {
+        var origin, result, storage;
+        origin = e.origin;
+        if (!self.checkOrigin(origin)) {
+          return false;
+        }
+        result = JSON.parse(e.data);
+        storage = result.session ? self.ss : self.ls;
+        switch (result.type) {
+          case "key":
+            return storage.key(result.index, function(data, err) {
+              result.data = data;
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+          case "size":
+            return storage.size(function(data, err) {
+              result.data = data;
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+          case "setItem":
+            return storage.setItem(result.key, result.val, function(err) {
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+          case "getItem":
+            return storage.getItem(result.key, function(data, err) {
+              result.data = data;
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+          case "removeItem":
+            return storage.removeItem(result.key, function(err) {
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+          case "usage":
+            return storage.usage(function(data, err) {
+              result.data = data;
+              result.err = err;
+              return self.postParent(result, origin);
+            });
+        }
+      });
+    };
+
+    return Server;
+
+  })();
+  return Server;
+})();
+
 var LocalDB = (function(){
 
   
@@ -2261,6 +2499,17 @@ var LocalDB = (function(){
    */
   LocalDB.getTime = function(objectId) {
     return Utils.getTime(objectId);
+  };
+
+  /*
+   *  Proxy Server Init
+   *  LocalDB.init({
+          allow: ['*.baidu.com', 'pt.aliexpress.com']
+          deny: ['map.baidu.com']
+      })
+   */
+  LocalDB.init = function(config) {
+    return (new Server(config)).init();
   };
   return LocalDB;
 })();

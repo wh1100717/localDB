@@ -161,6 +161,7 @@ define (require, exports, module) ->
       * 数据排序
     ###
     Utils.sortObj = (data, sortObj) ->
+        return data if not sortObj?
         result = data
         sortArr = []
         sortArr.unshift {key: key, order: order} for key, order of sortObj

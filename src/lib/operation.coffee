@@ -49,6 +49,7 @@ define (require, exports, module) ->
             break if limit is 0
             limit -= 1
             result.push d
+        result = Utils.sortObj(result, options.sort)
         return Projection.generate(result, projection)
 
     Update = {

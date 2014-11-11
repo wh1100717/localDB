@@ -245,6 +245,9 @@ define(function(require, exports, module) {
    */
   Utils.sortObj = function(data, sortObj) {
     var key, order, result, sort, sortArr, _i, _len;
+    if (sortObj == null) {
+      return data;
+    }
     result = data;
     sortArr = [];
     for (key in sortObj) {
