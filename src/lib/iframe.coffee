@@ -15,6 +15,7 @@ define (require, exports, module) ->
             @ifrm.style.display = "none"
             document.body.appendChild(@ifrm)
             return
+            
         remove: -> @ifrm.parentElement.removeChild(@ifrm)
 
     module.exports = Iframe

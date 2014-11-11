@@ -8,7 +8,7 @@ define (require, exports, module) ->
     toString = Object.prototype.toString
 
     ###
-     *  isEqual function is implemented by underscore and I just rewrite in my project.
+     *  isEqual function is implemented by underscore and I just rewrite in coffee.
      *  https://github.com/jashkenas/underscore/blob/master/underscore.js
     ###
     eq = (a, b, aStack, bStack) ->
@@ -75,7 +75,7 @@ define (require, exports, module) ->
         return Object.keys(obj) if Object.keys
         # return (key for key of obj when Utils.has(obj, key))
 
-    Utils.has = (obj, key) -> obj isnt null and obj isnt undefined and Object.prototype.hasOwnProperty.call(obj, key)
+    Utils.has = (obj, key) -> obj? and Object.prototype.hasOwnProperty.call(obj, key)
 
     Utils.isEqual = (a, b) -> eq(a, b, [], [])
 
@@ -116,19 +116,15 @@ define (require, exports, module) ->
     Utils.toUnicode = (string) ->
         result = ['']
         index = 1
-        len = string.length
-        (
+        while index <= string.length
             char = string.charCodeAt(index - 1)
             uniChar = "00" + char.toString(16)
             uniChar = uniChar.slice(-4)
             result.push(uniChar)
             index += 1
-        ) while index <= len
         result.join('\\u')
 
-    Utils.fromUnicode = (string) ->
-        repStr = string.replace(/\\/g,"%")
-        unescape(repStr)
+    Utils.fromUnicode = (string) -> unescape(string.replace(/\\/g,"%"))
 
     Utils.getSubValue = (value, key) ->
         return value if not value?

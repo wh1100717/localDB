@@ -6,6 +6,7 @@ define (require, exports, module) ->
     hexTable = ((if i <= 15 then '0' else '') + i.toString(16) for i in [0...256])
 
     class ObjectID
+
         constructor: (id, _hex) ->
             @_bsontype = 'ObjectID'
             @MACHINE_ID = parseInt(Math.random() * 0xFFFFFF, 10)
@@ -19,6 +20,7 @@ define (require, exports, module) ->
                 return @createFromHexString(id)
             else
                 throw new Error("Value passed in is not a valid 24 character hex string")
+
         generate: ->
             unixTime = parseInt(Date.now() / 1000, 10)
             time4Bytes = BinaryParser.encodeInt(unixTime, 32, true, true)
@@ -26,19 +28,26 @@ define (require, exports, module) ->
             pid2Bytes = BinaryParser.fromShort(if typeof process is 'undefined' then Math.floor(Math.random() * 100000) else process.pid)
             index3Bytes = BinaryParser.encodeInt(@get_inc(), 24, false, true)
             time4Bytes + machine3Bytes + pid2Bytes + index3Bytes
+
         toHexString: ->
             hexString = ''
             for i in [0...@id.length]
                 hexString += hexTable[@id.charCodeAt(i)]
             hexString
+
         toString: -> @toHexString()
+
         inspect: -> @toHexString()
+
         getTime: -> Math.floor(BinaryParser.decodeInt(@id.substring(0, 4), 32, true, true)) * 1000
+
         getTimestamp: ->
             timestamp = new Date()
             timestamp.setTime(@getTime())
             timestamp
+
         get_inc: -> ObjectID.index = (ObjectID.index + 1) % 0xFFFFFF
+
         createFromHexString: (hexString) ->
             result = ''
             for i in [0...24] when i % 2 is 0

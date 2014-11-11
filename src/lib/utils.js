@@ -7,7 +7,7 @@ define(function(require, exports, module) {
   toString = Object.prototype.toString;
 
   /*
-   *  isEqual function is implemented by underscore and I just rewrite in my project.
+   *  isEqual function is implemented by underscore and I just rewrite in coffee.
    *  https://github.com/jashkenas/underscore/blob/master/underscore.js
    */
   eq = function(a, b, aStack, bStack) {
@@ -113,7 +113,7 @@ define(function(require, exports, module) {
     }
   };
   Utils.has = function(obj, key) {
-    return obj !== null && obj !== void 0 && Object.prototype.hasOwnProperty.call(obj, key);
+    return (obj != null) && Object.prototype.hasOwnProperty.call(obj, key);
   };
   Utils.isEqual = function(a, b) {
     return eq(a, b, [], []);
@@ -180,11 +180,10 @@ define(function(require, exports, module) {
     return (new ObjectID(objectId)).getTime();
   };
   Utils.toUnicode = function(string) {
-    var char, index, len, result, uniChar;
+    var char, index, result, uniChar;
     result = [''];
     index = 1;
-    len = string.length;
-    while (index <= len) {
+    while (index <= string.length) {
       char = string.charCodeAt(index - 1);
       uniChar = "00" + char.toString(16);
       uniChar = uniChar.slice(-4);
@@ -194,9 +193,7 @@ define(function(require, exports, module) {
     return result.join('\\u');
   };
   Utils.fromUnicode = function(string) {
-    var repStr;
-    repStr = string.replace(/\\/g, "%");
-    return unescape(repStr);
+    return unescape(string.replace(/\\/g, "%"));
   };
   Utils.getSubValue = function(value, key) {
     var k, keyArr, _i, _len;
