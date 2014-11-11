@@ -19,12 +19,14 @@ define(function(require, exports, module) {
       expect(a.inspect()).toEqual(b.inspect());
       try {
         c = new ObjectID("asdfa");
+        throw new Error("should not be here");
       } catch (_error) {
         e = _error;
         expect(e.message).toEqual("Argument passed in must be a single String of 12 bytes or a string of 24 hex characters");
       }
       try {
-        return c = new ObjectID("aaaaaaaaaaaaaaaaaaaaaaa*");
+        c = new ObjectID("aaaaaaaaaaaaaaaaaaaaaaa*");
+        throw new Error("should not be here");
       } catch (_error) {
         e = _error;
         return expect(e.message).toEqual("Value passed in is not a valid 24 character hex string");

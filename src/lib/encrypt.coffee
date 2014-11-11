@@ -9,7 +9,7 @@ define (require, exports, module) ->
       * 加密
     ###
     Encrypt.encode = (value, key) ->
-        return null if value is null
+        return null if not value?
         resultArr = ['']
         key = Sha1.hex_sha1(key)
         unicodeValue = Utils.toUnicode(value)

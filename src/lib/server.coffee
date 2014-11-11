@@ -23,7 +23,7 @@ define (require, exports, module) ->
 
         init: ->
             self = @
-            Evemit.bind 'message', (e) ->
+            Evemit.bind window, 'message', (e) ->
                 origin = e.origin
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data

@@ -11,7 +11,7 @@ define(function(require, exports, module) {
    */
   Encrypt.encode = function(value, key) {
     var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
-    if (value === null) {
+    if (value == null) {
       return null;
     }
     resultArr = [''];

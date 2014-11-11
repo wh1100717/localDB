@@ -32,7 +32,7 @@ define(function(require, exports, module) {
     Server.prototype.init = function() {
       var self;
       self = this;
-      return Evemit.bind('message', function(e) {
+      return Evemit.bind(window, 'message', function(e) {
         var origin, result, storage;
         origin = e.origin;
         if (!self.checkOrigin(origin)) {
