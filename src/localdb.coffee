@@ -5,6 +5,7 @@ define (require, exports, module) ->
     Collection = require('lib/collection')
     Engine = require('lib/engine')
     Support = require('lib/support')
+    Server = require('lib/server')
 
     dbPrefix = "ldb_"
 
@@ -87,6 +88,14 @@ define (require, exports, module) ->
     ###
     LocalDB.getTime = (objectId) -> Utils.getTime(objectId)
 
-    # window.LocalDB = LocalDB if not seajs?
+    ###
+     *  Proxy Server Init
+     *  LocalDB.init({
+            allow: ['*.baidu.com', 'pt.aliexpress.com']
+            deny: ['map.baidu.com']
+        })
+    ###
+    LocalDB.init = (config) -> (new Server(config)).init()
+
 
     module.exports = LocalDB

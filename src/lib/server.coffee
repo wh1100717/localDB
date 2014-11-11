@@ -2,76 +2,55 @@ define (require, exports, module) ->
     
     'use strict'
 
-    sendMessage = require("lib/send-message")
     Storage = require('lib/storage')
+    Evemit = require('lib/evemit')
 
     class Server
+
         constructor: (@config) ->
+            @allow = @config.allow or "*"
+            @deny = @config.deny or []
+            @ss = new Storage(true)
+            @ls = new Storage(false)
+
+        postParent: (mes, origin) -> parent.window.postParent(JSON.stringify(mes), @origin)
+
+        checkOrigin: (origin) -> origin in @allow
+
+        init: ->
             self = @
-            self.Storage = null
-            window.addEventListener('message', (e) ->
+            Evemit.bind 'message', (e) ->
                 origin = e.origin
-                isWhite = self.checkOrigin(origin)
-                if isWhite is true
-                    result = JSON.parse e.data
-                    mes = {}
-                    mes.type = result.type
-                    mes.eve = result.eve
-                    session = result.session
-                    if self.session is not session or self.Storage is null
-                        self.Storage = new Storage(session)
-                    self.session = session
-                    switch mes.type
-                        when "key" 
-                            index = result.index
-                            self.Storage.key index, (data) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-
-                        when "size" 
-                            self.Storage.size  (data ) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-
-                        when "setItem"
-                            key = result.key
-                            val = result.val
-                            self.Storage.setItem  key, val, (data ) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-
-                        when "getItem"
-                            key = result.key
-                            self.Storage.getItem  key, (data ) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-
-                        when "removeItem"
-                            key = result.key
-                            self.Storage.removeItem  key, (data ) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-
-                         when "usage"
-                            self.Storage.usage (data ) ->
-                                mes.data = data
-                                self.postParent(mes, origin)
-                else
-                    return false
-                
-            , false);
-
-        postParent: (mes) -> 
-            mes = JSON.stringify mes
-            parent.window.postMessage(mes, origin)
-
-        checkOrigin: (origin) ->
-            isWhite = false
-            whiteList = self.config.whiteList
-            for src in whiteList
-                if src is origin
-                    isWhite = true
-                    break
-            return isWhite
-
+                return false if not self.checkOrigin(origin)
+                result = JSON.parse e.data
+                storage = if result.session then self.ss else self.ls
+                switch result.type
+                    when "key"
+                        storage.key result.index, (data, err) ->
+                            result.data = data
+                            result.err = err
+                            self.postParent(result, origin)
+                    when "size"
+                        storage.size (data, err) ->
+                            result.data = data
+                            result.err = err
+                            self.postParent(result, origin)
+                    when "setItem"
+                        storage.setItem result.key, result.val, (err) ->
+                            result.err = err
+                            self.postParent(result, origin)
+                    when "getItem"
+                        storage.getItem result.key, (data, err) ->
+                            result.data = data
+                            result.err = err
+                            self.postParent(result, origin)
+                    when "removeItem"
+                        storage.removeItem result.key, (err) ->
+                            result.err = err
+                            self.postParent(result, origin)
+                    when "usage"
+                        storage.usage (data, err) ->
+                            result.data = data
+                            result.err = err
+                            self.postParent(result, origin)
     module.exports = Server
