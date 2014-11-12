@@ -2,113 +2,46 @@ define (require, exports, module) ->
     
     'use strict'
 
-    sendMessage = require("lib/send-message")
+    Evemit = require('lib/evemit')
+    Utils = require('lib/utils')
 
     class Proxy
-        constructor: (@config, @session) ->
+
+        constructor: (@session, @encrypt, @token, @proxy) ->
             self = @
-            @sendMessage = sendMessage
-            window.addEventListener('message', (e) ->
-                result = JSON.parse e.data;
-                type = result.type
-                eve = result.eve
-                data = result.data
-                switch type
-                    when "key" 
-                        if typeof self.key[eve] == "function"
-                            self.key[eve](data) 
-                            delete self.key[eve]
-                    when "size"   
-                        if typeof self.size[eve] == "function"
-                            self.size[eve](data)
-                            delete self.size[eve]
-                    when "setItem"
-                        if typeof self.setItem[eve] == "function"
-                            self.setItem[eve](data)
-                            delete self.setItem[eve]
-                    when "getItem" 
-                        if typeof self.getItem[eve] == "function"
-                            self.getItem[eve](data)
-                            delete self.getItem[eve]
-                    when "removeItem"  
-                        if typeof self.removeItem[eve] == "function"
-                            self.removeItem[eve](data)
-                            delete self.removeItem[eve]
-                    when "usage"
-                        if typeof self.usage[eve] == "function"
-                            self.usage[eve](data)
-                            delete self.usage[eve]
-            , false)
+            @evemit = new Evemit()
+            Evemit.bind window, 'message', (e) ->
+                result = JSON.parse e.data
+                return if @proxy isnt e.origin
+                @evemit.emit result.eve
 
-        key: (index, fn) ->
-            id = new Date().getTime();
-            eve = "key"+ id
-            data = {
-                type: "key",
-                index: index,
-                eve: eve
-                session: @session
-            }
-            @key[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        sendMessage: (type, data, callback) ->
+            self = @
+            eve = type + "|" + new Date().getTime()
+            data.eve = eve
+            data.session = @session
+            data.encrypt = @encrypt
+            data.token = @token
+            @evemit.once eve, callback
+            data = JSON.stringify data
+            iframe = Utils.getIframe @proxy
+            if iframe?
+                iframe.contentWindow.postMessage data, @proxy
+            else
+                iframe = Utils.createIframe @proxy
+                iframe.onload = -> iframe.contentWindow.postMessage data, self.proxy
 
-        size: (fn)-> 
-            id = new Date().getTime();
-            eve = "size"+ id
-            data = {
-                type: "size",
-                eve: eve,
-                session: @session
-            }
-            @size[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        key: (index, callback) -> @sendMessage 'key', {index: index}, callback
 
-        setItem: (key, val, fn) -> 
-            id = new Date().getTime();
-            eve = "setItem"+ id
-            data = {
-                type: "setItem",
-                key: key,
-                val: val,
-                eve: eve,
-                session: @session
-            }
-            @setItem[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        size: (callback) -> @sendMessage 'size', {}, callback
 
-        getItem: (key, fn) -> 
-            id = new Date().getTime();
-            eve = "getItem"+ id
-            data = {
-                type: "getItem",
-                key: key,
-                eve: eve,
-                session: @session
-            }
-            @getItem[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        setItem: (key, val, callback) -> @sendMessage 'setItem', {key: key, val: val}, callback
 
-        removeItem: (key, fn) -> 
-            id = new Date().getTime();
-            eve = "removeItem"+ id
-            data = {
-                type: "removeItem",
-                key: key,
-                eve: eve,
-                session: @session
-            }
-            @removeItem[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        getItem: (key, callback) -> @sendMessage 'getItem', {key: key}, callback
 
-        usage: (fn) ->
-            id = new Date().getTime();
-            eve = "usage"+ id
-            data = {
-                type: "removeItem",
-                eve: eve,
-                session: @session
-            }
-            @usage[eve] = fn 
-            @sendMessage(JSON.stringify data)
+        removeItem: (key, callback) -> @sendMessage 'removeItem', {key: key}, callback
+
+        usage: (callback) -> @sendMessage 'usage', {}, callback
+
 
     module.exports = Proxy

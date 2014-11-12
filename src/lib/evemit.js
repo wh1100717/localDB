@@ -13,6 +13,9 @@ define(function(require, exports, module) {
   Evemit = (function() {
     function Evemit(obj) {
       var i, j, _ref;
+      if (obj != null) {
+        obj = {};
+      }
       if (!Utils.isObject(obj)) {
         throw new Error("input type error: Input should be object");
       }

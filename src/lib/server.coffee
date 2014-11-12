@@ -28,7 +28,7 @@ define (require, exports, module) ->
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data
                 storage = if result.session then self.ss else self.ls
-                switch result.type
+                switch result.eve.split("|")[0]
                     when "key"
                         storage.key result.index, (data, err) ->
                             result.data = data

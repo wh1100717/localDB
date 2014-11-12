@@ -40,7 +40,7 @@ define(function(require, exports, module) {
         }
         result = JSON.parse(e.data);
         storage = result.session ? self.ss : self.ls;
-        switch (result.type) {
+        switch (result.eve.split("|")[0]) {
           case "key":
             return storage.key(result.index, function(data, err) {
               result.data = data;
