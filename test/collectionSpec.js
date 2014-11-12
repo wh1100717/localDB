@@ -4,10 +4,13 @@ define(function(require, exports, module) {
   var Collection, LocalDB, Utils, db;
   LocalDB = require("localdb");
   Collection = require("lib/collection");
-  Utils = require('lib/utils');
+  Utils = require("lib/utils");
   db = new LocalDB("foo");
+
+  /* TODO
+   *  没有覆盖到的分支都是try..catch中错误处理的分支，有时间想一下如何去做这方面的测试来进行测试覆盖
+   */
   return describe("Collection", function() {
-    var bar;
     it("wrong usage", function() {
       var bar, e;
       try {
@@ -17,13 +20,14 @@ define(function(require, exports, module) {
         return expect(e.message).toEqual("collectionName should be specified.");
       }
     });
-    bar = db.collection("bar");
-    it("Init", function() {
+    it("new Collection", function() {
+      var bar;
+      bar = db.collection("bar");
       return expect(bar instanceof Collection).toEqual(true);
     });
-    it("Insert", function() {
+    it("insert", function() {
       var insert_bar;
-      insert_bar = db.collection("insert");
+      insert_bar = db.collection("insert_bar");
       return insert_bar.insert({
         a: 1,
         b: "abc",
@@ -52,119 +56,28 @@ define(function(require, exports, module) {
         });
       });
     });
-    it("InsertPromise", function() {
-      var InsertPromise_bar;
-      InsertPromise_bar = db.collection("InsertPromise");
-      return InsertPromise_bar.drop().then(function() {
-        return InsertPromise_bar.find();
-      }).then(function(data) {
-        return console.log("InsertPromise --->", data.length);
-      }).then(function() {
-        return InsertPromise_bar.insert({
-          a: 1,
-          b: "abc",
-          c: /hell.*ld/,
-          d: {
-            e: 4,
-            f: "5"
-          },
-          g: function(h) {
-            return h * 3;
-          },
-          i: [1, 2, 3]
-        });
-      }).then(function() {
-        return InsertPromise_bar.find();
-      }).then(function(data) {
-        console.log(data.length, data[0]);
-        data = data[0];
-        expect(data.a).toEqual(1);
-        expect(data.b).toEqual("abc");
-        expect(data.c.test("hello world")).toEqual(true);
-        expect(data.d).toEqual({
-          e: 4,
-          f: "5"
-        });
-        expect(Utils.isFunction(data.g)).toEqual(true);
-        expect(data.g(100)).toEqual(300);
-        return expect(data.i).toEqual([1, 2, 3]);
-      });
-    });
-    it("Insert List", function() {
+    it("insertList", function() {
       var insertList_bar;
-      insertList_bar = db.collection("insertList");
-      return insertList_bar.drop(function() {
-        return insertList_bar.insert([
-          {
-            a: 1,
-            b: 2,
-            c: 3
-          }, {
-            a: 2,
-            b: 3,
-            c: 4
-          }
-        ], function() {
-          insertList_bar.find(function(data) {
-            return expect(data.length).toEqual(2);
-          });
-          return insertList_bar.insert([
-            {
-              a: 1,
-              b: 2,
-              c: 3
-            }, 4, {
-              a: 2,
-              b: 3,
-              c: 4
-            }
-          ], function() {
-            return insertList_bar.find(function(data) {
-              return expect(data.length).toEqual(4);
-            });
-          });
+      insertList_bar = db.collection("insertList_bar");
+      return insertList_bar.insert([
+        {
+          a: 1,
+          b: 2,
+          c: 3
+        }, 4, null, [1, 2, 3], /abc/, {
+          a: 2,
+          b: 3,
+          c: 4
+        }
+      ], function() {
+        return insertList_bar.find(function(data) {
+          return expect(data.length).toEqual(2);
         });
       });
     });
-    it("InsertListPromise", function() {
-      var InsertListPromise_bar;
-      InsertListPromise_bar = db.collection("InsertListPromise");
-      return InsertListPromise_bar.drop().then(function() {
-        return InsertListPromise_bar.insert([
-          {
-            a: 1,
-            b: 2,
-            c: 3
-          }, {
-            a: 2,
-            b: 3,
-            c: 4
-          }
-        ]);
-      }).then(function() {
-        return InsertListPromise_bar.find();
-      }).then(function(data) {
-        expect(data.length).toEqual(2);
-        return InsertListPromise_bar.insert([
-          {
-            a: 1,
-            b: 2,
-            c: 3
-          }, 4, {
-            a: 2,
-            b: 3,
-            c: 4
-          }
-        ]);
-      }).then(function() {
-        return InsertListPromise_bar.find();
-      }).then(function(data) {
-        return expect(data.length).toEqual(4);
-      });
-    });
-    it("Update", function() {
+    it("update", function() {
       var update_bar;
-      update_bar = db.collection("update");
+      update_bar = db.collection("update_bar");
       return update_bar.insert({
         a: 1,
         b: 2,
@@ -317,40 +230,9 @@ define(function(require, exports, module) {
         });
       });
     });
-    it("UpdatePromise", function() {
-      var UpdatePromise_bar;
-      UpdatePromise_bar = db.collection("UpdatePromise");
-      return UpdatePromise_bar.drop().then(function() {
-        return UpdatePromise_bar.insert([
-          {
-            a: 1,
-            b: 2
-          }, {
-            a: 1,
-            b: 3
-          }, {
-            a: 2,
-            b: 4
-          }
-        ]);
-      }).then(function() {
-        return UpdatePromise_bar.update({
-          $set: {
-            a: 3
-          },
-          $inc: {
-            b: 2
-          }
-        });
-      }).then(function() {
-        return UpdatePromise_bar.findOne();
-      }).then(function(data) {
-        return expect(data.a).toEqual(3);
-      });
-    });
     it("Remove", function() {
       var remove_bar;
-      remove_bar = db.collection("remove");
+      remove_bar = db.collection("remove_bar");
       return remove_bar.insert([
         {
           a: 1,
@@ -433,33 +315,9 @@ define(function(require, exports, module) {
         });
       });
     });
-    it("RemovePromise", function() {
-      var RemovePromise_bar;
-      RemovePromise_bar = db.collection("RemovePromise");
-      return RemovePromise_bar.drop().then(function() {
-        return RemovePromise_bar.insert([
-          {
-            a: 1,
-            b: 2
-          }, {
-            a: 1,
-            b: 3
-          }, {
-            a: 2,
-            b: 4
-          }
-        ]);
-      }).then(function() {
-        return RemovePromise_bar.remove();
-      }).then(function() {
-        return RemovePromise_bar.find();
-      }).then(function(data) {
-        return expect(data).toEqual([]);
-      });
-    });
     it("FindOne", function() {
       var findone_bar;
-      findone_bar = db.collection('findone');
+      findone_bar = db.collection("findone");
       return findone_bar.insert([
         {
           a: 1,
@@ -514,60 +372,9 @@ define(function(require, exports, module) {
         });
       });
     });
-    it("FindOnePromise", function() {
-      var FindOnePromise_bar;
-      FindOnePromise_bar = db.collection('FindOnePromise');
-      return FindOnePromise_bar.drop().then(function() {
-        return FindOnePromise_bar.insert([
-          {
-            a: 1,
-            b: 2,
-            c: {
-              d: 3,
-              e: 4
-            },
-            f: function(x) {
-              return x * x;
-            },
-            g: [1, 2, 3, 4],
-            h: "abc",
-            price: 10.99,
-            max1: 100,
-            max2: 200,
-            min1: 50,
-            min2: 30
-          }, {
-            a: 1,
-            b: 2,
-            c: {
-              d: 3,
-              e: 4
-            },
-            f: function(x) {
-              return x * x;
-            },
-            g: [1, 2, 3, 4],
-            h: "abc",
-            price: 10.99,
-            max1: 100,
-            max2: 200,
-            min1: 50,
-            min2: 30
-          }
-        ]);
-      }).then(function() {
-        return FindOnePromise_bar.findOne({
-          where: {
-            a: 1
-          }
-        });
-      }).then(function(data) {
-        return expect(data.a).toEqual(1);
-      });
-    });
     return it("Projection", function() {
       var projection2_bar, projection_bar;
-      projection_bar = db.collection('projection');
+      projection_bar = db.collection("projection");
       projection_bar.insert([
         {
           a: 1,

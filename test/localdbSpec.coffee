@@ -1,6 +1,6 @@
 define (require, exports, module) ->
-
     "use strict"
+    
     LocalDB = require("localdb")
     Collection = require("lib/collection")
     Support = require("lib/support")

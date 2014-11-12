@@ -1,25 +1,30 @@
 define (require, exports, module) ->
-
     "use strict"
+
     LocalDB = require("localdb")
     Collection = require("lib/collection")
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
 
+    db = new LocalDB "foo"
 
-    db = new LocalDB("foo")
+    ### TODO
+     *  没有覆盖到的分支都是try..catch中错误处理的分支，有时间想一下如何去做这方面的测试来进行测试覆盖
+    ###
 
     describe "Collection", ->
+
         it "wrong usage", ->
             try
                 bar = db.collection()
             catch e
                 expect(e.message).toEqual("collectionName should be specified.")
-            
-        bar = db.collection("bar")
-        it "Init", ->
+
+        it "new Collection", ->
+            bar = db.collection "bar"
             expect(bar instanceof Collection).toEqual(true)
-        it "Insert", ->
-            insert_bar = db.collection("insert")
+
+        it "insert", ->
+            insert_bar = db.collection "insert_bar"
             insert_bar.insert {
                 a: 1
                 b: "abc"
@@ -37,109 +42,31 @@ define (require, exports, module) ->
                     expect(Utils.isFunction(data.g)).toEqual(true)
                     expect(data.g(100)).toEqual(300)
                     expect(data.i).toEqual([1,2,3])
-        it "InsertPromise", ->
-            InsertPromise_bar = db.collection("InsertPromise")
-            InsertPromise_bar.drop()
-                .then( -> InsertPromise_bar.find())
-                .then( (data) -> console.log "InsertPromise --->", data.length)
-                .then( ->
-                    InsertPromise_bar.insert {
-                        a: 1
-                        b: "abc"
-                        c: /hell.*ld/
-                        d: {e: 4, f: "5"}
-                        g: (h) -> return h * 3
-                        i: [1,2,3]
-                    }
-                )
-                .then( -> InsertPromise_bar.find())
-                .then( (data) ->
-                    console.log data.length, data[0]
-                    data = data[0]
-                    expect(data.a).toEqual(1)
-                    expect(data.b).toEqual("abc")
-                    expect(data.c.test("hello world")).toEqual(true)
-                    expect(data.d).toEqual({e:4, f: "5"})
-                    expect(Utils.isFunction(data.g)).toEqual(true)
-                    expect(data.g(100)).toEqual(300)
-                    expect(data.i).toEqual([1,2,3])
-                )
-        it "Insert List", ->
-            insertList_bar = db.collection("insertList")
-            insertList_bar.drop ->
-                insertList_bar.insert [
-                    {
-                        a:1
-                        b:2
-                        c:3
-                    },
-                    {
-                        a:2
-                        b:3
-                        c:4
-                    }
-                ], ->
-                    insertList_bar.find (data) ->
-                        expect(data.length).toEqual(2)
-                    insertList_bar.insert [
-                        {
-                            a:1
-                            b:2
-                            c:3
-                        }
-                        4 #只能插入对象，该数据将被过滤掉，不会被插入
-                        {
-                            a:2
-                            b:3
-                            c:4
-                        }
-                    ], ->
-                        insertList_bar.find (data) ->
-                            expect(data.length).toEqual(4)
-        it "InsertListPromise", ->
-            InsertListPromise_bar = db.collection("InsertListPromise")
-            InsertListPromise_bar.drop()
-                .then( ->
-                    InsertListPromise_bar.insert [
-                        {
-                            a:1
-                            b:2
-                            c:3
-                        },
-                        {
-                            a:2
-                            b:3
-                            c:4
-                        }
-                    ]
-                )
-                .then( ->
-                    InsertListPromise_bar.find()
-                )
-                .then( (data) ->
+
+        it "insertList", ->
+            insertList_bar = db.collection "insertList_bar"
+            insertList_bar.insert [
+                {
+                    a:1
+                    b:2
+                    c:3
+                },
+                #只能插入对象，该数据将被过滤掉，不会被插入
+                4,
+                null,
+                [1,2,3],
+                /abc/,
+                {
+                    a:2
+                    b:3
+                    c:4
+                }
+            ], ->
+                insertList_bar.find (data) ->
                     expect(data.length).toEqual(2)
-                    InsertListPromise_bar.insert [
-                        {
-                            a:1
-                            b:2
-                            c:3
-                        }
-                        4 #只能插入对象，该数据将被过滤掉，不会被插入
-                        {
-                            a:2
-                            b:3
-                            c:4
-                        }
-                    ]
-                )
-                .then( ->
-                    InsertListPromise_bar.find()
-                )
-                .then( (data) ->
-                    expect(data.length).toEqual(4)
-                )
-        it "Update", ->
-            update_bar = db.collection("update")
+
+        it "update", ->
+            update_bar = db.collection "update_bar"
             update_bar.insert {
                 a: 1
                 b: 2
@@ -238,34 +165,9 @@ define (require, exports, module) ->
                                                                 }, ->
                                                                     update_bar.find (data) ->
                                                                         expect(d.b).not.toEqual(5) for d,index in data  when index > 0
-        it "UpdatePromise", ->
-            UpdatePromise_bar = db.collection("UpdatePromise")
-            UpdatePromise_bar.drop()
-                .then( ->
-                    UpdatePromise_bar.insert [
-                        {a: 1,b: 2}
-                        {a: 1,b: 3}
-                        {a: 2,b: 4}
-                    ]
-                )
-                .then( ->
-                    UpdatePromise_bar.update {
-                        $set: {
-                            a:3
-                        }
-                        $inc: {
-                            b: 2
-                        }
-                    }
-                )
-                .then( ->
-                    UpdatePromise_bar.findOne()
-                )
-                .then( (data) ->
-                    expect(data.a).toEqual(3)
-                )
+
         it "Remove", ->
-            remove_bar = db.collection("remove")
+            remove_bar = db.collection("remove_bar")
             remove_bar.insert [
                 {a: 1,b: 2}
                 {a: 1,b: 3}
@@ -300,21 +202,9 @@ define (require, exports, module) ->
                                                     expect(data.length).toEqual(0)
                                                 remove_bar.find (data) ->
                                                     expect(data.length).toEqual(2)
-        it "RemovePromise", ->
-            RemovePromise_bar = db.collection("RemovePromise")
-            RemovePromise_bar.drop()
-                .then( ->
-                    RemovePromise_bar.insert [
-                        {a: 1,b: 2}
-                        {a: 1,b: 3}
-                        {a: 2,b: 4}
-                    ]
-                )
-                .then( -> RemovePromise_bar.remove())
-                .then( -> RemovePromise_bar.find())
-                .then( (data) -> expect(data).toEqual([]))
+
         it "FindOne", ->
-            findone_bar = db.collection('findone')
+            findone_bar = db.collection("findone")
             findone_bar.insert [{
                 a: 1
                 b: 2
@@ -345,42 +235,9 @@ define (require, exports, module) ->
                     expect(data.a).toEqual(1)
                 findone_bar.findOne {where: {no_val: 11111}}, (data) ->
                     expect(data).not.toBeDefined()
-        it "FindOnePromise", ->
-            FindOnePromise_bar = db.collection('FindOnePromise')
-            FindOnePromise_bar.drop()
-                .then( ->
-                    FindOnePromise_bar.insert [
-                        {
-                            a: 1
-                            b: 2
-                            c: {d: 3, e:4}
-                            f: (x) -> x * x
-                            g: [1,2,3,4]
-                            h: "abc"
-                            price: 10.99
-                            max1: 100
-                            max2: 200
-                            min1: 50
-                            min2: 30
-                        },{
-                            a: 1
-                            b: 2
-                            c: {d: 3, e:4}
-                            f: (x) -> x * x
-                            g: [1,2,3,4]
-                            h: "abc"
-                            price: 10.99
-                            max1: 100
-                            max2: 200
-                            min1: 50
-                            min2: 30
-                        }
-                    ]
-                )
-                .then( -> FindOnePromise_bar.findOne {where: {a:1}})
-                .then( (data) -> expect(data.a).toEqual(1))
+
         it "Projection", ->
-            projection_bar = db.collection('projection')
+            projection_bar = db.collection("projection")
             projection_bar.insert [{
                 a: 1
                 b: 2
@@ -476,38 +333,3 @@ define (require, exports, module) ->
                     }
                 }, (data) ->
                     console.log data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
