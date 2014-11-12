@@ -14,7 +14,8 @@ define (require, exports, module) ->
             @ss = new Storage(true)
             @ls = new Storage(false)
 
-        postParent: (mes, origin) -> parent.window.postParent(JSON.stringify(mes), @origin)
+        postParent: (mes, origin) ->
+            top.postMessage(JSON.stringify(mes), origin)
 
         ###
          *  支持正则表达式

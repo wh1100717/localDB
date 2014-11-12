@@ -16,10 +16,14 @@ define(function(require, exports, module) {
       Evemit.bind(window, 'message', function(e) {
         var result;
         result = JSON.parse(e.data);
-        if (this.proxy !== e.origin) {
+        if (self.proxy.indexOf(e.origin) === -1) {
           return;
         }
-        return this.evemit.emit(result.eve);
+        if (result.data != null) {
+          return self.evemit.emit(result.eve, result.data, result.err);
+        } else {
+          return self.evemit.emit(result.eve, result.err);
+        }
       });
     }
 
@@ -35,11 +39,11 @@ define(function(require, exports, module) {
       data = JSON.stringify(data);
       iframe = Utils.getIframe(this.proxy);
       if (iframe != null) {
-        return iframe.contentWindow.postMessage(data, this.proxy);
+        return iframe.contentWindow.postMessage(data, Utils.getOrigin(this.proxy));
       } else {
         iframe = Utils.createIframe(this.proxy);
         return iframe.onload = function() {
-          return iframe.contentWindow.postMessage(data, self.proxy);
+          return iframe.contentWindow.postMessage(data, Utils.getOrigin(self.proxy));
         };
       }
     };

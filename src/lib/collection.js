@@ -26,6 +26,7 @@ define(function(require, exports, module) {
 
     Collection.prototype.deserialize = function(callback) {
       return this.engine.getItem(this.name, function(data, err) {
+        console.log("deserialize: ", data);
         return callback(Utils.parse(data), err);
       });
     };

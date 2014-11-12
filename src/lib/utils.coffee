@@ -163,7 +163,6 @@ define (require, exports, module) ->
         sortArr.unshift {key: key, order: order} for key, order of sortObj
         for sort in sortArr
             result = Utils.quickSort(result, sort.key, sort.order)
-            console.log(result)
         return result
 
     ###
@@ -190,5 +189,7 @@ define (require, exports, module) ->
         return iframe
 
     Utils.getDomain = (url) -> url.match(/(https?:\/\/)?([^\/]+)/)[2]
+
+    Utils.getOrigin = (url) -> url.match(/(https?:\/\/)?([^\/]+)/)[0]
 
     module.exports = Utils

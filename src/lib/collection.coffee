@@ -17,7 +17,9 @@ define (require, exports, module) ->
         ###
          *  get data and tranfer into object from localStorage/sessionStorage
         ###
-        deserialize: (callback) -> @engine.getItem @name, (data, err) -> callback(Utils.parse(data), err)
+        deserialize: (callback) -> @engine.getItem @name, (data, err) ->
+            console.log "deserialize: ", data
+            callback(Utils.parse(data), err)
 
         ###
          *  save data into localStorage/sessionStorage

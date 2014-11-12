@@ -15,7 +15,7 @@ define(function(require, exports, module) {
     }
 
     Server.prototype.postParent = function(mes, origin) {
-      return parent.window.postParent(JSON.stringify(mes), this.origin);
+      return top.postMessage(JSON.stringify(mes), origin);
     };
 
 

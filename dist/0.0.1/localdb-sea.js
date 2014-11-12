@@ -518,6 +518,9 @@ var Utils = (function(){
   Utils.getDomain = function(url) {
     return url.match(/(https?:\/\/)?([^\/]+)/)[2];
   };
+  Utils.getOrigin = function(url) {
+    return url.match(/(https?:\/\/)?([^\/]+)/)[0];
+  };
   return Utils;
 })();
 
@@ -1514,6 +1517,7 @@ var __slice = [].slice;
 
     Collection.prototype.deserialize = function(callback) {
       return this.engine.getItem(this.name, function(data, err) {
+        console.log("deserialize: ", data);
         return callback(Utils.parse(data), err);
       });
     };
@@ -2166,6 +2170,7 @@ var __slice = [].slice;
     Evemit.prototype.emit = function() {
       var args, e, eve, _i, _len, _ref, _results;
       eve = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      console.log(this.events, eve, args);
       if (this.events[eve] != null) {
         _ref = this.events[eve];
         _results = [];
@@ -2225,10 +2230,14 @@ var Proxy = (function(){
       Evemit.bind(window, 'message', function(e) {
         var result;
         result = JSON.parse(e.data);
-        if (this.proxy !== e.origin) {
+        if (self.proxy.indexOf(e.origin) === -1) {
           return;
         }
-        return this.evemit.emit(result.eve);
+        if (result.data != null) {
+          return self.evemit.emit(result.eve, result.data, result.err);
+        } else {
+          return self.evemit.emit(result.eve, result.err);
+        }
       });
     }
 
@@ -2244,11 +2253,11 @@ var Proxy = (function(){
       data = JSON.stringify(data);
       iframe = Utils.getIframe(this.proxy);
       if (iframe != null) {
-        return iframe.contentWindow.postMessage(data, this.proxy);
+        return iframe.contentWindow.postMessage(data, Utils.getOrigin(this.proxy));
       } else {
         iframe = Utils.createIframe(this.proxy);
         return iframe.onload = function() {
-          return iframe.contentWindow.postMessage(data, self.proxy);
+          return iframe.contentWindow.postMessage(data, Utils.getOrigin(self.proxy));
         };
       }
     };
@@ -2358,7 +2367,7 @@ var Server = (function(){
     }
 
     Server.prototype.postParent = function(mes, origin) {
-      return parent.window.postParent(JSON.stringify(mes), this.origin);
+      return top.postMessage(JSON.stringify(mes), origin);
     };
 
 
@@ -2483,12 +2492,7 @@ var Server = (function(){
 var LocalDB = (function(){
 
   
-  var Collection, Engine, LocalDB, Server, Support, Utils, dbPrefix, version;
-  Utils = require("lib/utils");
-  Collection = require("lib/collection");
-  Engine = require("lib/engine");
-  Support = require("lib/support");
-  Server = require("lib/server");
+  var LocalDB, dbPrefix, version;
   dbPrefix = "ldb_";
   version = "0.0.1"
   LocalDB = (function() {

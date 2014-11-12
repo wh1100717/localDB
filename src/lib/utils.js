@@ -257,7 +257,6 @@ define(function(require, exports, module) {
     for (_i = 0, _len = sortArr.length; _i < _len; _i++) {
       sort = sortArr[_i];
       result = Utils.quickSort(result, sort.key, sort.order);
-      console.log(result);
     }
     return result;
   };
@@ -296,6 +295,9 @@ define(function(require, exports, module) {
   };
   Utils.getDomain = function(url) {
     return url.match(/(https?:\/\/)?([^\/]+)/)[2];
+  };
+  Utils.getOrigin = function(url) {
+    return url.match(/(https?:\/\/)?([^\/]+)/)[0];
   };
   return module.exports = Utils;
 });
