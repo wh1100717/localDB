@@ -171,7 +171,7 @@ define (require, exports, module) ->
     ###
     Utils.getIframe = (src) ->
         allFrames = document.getElementsByTagName("iframe")
-        for frame in allFrames when frame.src is src
+        for frame in allFrames when frame.src.indexOf(src) is 0
             return frame
         return null
 
@@ -182,7 +182,7 @@ define (require, exports, module) ->
         iframe = Utils.getIframe(src)
         return iframe if iframe?
         iframe = document.createElement "iframe"
-        iframe.src = @src
+        iframe.src = src
         iframe.style.width = "1px"
         iframe.style.height = "1px"
         iframe.style.display = "none"

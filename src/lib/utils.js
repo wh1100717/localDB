@@ -270,7 +270,7 @@ define(function(require, exports, module) {
     allFrames = document.getElementsByTagName("iframe");
     for (_i = 0, _len = allFrames.length; _i < _len; _i++) {
       frame = allFrames[_i];
-      if (frame.src === src) {
+      if (frame.src.indexOf(src) === 0) {
         return frame;
       }
     }
@@ -287,7 +287,7 @@ define(function(require, exports, module) {
       return iframe;
     }
     iframe = document.createElement("iframe");
-    iframe.src = this.src;
+    iframe.src = src;
     iframe.style.width = "1px";
     iframe.style.height = "1px";
     iframe.style.display = "none";

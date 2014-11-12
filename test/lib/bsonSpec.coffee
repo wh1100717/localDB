@@ -1,9 +1,10 @@
 define (require, exports, module) ->
-
     "use strict"
+
     ObjectID = require("lib/bson")
 
     describe "ObjectID", ->
+
         it "Init", ->
             a = new ObjectID()
             console.log a.toHexString()

@@ -9,6 +9,8 @@ define (require, exports, module) ->
 
         constructor: (@session, @encrypt, @name, @proxy) ->
             if @proxy?
+                @proxy = @proxy.trim()
+                @proxy = "http://" + @proxy if @proxy.indexOf("http") is -1
                 @proxy = new Proxy(@session, @encrypt, @name, @proxy)
             else
                 @storage = new Storage(@session, @encrypt, @name)

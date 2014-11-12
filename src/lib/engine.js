@@ -12,6 +12,10 @@ define(function(require, exports, module) {
       this.name = name;
       this.proxy = proxy;
       if (this.proxy != null) {
+        this.proxy = this.proxy.trim();
+        if (this.proxy.indexOf("http") === -1) {
+          this.proxy = "http://" + this.proxy;
+        }
         this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
       } else {
         this.storage = new Storage(this.session, this.encrypt, this.name);
