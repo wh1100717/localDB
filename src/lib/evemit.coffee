@@ -11,7 +11,7 @@ define (require, exports, module) ->
     class Evemit
 
         constructor: (obj) ->
-            obj = {} if obj?
+            obj = {} if not obj?
             throw new Error("input type error: Input should be object") if not Utils.isObject(obj)
             @events = {}
             obj[i] = j for i,j of Evemit.prototype

@@ -1,20 +1,21 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
-    Collection = require('lib/collection')
-    Engine = require('lib/engine')
-    Support = require('lib/support')
-    Server = require('lib/server')
+    Utils = require("lib/utils")
+    Collection = require("lib/collection")
+    Engine = require("lib/engine")
+    Support = require("lib/support")
+    Server = require("lib/server")
 
     dbPrefix = "ldb_"
+    version = ""
 
     class LocalDB
 
         ###
          *  Constructor
-         *  var db = new LocalDB('foo')
-         *  var db = new LocaoDB('foo', {
+         *  var db = new LocalDB("foo")
+         *  var db = new LocaoDB("foo", {
                 session: true,
                 encrypt: true,
                 proxy: "http://www.foo.com/getProxy.html"
@@ -44,13 +45,13 @@ define (require, exports, module) ->
 
         # ###
         #  *  Get Collection Names
-        #  *  db.collections()    //['foo','foo1','foo2','foo3',....]
+        #  *  db.collections()    //["foo","foo1","foo2","foo3",....]
         # ###
         # collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.size()] when @ls.key(i).indexOf("#{@name}_") is 0)
 
         ###
          *  Get Collection
-         *  var collection = db.collection('bar')
+         *  var collection = db.collection("bar")
         ###
         collection: (collectionName) ->
             throw new Error("collectionName should be specified.") if not collectionName?
@@ -69,12 +70,12 @@ define (require, exports, module) ->
     ###
      *  Check Browser Feature Compatibility
     ###
-    LocalDB.support = Support
+    LocalDB.getSupport = -> Support
 
     ###
      *  Version
     ###
-    LocalDB.version = ''
+    LocalDB.getVersion = -> version
 
     ###
      *  Get Timestamp
@@ -91,8 +92,8 @@ define (require, exports, module) ->
     ###
      *  Proxy Server Init
      *  LocalDB.init({
-            allow: ['*.baidu.com', 'pt.aliexpress.com']
-            deny: ['map.baidu.com']
+            allow: ["*.baidu.com", "pt.aliexpress.com"]
+            deny: ["map.baidu.com"]
         })
     ###
     LocalDB.init = (config) -> (new Server(config)).init()

@@ -3,33 +3,72 @@ define (require, exports, module) ->
     "use strict"
     LocalDB = require("localdb")
     Collection = require("lib/collection")
+    Support = require("lib/support")
+
 
     describe "LocalDB", ->
-        it "LocalStorage Support", ->
-            expect(LocalDB.support.localstorage()).toEqual(true)
-        it "SessionStorage Support", ->
-            expect(LocalDB.support.sessionstorage()).toEqual(true)
+
         it "wrong usage", ->
             try
                 db = new LocalDB()
             catch e
                 expect(e.message).toEqual("dbName should be specified.")
-        db = new LocalDB('foo', {
-            session: false
-            #TODO size
-            #size: 500
-        })
+
         it "new LocalDB", ->
+            db = new LocalDB "foo", {
+                session: false
+                encrypt: false
+            }
             expect(db instanceof LocalDB).toEqual(true)
+
+        it "new LocalDB with proxy", ->
+            db = new LocalDB "foo_proxy", {
+                session: false
+                encrypt: false
+                proxy: "http://localdb.emptystack.net/server.html"
+            }
+            expect(db instanceof LocalDB).toEqual(true)
+
         it "options", ->
+            db = new LocalDB "foo2", {
+                session: false
+                encrypt: false
+            }
             options = db.options()
-            expect(options).toBeDefined()
-            expect(options.name).toEqual("foo")
+            expect(options.name).toEqual("foo2")
             expect(options.session).toEqual(false)
+            expect(options.encrypt).toEqual(false)
+            expect(options.proxy?).toEqual(false)
+
         it "collection", ->
-            collection = db.collection("bar")
-            collection.insert {a:1}, ->
-                expect(collection instanceof Collection).toEqual(true)
+            db = new LocalDB "foo3"
+            collection = db.collection "bar"
+            expect(collection instanceof Collection).toEqual(true)
+
+        it "support", ->
+            support = LocalDB.getSupport()
+            expect(support).toEqual(Support)
+
+        it "version", ->
+            ###
+             *  在src/localdb.coffee中version为空
+             *  实际上在build的时候会根据package.json中的版本号来进行改写。
+            ###
+            version = LocalDB.getVersion()
+            console.log version
+            expect(version).toEqual("")
+
+        it "timestamp", ->
+            expect(LocalDB.getTimestamp("543509d5f3692b00001b2b61")).toBeDefined()
+            expect(LocalDB.getTime("543509d5f3692b00001b2b61")).toEqual(1412762069000)
+
+        it "server init", ->
+            LocalDB.init {
+                allow: ["*.baidu.com", "pt.aliexpress.com"]
+                deny: "map.baidu.com"
+            }
+
+
         # it "collections", ->
         #     collections = db.collections()
         #     console.log db.ls.size()
@@ -47,8 +86,3 @@ define (require, exports, module) ->
         #     db.drop()
         #     collections = db.collections()
         #     expect(collections).toEqual([])
-        it "timestamp", ->
-            expect(LocalDB.getTimestamp("543509d5f3692b00001b2b61")).toBeDefined()
-            expect(LocalDB.getTime("543509d5f3692b00001b2b61")).toEqual(1412762069000)
-        it "window.LocalDB", ->
-            expect(typeof window.LocalDB).toBe("undefined")
