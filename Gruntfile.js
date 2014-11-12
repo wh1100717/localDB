@@ -26,7 +26,7 @@ module.exports = function(grunt) {
     contents = contents.replace(/(.+) = require\(['"]$/, "");
     contents = contents.replace(/define\([^{]*?{/, "").replace(/\}\);[^}\w]*$/, "");
     contents = contents.replace(/define\(\[[^\]]+\]\)[\W\n]+$/, "");
-    contents = contents.replace(/LocalDB.version = \'\';/, "LocalDB.version = '" + pkg.version + "'");
+    contents = contents.replace(/version = \"\";/, "version = \"" + pkg.version + "\"");
     contents = ("var " + exportVar + " = (function(){\n") + contents;
     contents += "\n})();\n";
     return contents;
