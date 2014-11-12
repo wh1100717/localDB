@@ -261,5 +261,38 @@ define(function(require, exports, module) {
     }
     return result;
   };
+
+  /*
+   *  根据src获取iframe
+   */
+  Utils.getIframe = function(src) {
+    var allFrames, frame, _i, _len;
+    allFrames = document.getElementsByTagName("iframe");
+    for (_i = 0, _len = allFrames.length; _i < _len; _i++) {
+      frame = allFrames[_i];
+      if (frame.src === src) {
+        return frame;
+      }
+    }
+    return null;
+  };
+
+  /*
+   *  创建Iframe
+   */
+  Utils.createIframe = function(src) {
+    var iframe;
+    iframe = Utils.getIframe(src);
+    if (iframe != null) {
+      return iframe;
+    }
+    iframe = document.createElement("iframe");
+    iframe.src = this.src;
+    iframe.style.width = "1px";
+    iframe.style.height = "1px";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe;
+  };
   return module.exports = Utils;
 });

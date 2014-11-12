@@ -1,19 +1,18 @@
 define (require, exports, module) ->
+
     'use strict'
 
-    hasIframe = require("lib/has-iframe")
-    Iframe = require("lib/iframe")
-    
-    class sendMessage
+    Utils = require('lib/utils')
+
+    class SendMessage
 
         constructor: (@data, @src) ->
             self = @
-            hasIframe = new hasIframe(self.src)
-            iframe = new Iframe(self.src)
-            if hasIframe? 
-                iframe.contentWindow.postMessage(data, self.src);
+            iframe = Utils.getIframe @src
+            if iframe?
+                iframe.contentWindow.postMessage @data, @src
             else
-                iframe.onload = ->
-                    iframe.contentWindow.postMessage(data, self.src);
+                iframe = Utils.createIfram @src
+                iframe.onload = -> iframe.contentWindow.postMessage(self.data, self.src)
 
-    module.exports = sendMessage
+    module.exports = SendMessage

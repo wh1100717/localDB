@@ -166,4 +166,27 @@ define (require, exports, module) ->
             console.log(result)
         return result
 
+    ###
+     *  根据src获取iframe
+    ###
+    Utils.getIframe = (src) ->
+        allFrames = document.getElementsByTagName("iframe")
+        for frame in allFrames when frame.src is src
+            return frame
+        return null
+
+    ###
+     *  创建Iframe
+    ###
+    Utils.createIframe = (src) ->
+        iframe = Utils.getIframe(src)
+        return iframe if iframe?
+        iframe = document.createElement "iframe"
+        iframe.src = @src
+        iframe.style.width = "1px"
+        iframe.style.height = "1px"
+        iframe.style.display = "none"
+        document.body.appendChild(iframe)
+        return iframe
+
     module.exports = Utils
