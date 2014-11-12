@@ -21,15 +21,19 @@ define (require, exports, module) ->
          *  支持*.xxx.com/www.*.com/www.xxx.*等格式
         ###
         checkOrigin: (origin) ->
-            if Utils.isString(allow)
-                return false if not @checkRule(origin, rule)
+            origin = Utils.getDomain(origin)
+            if Utils.isString(@allow)
+                return false if not @checkRule(origin, @allow)
             else
-                for rule in allow when not @checkRule(origin, rule)
-                    return false
-            if Utils.isString(deny)
-                return false if @checkRule(origin, rule)
+                flag = true
+                for rule in @allow when @checkRule(origin, rule)
+                    flag = false
+                    break
+                return false if flag
+            if Utils.isString(@deny)
+                return false if @checkRule(origin, @deny)
             else
-                for rule in deny when @checkRule(origin, rule)
+                for rule in @deny when @checkRule(origin, rule)
                     return false
             return true
 
@@ -43,11 +47,10 @@ define (require, exports, module) ->
                 return url is rule
             return true
 
-
         init: ->
             self = @
             Evemit.bind window, 'message', (e) ->
-                origin = Utils.getDomain(e.origin)
+                origin = e.origin
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data
                 storage = if result.session then self.ss else self.ls

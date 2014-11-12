@@ -189,6 +189,6 @@ define (require, exports, module) ->
         document.body.appendChild(iframe)
         return iframe
 
-    Utils.getDomain = (url) -> url.match(/https?:\/\/([^\/]+)/)[1]
+    Utils.getDomain = (url) -> url.match(/(https?:\/\/)?([^\/]+)/)[2]
 
     module.exports = Utils

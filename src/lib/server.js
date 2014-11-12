@@ -25,26 +25,35 @@ define(function(require, exports, module) {
      */
 
     Server.prototype.checkOrigin = function(origin) {
-      var rule, _i, _j, _len, _len1;
-      if (Utils.isString(allow)) {
-        if (!this.checkRule(origin, rule)) {
+      var flag, rule, _i, _j, _len, _len1, _ref, _ref1;
+      origin = Utils.getDomain(origin);
+      if (Utils.isString(this.allow)) {
+        if (!this.checkRule(origin, this.allow)) {
           return false;
         }
       } else {
-        for (_i = 0, _len = allow.length; _i < _len; _i++) {
-          rule = allow[_i];
-          if (!this.checkRule(origin, rule)) {
-            return false;
+        flag = true;
+        _ref = this.allow;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          rule = _ref[_i];
+          if (!(this.checkRule(origin, rule))) {
+            continue;
           }
+          flag = false;
+          break;
+        }
+        if (flag) {
+          return false;
         }
       }
-      if (Utils.isString(deny)) {
-        if (this.checkRule(origin, rule)) {
+      if (Utils.isString(this.deny)) {
+        if (this.checkRule(origin, this.deny)) {
           return false;
         }
       } else {
-        for (_j = 0, _len1 = deny.length; _j < _len1; _j++) {
-          rule = deny[_j];
+        _ref1 = this.deny;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          rule = _ref1[_j];
           if (this.checkRule(origin, rule)) {
             return false;
           }
@@ -77,7 +86,7 @@ define(function(require, exports, module) {
       self = this;
       return Evemit.bind(window, 'message', function(e) {
         var origin, result, storage;
-        origin = Utils.getDomain(e.origin);
+        origin = e.origin;
         if (!self.checkOrigin(origin)) {
           return false;
         }

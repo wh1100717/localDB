@@ -516,7 +516,7 @@ var Utils = (function(){
     return iframe;
   };
   Utils.getDomain = function(url) {
-    return url.match(/https?:\/\/([^\/]+)/)[1];
+    return url.match(/(https?:\/\/)?([^\/]+)/)[2];
   };
   return Utils;
 })();
@@ -1775,94 +1775,6 @@ var Support = (function(){
   return Support;
 })();
 
-var UserData = (function(){
-
-  
-  var UserData;
-  UserData = (function() {
-
-    /* rewrite with coffee from https://github.com/marcuswestin/store.js
-    // Since #userData storage applies only to specific paths, we need to
-    // somehow link our data to a specific path.  We choose /favicon.ico
-    // as a pretty safe option, since all browsers already make a request to
-    // this URL anyway and being a 404 will not hurt us here.  We wrap an
-    // iframe pointing to the favicon in an ActiveXObject(htmlfile) object
-    // (see: http://msdn.microsoft.com/en-us/library/aa752574(v=VS.85).aspx)
-    // since the iframe access rules appear to allow direct access and
-    // manipulation of the document element, even for a 404 page.  This
-    // document can be used instead of the current document (which would
-    // have been limited to the current path) to perform #userData storage.
-     */
-    function UserData() {
-      var e, storageContainer;
-      try {
-        storageContainer = new ActiveXObject('htmlfile');
-        storageContainer.open();
-        storageContainer.write('<script>document.w=window</script><iframe src="/favicon.ico"></iframe>');
-        storageContainer.close();
-        this.storageOwner = storageContainer.w.frames[0].document;
-        this.storage = this.storageOwner.createElement('div');
-      } catch (_error) {
-        e = _error;
-
-        /*
-        // somehow ActiveXObject instantiation failed (perhaps some special
-        // security settings or otherwse), fall back to per-path storage
-         */
-        this.storage = document.createElement('div');
-        this.storageOwner = document.body;
-      }
-    }
-
-    UserData.prototype.localStorageName = "localStorage";
-
-    UserData.prototype.forbiddenCharsRegex = new RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g");
-
-    UserData.prototype.ieKeyFix = function(key) {
-      return key.replace(/^d/, '___$&').replace(this.forbiddenCharsRegex, '___');
-    };
-
-    UserData.prototype.setItem = function(key, val) {
-      key = this.ieKeyFix(key);
-      this.storageOwner.appendChild(this.storage);
-      this.storage.addBehavior("#default#userData");
-      this.storage.load(this.localStorageName);
-      this.storage.setAttribute(key, val);
-      this.storage.save(this.localStorageName);
-      return true;
-    };
-
-    UserData.prototype.getItem = function(key) {
-      key = this.ieKeyFix(key);
-      this.storageOwner.appendChild(this.storage);
-      this.storage.addBehavior("#default#userData");
-      this.storage.load(this.localStorageName);
-      return this.storage.getAttribute(key);
-    };
-
-    UserData.prototype.removeItem = function(key) {
-      key = this.ieKeyFix(key);
-      this.storageOwner.appendChild(this.storage);
-      this.storage.addBehavior("#default#userData");
-      this.storage.load(this.localStorageName);
-      this.storage.removeAttribute(key);
-      return this.storage.save(this.localStorageName);
-    };
-
-    UserData.prototype.size = function() {
-      return this.storage.XMLDocument.documentElement.attributes.length;
-    };
-
-    UserData.prototype.key = function(index) {
-      return this.storage.XMLDocument.documentElement.attributes[index];
-    };
-
-    return UserData;
-
-  })();
-  return UserData;
-})();
-
 var Sha1 = (function(){
 /*   
  *   A   JavaScript   implementation   of   the   Secure   Hash   Algorithm,   SHA-1,   as   defined
@@ -2076,18 +1988,19 @@ var Storage = (function(){
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");
         }
-      } else if (!Support.localstorage()) {
-        if (!Support.userdata()) {
-          throw new Error("no browser storage engine is supported in your browser!");
+        this.storage = sessionStorage;
+      } else {
+        if (!Support.localstorage()) {
+          throw new Error("localStorage is not supported!");
         }
-        this.userdata = new UserData();
+        this.storage = localStorage;
       }
     }
 
     Storage.prototype.key = function(index, callback) {
       var e, key;
       try {
-        key = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).key(index);
+        key = this.storage.key(index);
       } catch (_error) {
         e = _error;
         callback(-1, e);
@@ -2098,13 +2011,7 @@ var Storage = (function(){
     Storage.prototype.size = function(callback) {
       var e, size;
       try {
-        if (this.session) {
-          size = sessionStorage.length;
-        } else if (Support.localstorage()) {
-          size = localStorage.length;
-        } else {
-          size = this.userdata.size();
-        }
+        size = this.storage.length;
       } catch (_error) {
         e = _error;
         callback(-1, e);
@@ -2113,21 +2020,39 @@ var Storage = (function(){
     };
 
     Storage.prototype.setItem = function(key, val, callback) {
-      var data, e, flag, ls;
-      ls = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage));
+      var data, e, flag, self;
+      self = this;
       try {
         if (this.encrypt) {
           val = Encrypt.encode(val, this.token);
         }
-        ls.setItem(key, val);
+        this.storage.setItem(key, val);
       } catch (_error) {
         e = _error;
+
+        /* TODO
+         *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
+         *  增加过期时间配置项
+         */
+
+        /* TODO
+         *  这里有可能是非容量满等其他原因导致出错
+         *  所以需要设置一个最大尝试阀值，或者根据出错信息来判断是否继续循环
+         *  避免死循环
+         */
         flag = true;
+        if (this.encrypt) {
+          val = Encrypt.decode(val, this.token);
+        }
         data = Utils.parse(val);
         while (flag) {
           try {
             data.splice(0, 1);
-            ls.setItem(key, Utils.stringify(data));
+            val = Utils.stringify(data);
+            if (self.encrypt) {
+              val = Encrypt.encode(val, self.token);
+            }
+            self.storage.setItem(key, val);
             flag = false;
           } catch (_error) {}
         }
@@ -2143,7 +2068,7 @@ var Storage = (function(){
     Storage.prototype.getItem = function(key, callback) {
       var e, item;
       try {
-        item = (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).getItem(key);
+        item = this.storage.getItem(key);
         if (this.encrypt) {
           item = Encrypt.decode(item, this.token);
         }
@@ -2157,7 +2082,7 @@ var Storage = (function(){
     Storage.prototype.removeItem = function(key, callback) {
       var e;
       try {
-        (this.session ? sessionStorage : (this.userdata != null ? this.userdata : localStorage)).removeItem(key);
+        this.storage.removeItem(key);
       } catch (_error) {
         e = _error;
         callback(e);
@@ -2170,21 +2095,13 @@ var Storage = (function(){
       /*
        *  check it out: http://stackoverflow.com/questions/4391575/how-to-find-the-size-of-localstorage
        */
-      var allStrings, e, key, val;
+      var allStrings, e, key, val, _ref;
       try {
         allStrings = "";
-        if (this.tyep === 1) {
-          for (key in sessionStorage) {
-            val = sessionStorage[key];
-            allStrings += val;
-          }
-        } else if (Support.localstorage()) {
-          for (key in localStorage) {
-            val = localStorage[key];
-            allStrings += val;
-          }
-        } else {
-          console.log("todo");
+        _ref = this.storage;
+        for (key in _ref) {
+          val = _ref[key];
+          allStrings += val;
         }
       } catch (_error) {
         e = _error;
@@ -2451,26 +2368,35 @@ var Server = (function(){
      */
 
     Server.prototype.checkOrigin = function(origin) {
-      var rule, _i, _j, _len, _len1;
-      if (Utils.isString(allow)) {
-        if (!this.checkRule(origin, rule)) {
+      var flag, rule, _i, _j, _len, _len1, _ref, _ref1;
+      origin = Utils.getDomain(origin);
+      if (Utils.isString(this.allow)) {
+        if (!this.checkRule(origin, this.allow)) {
           return false;
         }
       } else {
-        for (_i = 0, _len = allow.length; _i < _len; _i++) {
-          rule = allow[_i];
-          if (!this.checkRule(origin, rule)) {
-            return false;
+        flag = true;
+        _ref = this.allow;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          rule = _ref[_i];
+          if (!(this.checkRule(origin, rule))) {
+            continue;
           }
+          flag = false;
+          break;
+        }
+        if (flag) {
+          return false;
         }
       }
-      if (Utils.isString(deny)) {
-        if (this.checkRule(origin, rule)) {
+      if (Utils.isString(this.deny)) {
+        if (this.checkRule(origin, this.deny)) {
           return false;
         }
       } else {
-        for (_j = 0, _len1 = deny.length; _j < _len1; _j++) {
-          rule = deny[_j];
+        _ref1 = this.deny;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          rule = _ref1[_j];
           if (this.checkRule(origin, rule)) {
             return false;
           }
@@ -2503,7 +2429,7 @@ var Server = (function(){
       self = this;
       return Evemit.bind(window, 'message', function(e) {
         var origin, result, storage;
-        origin = Utils.getDomain(e.origin);
+        origin = e.origin;
         if (!self.checkOrigin(origin)) {
           return false;
         }
