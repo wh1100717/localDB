@@ -35,20 +35,7 @@ var BinaryParser = (function(){
     maxBits[i] = Math.pow(2, i);
   }
 
-  function BinaryParser(bigEndian, allowExceptions) {
-    if (!(this instanceof BinaryParser)) return new BinaryParser(bigEndian, allowExceptions);
-
-    this.bigEndian = bigEndian;
-    this.allowExceptions = allowExceptions;
-  };
-
-  BinaryParser.warn = function warn(msg) {
-    if (this.allowExceptions) {
-      throw new Error(msg);
-    }
-
-    return 1;
-  };
+  var BinaryParser = {}
 
   BinaryParser.decodeInt = function decodeInt(data, bits, signed, forceBigEndian) {
     var b = new this.Buffer(this.bigEndian || forceBigEndian, data),
@@ -62,7 +49,6 @@ var BinaryParser = (function(){
     var max = maxBits[bits];
 
     if (data >= max || data < -(max / 2)) {
-      this.warn("encodeInt::overflow");
       data = 0;
     }
 
@@ -242,7 +228,7 @@ var Utils = (function(){
   toString = Object.prototype.toString;
 
   /*
-   *  isEqual function is implemented by underscore and I just rewrite in my project.
+   *  isEqual function is implemented by underscore and I just rewrite in coffee.
    *  https://github.com/jashkenas/underscore/blob/master/underscore.js
    */
   eq = function(a, b, aStack, bStack) {
@@ -348,7 +334,7 @@ var Utils = (function(){
     }
   };
   Utils.has = function(obj, key) {
-    return obj !== null && obj !== void 0 && Object.prototype.hasOwnProperty.call(obj, key);
+    return (obj != null) && Object.prototype.hasOwnProperty.call(obj, key);
   };
   Utils.isEqual = function(a, b) {
     return eq(a, b, [], []);
@@ -415,11 +401,10 @@ var Utils = (function(){
     return (new ObjectID(objectId)).getTime();
   };
   Utils.toUnicode = function(string) {
-    var char, index, len, result, uniChar;
+    var char, index, result, uniChar;
     result = [''];
     index = 1;
-    len = string.length;
-    while (index <= len) {
+    while (index <= string.length) {
       char = string.charCodeAt(index - 1);
       uniChar = "00" + char.toString(16);
       uniChar = uniChar.slice(-4);
@@ -429,9 +414,7 @@ var Utils = (function(){
     return result.join('\\u');
   };
   Utils.fromUnicode = function(string) {
-    var repStr;
-    repStr = string.replace(/\\/g, "%");
-    return unescape(repStr);
+    return unescape(string.replace(/\\/g, "%"));
   };
   Utils.getSubValue = function(value, key) {
     var k, keyArr, _i, _len;
@@ -498,6 +481,42 @@ var Utils = (function(){
       console.log(result);
     }
     return result;
+  };
+
+  /*
+   *  根据src获取iframe
+   */
+  Utils.getIframe = function(src) {
+    var allFrames, frame, _i, _len;
+    allFrames = document.getElementsByTagName("iframe");
+    for (_i = 0, _len = allFrames.length; _i < _len; _i++) {
+      frame = allFrames[_i];
+      if (frame.src.indexOf(src) === 0) {
+        return frame;
+      }
+    }
+    return null;
+  };
+
+  /*
+   *  创建Iframe
+   */
+  Utils.createIframe = function(src) {
+    var iframe;
+    iframe = Utils.getIframe(src);
+    if (iframe != null) {
+      return iframe;
+    }
+    iframe = document.createElement("iframe");
+    iframe.src = src;
+    iframe.style.width = "1px";
+    iframe.style.height = "1px";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe;
+  };
+  Utils.getDomain = function(url) {
+    return url.match(/https?:\/\/([^\/]+)/)[1];
   };
   return Utils;
 })();
@@ -1987,7 +2006,7 @@ var Encrypt = (function(){
    */
   Encrypt.encode = function(value, key) {
     var comEncodeVal, encodeVal, index, len, mod, resultArr, resultStr, uniKey, uniKeyArr, uniValue, uniValueArr, unicodeKey, unicodeValue, _i, _len;
-    if (value === null) {
+    if (value == null) {
       return null;
     }
     resultArr = [''];
@@ -2180,62 +2199,6 @@ var Storage = (function(){
   return Storage;
 })();
 
-var Proxy = (function(){
-
-  
-  var Proxy;
-  Proxy = {};
-  return Proxy;
-})();
-
-var Engine = (function(){
-
-  
-  var Engine;
-  Engine = (function() {
-    function Engine(session, encrypt, name, proxy) {
-      this.session = session;
-      this.encrypt = encrypt;
-      this.name = name;
-      this.proxy = proxy;
-      if (this.proxy != null) {
-        this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
-      } else {
-        this.storage = new Storage(this.session, this.encrypt, this.name);
-      }
-      return;
-    }
-
-    Engine.prototype.key = function(index, callback) {
-      return (this.proxy != null ? this.proxy : this.storage).key(index, callback);
-    };
-
-    Engine.prototype.size = function(callback) {
-      return (this.proxy != null ? this.proxy : this.storage).size(callback);
-    };
-
-    Engine.prototype.setItem = function(key, val, callback) {
-      return (this.proxy != null ? this.proxy : this.storage).setItem(key, val, callback);
-    };
-
-    Engine.prototype.getItem = function(key, callback) {
-      return (this.proxy != null ? this.proxy : this.storage).getItem(key, callback);
-    };
-
-    Engine.prototype.removeItem = function(key, callback) {
-      return (this.proxy != null ? this.proxy : this.storage).removeItem(key, callback);
-    };
-
-    Engine.prototype.usage = function(callback) {
-      return (this.proxy != null ? this.proxy : this.storage).usage(callback);
-    };
-
-    return Engine;
-
-  })();
-  return Engine;
-})();
-
 var Evemit = (function(){
 var __slice = [].slice;
 
@@ -2250,6 +2213,9 @@ var __slice = [].slice;
   Evemit = (function() {
     function Evemit(obj) {
       var i, j, _ref;
+      if (obj == null) {
+        obj = {};
+      }
       if (!Utils.isObject(obj)) {
         throw new Error("input type error: Input should be object");
       }
@@ -2326,9 +2292,142 @@ var __slice = [].slice;
   return Evemit;
 })();
 
-var Server = (function(){
-var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var Proxy = (function(){
 
+  
+  var Proxy;
+  Proxy = (function() {
+    function Proxy(session, encrypt, token, proxy) {
+      var self;
+      this.session = session;
+      this.encrypt = encrypt;
+      this.token = token;
+      this.proxy = proxy;
+      self = this;
+      this.evemit = new Evemit();
+      Evemit.bind(window, 'message', function(e) {
+        var result;
+        result = JSON.parse(e.data);
+        if (this.proxy !== e.origin) {
+          return;
+        }
+        return this.evemit.emit(result.eve);
+      });
+    }
+
+    Proxy.prototype.sendMessage = function(type, data, callback) {
+      var eve, iframe, self;
+      self = this;
+      eve = type + "|" + new Date().getTime();
+      data.eve = eve;
+      data.session = this.session;
+      data.encrypt = this.encrypt;
+      data.token = this.token;
+      this.evemit.once(eve, callback);
+      data = JSON.stringify(data);
+      iframe = Utils.getIframe(this.proxy);
+      if (iframe != null) {
+        return iframe.contentWindow.postMessage(data, this.proxy);
+      } else {
+        iframe = Utils.createIframe(this.proxy);
+        return iframe.onload = function() {
+          return iframe.contentWindow.postMessage(data, self.proxy);
+        };
+      }
+    };
+
+    Proxy.prototype.key = function(index, callback) {
+      return this.sendMessage('key', {
+        index: index
+      }, callback);
+    };
+
+    Proxy.prototype.size = function(callback) {
+      return this.sendMessage('size', {}, callback);
+    };
+
+    Proxy.prototype.setItem = function(key, val, callback) {
+      return this.sendMessage('setItem', {
+        key: key,
+        val: val
+      }, callback);
+    };
+
+    Proxy.prototype.getItem = function(key, callback) {
+      return this.sendMessage('getItem', {
+        key: key
+      }, callback);
+    };
+
+    Proxy.prototype.removeItem = function(key, callback) {
+      return this.sendMessage('removeItem', {
+        key: key
+      }, callback);
+    };
+
+    Proxy.prototype.usage = function(callback) {
+      return this.sendMessage('usage', {}, callback);
+    };
+
+    return Proxy;
+
+  })();
+  return Proxy;
+})();
+
+var Engine = (function(){
+
+  
+  var Engine;
+  Engine = (function() {
+    function Engine(session, encrypt, name, proxy) {
+      this.session = session;
+      this.encrypt = encrypt;
+      this.name = name;
+      this.proxy = proxy;
+      if (this.proxy != null) {
+        this.proxy = this.proxy.trim();
+        if (this.proxy.indexOf("http") === -1) {
+          this.proxy = "http://" + this.proxy;
+        }
+        this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
+      } else {
+        this.storage = new Storage(this.session, this.encrypt, this.name);
+      }
+      return;
+    }
+
+    Engine.prototype.key = function(index, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).key(index, callback);
+    };
+
+    Engine.prototype.size = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).size(callback);
+    };
+
+    Engine.prototype.setItem = function(key, val, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).setItem(key, val, callback);
+    };
+
+    Engine.prototype.getItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).getItem(key, callback);
+    };
+
+    Engine.prototype.removeItem = function(key, callback) {
+      return (this.proxy != null ? this.proxy : this.storage).removeItem(key, callback);
+    };
+
+    Engine.prototype.usage = function(callback) {
+      return (this.proxy != null ? this.proxy : this.storage).usage(callback);
+    };
+
+    return Engine;
+
+  })();
+  return Engine;
+})();
+
+var Server = (function(){
 
   
   var Server;
@@ -2346,27 +2445,71 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
     };
 
 
-    /* TODO
-     *  目前只是简单的判断一下origin是否在allow对应的List里面，只是简单的功能实现
-     *  需要讨论实现具体的域白名单和黑名单的解析方案
+    /*
+     *  支持正则表达式
+     *  支持*.xxx.com/www.*.com/www.xxx.*等格式
      */
 
     Server.prototype.checkOrigin = function(origin) {
-      return __indexOf.call(this.allow, origin) >= 0;
+      var rule, _i, _j, _len, _len1;
+      if (Utils.isString(allow)) {
+        if (!this.checkRule(origin, rule)) {
+          return false;
+        }
+      } else {
+        for (_i = 0, _len = allow.length; _i < _len; _i++) {
+          rule = allow[_i];
+          if (!this.checkRule(origin, rule)) {
+            return false;
+          }
+        }
+      }
+      if (Utils.isString(deny)) {
+        if (this.checkRule(origin, rule)) {
+          return false;
+        }
+      } else {
+        for (_j = 0, _len1 = deny.length; _j < _len1; _j++) {
+          rule = deny[_j];
+          if (this.checkRule(origin, rule)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    };
+
+    Server.prototype.checkRule = function(url, rule) {
+      var seg, segList, _i, _len;
+      if (Utils.isRegex(rule)) {
+        return rule.test(url);
+      }
+      if (rule.indexOf('*') !== -1) {
+        segList = rule.split("*");
+        for (_i = 0, _len = segList.length; _i < _len; _i++) {
+          seg = segList[_i];
+          if (url.indexOf(seg) === -1) {
+            return false;
+          }
+        }
+      } else {
+        return url === rule;
+      }
+      return true;
     };
 
     Server.prototype.init = function() {
       var self;
       self = this;
-      return Evemit.bind('message', function(e) {
+      return Evemit.bind(window, 'message', function(e) {
         var origin, result, storage;
-        origin = e.origin;
+        origin = Utils.getDomain(e.origin);
         if (!self.checkOrigin(origin)) {
           return false;
         }
         result = JSON.parse(e.data);
         storage = result.session ? self.ss : self.ls;
-        switch (result.type) {
+        switch (result.eve.split("|")[0]) {
           case "key":
             return storage.key(result.index, function(data, err) {
               result.data = data;
@@ -2414,14 +2557,20 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 var LocalDB = (function(){
 
   
-  var LocalDB, dbPrefix;
+  var Collection, Engine, LocalDB, Server, Support, Utils, dbPrefix, version;
+  Utils = require("lib/utils");
+  Collection = require("lib/collection");
+  Engine = require("lib/engine");
+  Support = require("lib/support");
+  Server = require("lib/server");
   dbPrefix = "ldb_";
+  version = "0.0.1"
   LocalDB = (function() {
 
     /*
      *  Constructor
-     *  var db = new LocalDB('foo')
-     *  var db = new LocaoDB('foo', {
+     *  var db = new LocalDB("foo")
+     *  var db = new LocaoDB("foo", {
             session: true,
             encrypt: true,
             proxy: "http://www.foo.com/getProxy.html"
@@ -2459,7 +2608,7 @@ var LocalDB = (function(){
 
     /*
      *  Get Collection
-     *  var collection = db.collection('bar')
+     *  var collection = db.collection("bar")
      */
 
     LocalDB.prototype.collection = function(collectionName) {
@@ -2482,12 +2631,16 @@ var LocalDB = (function(){
   /*
    *  Check Browser Feature Compatibility
    */
-  LocalDB.support = Support;
+  LocalDB.getSupport = function() {
+    return Support;
+  };
 
   /*
    *  Version
    */
-  LocalDB.version = '0.0.1'
+  LocalDB.getVersion = function() {
+    return version;
+  };
 
   /*
    *  Get Timestamp
@@ -2508,8 +2661,8 @@ var LocalDB = (function(){
   /*
    *  Proxy Server Init
    *  LocalDB.init({
-          allow: ['*.baidu.com', 'pt.aliexpress.com']
-          deny: ['map.baidu.com']
+          allow: ["*.baidu.com", "pt.aliexpress.com"]
+          deny: ["map.baidu.com"]
       })
    */
   LocalDB.init = function(config) {

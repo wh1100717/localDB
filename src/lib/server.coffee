@@ -4,6 +4,7 @@ define (require, exports, module) ->
 
     Storage = require('lib/storage')
     Evemit = require('lib/evemit')
+    Utils = require('lib/utils')
 
     class Server
 
@@ -15,16 +16,38 @@ define (require, exports, module) ->
 
         postParent: (mes, origin) -> parent.window.postParent(JSON.stringify(mes), @origin)
 
-        ### TODO
-         *  目前只是简单的判断一下origin是否在allow对应的List里面，只是简单的功能实现
-         *  需要讨论实现具体的域白名单和黑名单的解析方案
         ###
-        checkOrigin: (origin) -> origin in @allow
+         *  支持正则表达式
+         *  支持*.xxx.com/www.*.com/www.xxx.*等格式
+        ###
+        checkOrigin: (origin) ->
+            if Utils.isString(allow)
+                return false if not @checkRule(origin, rule)
+            else
+                for rule in allow when not @checkRule(origin, rule)
+                    return false
+            if Utils.isString(deny)
+                return false if @checkRule(origin, rule)
+            else
+                for rule in deny when @checkRule(origin, rule)
+                    return false
+            return true
+
+        checkRule: (url, rule) ->
+            return rule.test(url) if Utils.isRegex(rule)
+            if rule.indexOf('*') isnt -1
+                segList = rule.split("*")
+                for seg in segList
+                    return false if url.indexOf(seg) is -1
+            else
+                return url is rule
+            return true
+
 
         init: ->
             self = @
             Evemit.bind window, 'message', (e) ->
-                origin = e.origin
+                origin = Utils.getDomain(e.origin)
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data
                 storage = if result.session then self.ss else self.ls

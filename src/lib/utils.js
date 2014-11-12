@@ -294,5 +294,8 @@ define(function(require, exports, module) {
     document.body.appendChild(iframe);
     return iframe;
   };
+  Utils.getDomain = function(url) {
+    return url.match(/https?:\/\/([^\/]+)/)[1];
+  };
   return module.exports = Utils;
 });
