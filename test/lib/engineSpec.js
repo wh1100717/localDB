@@ -5,8 +5,8 @@ define(function(require, exports, module) {
   Engine = require("lib/engine");
   return describe("Engine", function() {
     var engine, engineProxy;
-    engine = new Engine(true, true, "test");
-    engineProxy = new Engine(false, false, "test2", "localdb.emptystack.net");
+    engine = new Engine("window", true, "test");
+    engineProxy = new Engine("none", true, "test");
     it("Init", function() {
       expect(engine instanceof Engine).toEqual(true);
       return expect(engineProxy instanceof Engine).toEqual(true);

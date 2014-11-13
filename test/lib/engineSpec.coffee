@@ -5,9 +5,9 @@ define (require, exports, module) ->
 
     describe "Engine", ->
 
-        engine = new Engine(true, true, "test")
-        # engineProxy = new Engine(true, true, "test")
-        engineProxy = new Engine(false, false, "test2", "localdb.emptystack.net")
+        engine = new Engine("window", true, "test")
+        engineProxy = new Engine("none", true, "test")
+        # engineProxy = new Engine("none", false, "test2", "localdb.emptystack.net")
 
         it "Init", ->
             expect(engine instanceof Engine).toEqual(true)

@@ -18,7 +18,7 @@ define(function(require, exports, module) {
     it("new LocalDB", function() {
       var db;
       db = new LocalDB("foo", {
-        session: false,
+        expire: "none",
         encrypt: false
       });
       return expect(db instanceof LocalDB).toEqual(true);
@@ -26,7 +26,7 @@ define(function(require, exports, module) {
     it("new LocalDB with proxy", function() {
       var db;
       db = new LocalDB("foo_proxy", {
-        session: false,
+        expire: "none",
         encrypt: false,
         proxy: "http://localdb.emptystack.net/server.html"
       });
@@ -35,12 +35,12 @@ define(function(require, exports, module) {
     it("options", function() {
       var db, options;
       db = new LocalDB("foo2", {
-        session: false,
+        expire: "window",
         encrypt: false
       });
       options = db.options();
       expect(options.name).toEqual("foo2");
-      expect(options.session).toEqual(false);
+      expect(options.expire).toEqual("window");
       expect(options.encrypt).toEqual(false);
       return expect(options.proxy != null).toEqual(false);
     });

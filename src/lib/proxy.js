@@ -5,9 +5,9 @@ define(function(require, exports, module) {
   Evemit = require('lib/evemit');
   Utils = require('lib/utils');
   Proxy = (function() {
-    function Proxy(session, encrypt, token, proxy) {
+    function Proxy(expire, encrypt, token, proxy) {
       var self;
-      this.session = session;
+      this.expire = expire;
       this.encrypt = encrypt;
       this.token = token;
       this.proxy = proxy;
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
       self = this;
       eve = type + "|" + new Date().getTime();
       data.eve = eve;
-      data.session = this.session;
+      data.expire = this.expire;
       data.encrypt = this.encrypt;
       data.token = this.token;
       this.evemit.once(eve, callback);

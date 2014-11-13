@@ -6,19 +6,23 @@ define(function(require, exports, module) {
   Storage = require('lib/storage');
   Proxy = require('lib/proxy');
   Engine = (function() {
-    function Engine(session, encrypt, name, proxy) {
-      this.session = session;
+    function Engine(expire, encrypt, name, proxy) {
+      this.expire = expire;
       this.encrypt = encrypt;
       this.name = name;
       this.proxy = proxy;
+
+      /* TODO
+       *  增加 @expire 类型判断，目前应该只有'none'和'window'，后续会增加'browser'和Date()类型
+       */
       if (this.proxy != null) {
         this.proxy = this.proxy.trim();
         if (this.proxy.indexOf("http") === -1) {
           this.proxy = "http://" + this.proxy;
         }
-        this.proxy = new Proxy(this.session, this.encrypt, this.name, this.proxy);
+        this.proxy = new Proxy(this.expire, this.encrypt, this.name, this.proxy);
       } else {
-        this.storage = new Storage(this.session, this.encrypt, this.name);
+        this.storage = new Storage(this.expire, this.encrypt, this.name);
       }
       return;
     }

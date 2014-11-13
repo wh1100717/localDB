@@ -10,8 +10,7 @@ define(function(require, exports, module) {
       this.config = config;
       this.allow = this.config.allow || "*";
       this.deny = this.config.deny || [];
-      this.ss = new Storage(true);
-      this.ls = new Storage(false);
+      this.storages = {};
     }
 
     Server.prototype.postParent = function(mes, origin) {
@@ -91,7 +90,10 @@ define(function(require, exports, module) {
           return false;
         }
         result = JSON.parse(e.data);
-        storage = result.session ? self.ss : self.ls;
+        if (self.storages[result.token] == null) {
+          self.storages[result.token] = new Storage(result.expire, result.encrypt, result.token);
+        }
+        storage = self.storages[result.token];
         switch (result.eve.split("|")[0]) {
           case "key":
             return storage.key(result.index, function(data, err) {

@@ -7,7 +7,7 @@ define (require, exports, module) ->
 
     class Proxy
 
-        constructor: (@session, @encrypt, @token, @proxy) ->
+        constructor: (@expire, @encrypt, @token, @proxy) ->
             self = @
             @evemit = new Evemit()
             Evemit.bind window, 'message', (e) ->
@@ -22,7 +22,7 @@ define (require, exports, module) ->
             self = @
             eve = type + "|" + new Date().getTime()
             data.eve = eve
-            data.session = @session
+            data.expire = @expire
             data.encrypt = @encrypt
             data.token = @token
             @evemit.once eve, callback

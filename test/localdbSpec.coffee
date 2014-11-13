@@ -16,14 +16,14 @@ define (require, exports, module) ->
 
         it "new LocalDB", ->
             db = new LocalDB "foo", {
-                session: false
+                expire: "none"
                 encrypt: false
             }
             expect(db instanceof LocalDB).toEqual(true)
 
         it "new LocalDB with proxy", ->
             db = new LocalDB "foo_proxy", {
-                session: false
+                expire: "none"
                 encrypt: false
                 proxy: "http://localdb.emptystack.net/server.html"
             }
@@ -31,12 +31,12 @@ define (require, exports, module) ->
 
         it "options", ->
             db = new LocalDB "foo2", {
-                session: false
+                expire: "window"
                 encrypt: false
             }
             options = db.options()
             expect(options.name).toEqual("foo2")
-            expect(options.session).toEqual(false)
+            expect(options.expire).toEqual("window")
             expect(options.encrypt).toEqual(false)
             expect(options.proxy?).toEqual(false)
 

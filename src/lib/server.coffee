@@ -11,8 +11,7 @@ define (require, exports, module) ->
         constructor: (@config) ->
             @allow = @config.allow or "*"
             @deny = @config.deny or []
-            @ss = new Storage(true)
-            @ls = new Storage(false)
+            @storages = {}
 
         postParent: (mes, origin) ->
             top.postMessage(JSON.stringify(mes), origin)
@@ -54,7 +53,9 @@ define (require, exports, module) ->
                 origin = e.origin
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data
-                storage = if result.session then self.ss else self.ls
+                if not self.storages[result.token]?
+                    self.storages[result.token] = new Storage(result.expire, result.encrypt, result.token)
+                storage = self.storages[result.token]
                 switch result.eve.split("|")[0]
                     when "key"
                         storage.key result.index, (data, err) ->

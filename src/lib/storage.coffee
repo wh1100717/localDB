@@ -7,11 +7,11 @@ define (require, exports, module) ->
 
     class Storage
 
-        constructor: (@session, @encrypt, @token) ->
-            if @session
+        constructor: (@expire, @encrypt, @token) ->
+            if @expire is "window"
                 throw new Error("sessionStorage is not supported!") if not Support.sessionstorage()
                 @storage = sessionStorage
-            else
+            else if @expire is "none"
                 throw new Error("localStorage is not supported!") if not Support.localstorage()
                 @storage = localStorage
 

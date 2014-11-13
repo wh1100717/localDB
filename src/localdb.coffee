@@ -16,29 +16,31 @@ define (require, exports, module) ->
          *  Constructor
          *  var db = new LocalDB("foo")
          *  var db = new LocaoDB("foo", {
-                session: true,
+                expire: "window",
                 encrypt: true,
                 proxy: "http://www.foo.com/getProxy.html"
             })
          *
-         *  Engine will decide to choose the best waty to handle the data automatically.
-         *  when session is true, the data will be alive while browser stay open. e.g. sessionStorage
-         *  when session is false, the data will be alive even after browser is closed. e.g. localStorage
-         *  true by default
+         *  Engine will decide to choose the best way to handle the data automatically.
+            *   when expire is set as "window", the data wil be alive while the window page stay open
+            *   when expire is set as "none", the data will be always stored even after the browser is closed.
+            *   "window" by default
+            *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
+            *   TODO: Date(), means the data will be alive until Date()
          *  The data will be stored encrypted if the encrpyt options is true, true by default.
         ###
         constructor: (dbName, options = {}) ->
             throw new Error("dbName should be specified.") if not dbName?
             @name = dbPrefix + dbName
-            @session = if options.session? then options.session else true
+            @expire = if options.expire? then options.expire else "window"
             @encrypt = if options.encrypt? then options.encrypt else true
             @proxy = if options.proxy? then options.proxy else null
-            @engine = new Engine(@session, @encrypt, @name, @proxy)
+            @engine = new Engine(@expire, @encrypt, @name, @proxy)
 
         # get options
         options: -> {
             name: @name.substr(dbPrefix.length)
-            session: @session
+            expire: @expire
             encrypt: @encrypt
             proxy: @proxy
         }

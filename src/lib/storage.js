@@ -6,16 +6,16 @@ define(function(require, exports, module) {
   Utils = require('lib/utils');
   Encrypt = require('lib/encrypt');
   Storage = (function() {
-    function Storage(session, encrypt, token) {
-      this.session = session;
+    function Storage(expire, encrypt, token) {
+      this.expire = expire;
       this.encrypt = encrypt;
       this.token = token;
-      if (this.session) {
+      if (this.expire === "window") {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");
         }
         this.storage = sessionStorage;
-      } else {
+      } else if (this.expire === "none") {
         if (!Support.localstorage()) {
           throw new Error("localStorage is not supported!");
         }
