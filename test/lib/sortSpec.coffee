@@ -1,8 +1,8 @@
 define (require, exports, module) ->
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
 
-    describe 'sort', ->
-        it 'quickSort simple asc', ->
+    describe "sort", ->
+        it "quickSort simple asc", ->
             array = [{count:1},{count:3},{},{count:2}]
             sortArray = [
                 {}
@@ -10,9 +10,9 @@ define (require, exports, module) ->
                 {count:2}
                 {count:3}
             ]
-            result = Utils.quickSort(array,'count',1)
+            result = Utils.quickSort(array,"count",1)
             expect(sortArray).toEqual(result)
-        it 'quickSort simple desc', ->
+        it "quickSort simple desc", ->
             array = [{count:1},{count:3},{},{count:2}]
             sortArray = [
                 {count:3}
@@ -20,9 +20,9 @@ define (require, exports, module) ->
                 {count:1}
                 {}
             ]
-            result = Utils.quickSort(array,'count',-1)
+            result = Utils.quickSort(array,"count",-1)
             expect(result).toEqual(sortArray)
-        it 'quickSort complex asc', ->
+        it "quickSort complex asc", ->
             array = [
                 {obj:{obj:{count:3}}}
                 {obj:{obj:{}}}
@@ -37,9 +37,9 @@ define (require, exports, module) ->
                 {obj:{obj:{count:2}}}
                 {obj:{obj:{count:3}}}
             ]
-            result = Utils.quickSort(array,'obj.obj.count',1)
+            result = Utils.quickSort(array,"obj.obj.count",1)
             expect(sortArray).toEqual(result)
-        it 'quickSort complex desc', ->
+        it "quickSort complex desc", ->
             array = [
                 {obj:{obj:{count:3}}}
                 {obj:{obj:{}}}
@@ -54,9 +54,9 @@ define (require, exports, module) ->
                 {obj:{obj:{}}}
                 {obj:{}}
             ]
-            result = Utils.quickSort(array,'obj.obj.count',-1)
+            result = Utils.quickSort(array,"obj.obj.count",-1)
             expect(sortArray).toEqual(result)
-        it 'sort complex', ->
+        it "sort complex", ->
             data = [
                 {obj:{obj:{count:3,age:3}}}
                 {obj:{obj:{}}}
@@ -76,7 +76,7 @@ define (require, exports, module) ->
             sort = {"obj.obj.count":1,"obj.obj.age":-1}
             result = Utils.sortObj(data, sort)
             expect(result).toEqual(sortData)
-        it 'sort simple', ->
+        it "sort simple", ->
             data = [
                 {count:3,age:3}
                 {}

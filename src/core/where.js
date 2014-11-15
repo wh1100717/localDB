@@ -2,10 +2,10 @@
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(function(require, exports, module) {
-  'use strict';
+  "use strict";
   var Utils, Where, arrayCheck, dotCheck, isKeyReserved, keywordCheck, numberCheck, objectCheck, regexCheck, reservedKeys, stringCheck, valueCheck;
-  Utils = require('lib/utils');
-  reservedKeys = ['$gt', '$gte', '$lt', '$lte', '$ne', '$in', '$nin', '$and', '$nor', '$or', '$not', '$exists', '$type', '$mod', '$regex', '$all', '$elemMatch', '$size'];
+  Utils = require("lib/utils");
+  reservedKeys = ["$gt", "$gte", "$lt", "$lte", "$ne", "$in", "$nin", "$and", "$nor", "$or", "$not", "$exists", "$type", "$mod", "$regex", "$all", "$elemMatch", "$size"];
   isKeyReserved = function(key) {
     return __indexOf.call(reservedKeys, key) >= 0;
   };
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
     var firstKey;
     firstKey = key.split(".")[0];
     return Where(data[/\d/.test(firstKey) ? Number(firstKey) : firstKey], new function() {
-      this[key.substr(key.indexOf('.') + 1)] = condition;
+      this[key.substr(key.indexOf(".") + 1)] = condition;
     });
   };
   valueCheck = function(data, key, condition) {

@@ -1,9 +1,9 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Where = require('lib/where')
-    Utils = require('lib/utils')
-    Projection = require('lib/projection')
+    Utils = require("lib/utils")
+    Where = require("core/where")
+    Projection = require("core/projection")
 
     Operation = {}
 
@@ -53,7 +53,7 @@ define (require, exports, module) ->
         return Projection.generate(result, projection)
 
     Update = {
-        isKeyReserved: (key) -> key in ['$inc', '$set', '$mul', '$rename', '$unset', '$max', '$min']
+        isKeyReserved: (key) -> key in ["$inc", "$set", "$mul", "$rename", "$unset", "$max", "$min"]
         generate: (data, action, value, where, multi, upsert) ->
             return data if not Update.isKeyReserved(action)
             for k, v of value

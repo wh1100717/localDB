@@ -1,7 +1,7 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
 
     Projection = {}
 

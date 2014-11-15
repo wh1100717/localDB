@@ -1,7 +1,7 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    mod = 'lST$*@?'
+    mod = "lST$*@?"
 
     Support = {}
 

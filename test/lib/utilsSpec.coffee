@@ -1,14 +1,14 @@
 define (require, exports, module) ->
+    "use strict"
 
-    'use strict'
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
 
-    describe 'Utils', ->
-        it 'isType', ->
+    describe "Utils", ->
+        it "isType", ->
             expect(Utils.isType(new Object(),"object")).toBe(true)
             expect(Utils.isType(new String("abc"),"object")).toBe(false)
 
-        it 'isObject', ->
+        it "isObject", ->
             expect(Utils.isObject(new Object())).toBe(true)
             expect(Utils.isObject({})).toBe(true)
             expect(Utils.isObject(new String("abc"))).toBe(false)
@@ -20,7 +20,7 @@ define (require, exports, module) ->
             expect(Utils.isObject(->)).toBe(false)
             expect(Utils.isObject(new RegExp("abc"))).toBe(false)
             expect(Utils.isObject(/abc/)).toBe(false)
-        it 'isString', ->
+        it "isString", ->
             expect(Utils.isString(new Object())).toBe(false)
             expect(Utils.isString({})).toBe(false)
             expect(Utils.isString(new String("abc"))).toBe(true)
@@ -32,7 +32,7 @@ define (require, exports, module) ->
             expect(Utils.isString(->)).toBe(false)
             expect(Utils.isString(new RegExp("abc"))).toBe(false)
             expect(Utils.isString(/abc/)).toBe(false)
-        it 'isNumber', ->
+        it "isNumber", ->
             expect(Utils.isNumber(new Object())).toBe(false)
             expect(Utils.isNumber({})).toBe(false)
             expect(Utils.isNumber(new String("abc"))).toBe(false)
@@ -44,7 +44,7 @@ define (require, exports, module) ->
             expect(Utils.isNumber(->)).toBe(false)
             expect(Utils.isNumber(new RegExp("abc"))).toBe(false)
             expect(Utils.isNumber(/abc/)).toBe(false)
-        it 'isArray', ->
+        it "isArray", ->
             expect(Utils.isArray(new Object())).toBe(false)
             expect(Utils.isArray({})).toBe(false)
             expect(Utils.isArray(new String("abc"))).toBe(false)
@@ -56,7 +56,7 @@ define (require, exports, module) ->
             expect(Utils.isArray(->)).toBe(false)
             expect(Utils.isArray(new RegExp("abc"))).toBe(false)
             expect(Utils.isArray(/abc/)).toBe(false)
-        it 'isFunction', ->
+        it "isFunction", ->
             expect(Utils.isFunction(new Object())).toBe(false)
             expect(Utils.isFunction({})).toBe(false)
             expect(Utils.isFunction(new String("abc"))).toBe(false)
@@ -68,7 +68,7 @@ define (require, exports, module) ->
             expect(Utils.isFunction(->)).toBe(true)
             expect(Utils.isFunction(new RegExp("abc"))).toBe(false)
             expect(Utils.isFunction(/abc/)).toBe(false)
-        it 'isRegex', ->
+        it "isRegex", ->
             expect(Utils.isRegex(new Object())).toBe(false)
             expect(Utils.isRegex({})).toBe(false)
             expect(Utils.isRegex(new String("abc"))).toBe(false)
@@ -80,17 +80,17 @@ define (require, exports, module) ->
             expect(Utils.isRegex(->)).toBe(false)
             expect(Utils.isRegex(new RegExp("abc"))).toBe(true)
             expect(Utils.isRegex(/abc/)).toBe(true)
-        it 'parse', ->
+        it "parse", ->
             expect(Utils.parse()).toEqual([])
-            expect(Utils.parse('[{"a":1}]')).toEqual([{a:1}])
-            expect(Utils.parse('[1,2,3]')).toEqual([1,2,3])
-        it 'stringify', ->
-            expect(Utils.stringify()).toEqual('[]')
-            expect(Utils.stringify([{a:1}])).toEqual('[{"a":1}]')
-            expect(Utils.stringify([1,2,3])).toEqual('[1,2,3]')
-        it 'isEqual', ->
-            expect(Utils.isEqual('aaa','bbb')).toBe(false)
-            expect(Utils.isEqual('aaa','aaa')).toBe(true)
+            expect(Utils.parse("[{\"a\":1}]")).toEqual([{a:1}])
+            expect(Utils.parse("[1,2,3]")).toEqual([1,2,3])
+        it "stringify", ->
+            expect(Utils.stringify()).toEqual("[]")
+            expect(Utils.stringify([{a:1}])).toEqual("[{\"a\":1}]")
+            expect(Utils.stringify([1,2,3])).toEqual("[1,2,3]")
+        it "isEqual", ->
+            expect(Utils.isEqual("aaa","bbb")).toBe(false)
+            expect(Utils.isEqual("aaa","aaa")).toBe(true)
             expect(Utils.isEqual(1,2)).toBe(false)
             expect(Utils.isEqual(1,1)).toBe(true)
             expect(Utils.isEqual(0,1)).toBe(false)
@@ -101,10 +101,10 @@ define (require, exports, module) ->
             expect(Utils.isEqual(null,undefined)).toBe(false)
             expect(Utils.isEqual(undefined,null)).toBe(false)
             expect(Utils.isEqual(NaN,1)).toBe(false)
-        it 'keys', ->
+        it "keys", ->
             expect(Utils.keys([])).toEqual([])
-        it 'toUnicode&fromUnicode', ->
-            string = ' 京东买奶茶——=+~！@#￥%……&*（）'
+        it "toUnicode&fromUnicode", ->
+            string = " 京东买奶茶——=+~！@#￥%……&*（）"
             toUnicode = Utils.toUnicode(string)
             fromUnicode = Utils.fromUnicode(toUnicode)
             expect(fromUnicode).toEqual(string)

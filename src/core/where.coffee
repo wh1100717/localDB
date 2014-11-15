@@ -1,14 +1,14 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
 
     reservedKeys = [
-        '$gt', '$gte', '$lt', '$lte', '$ne', '$in', '$nin'  #Comparison
-        '$and', '$nor', '$or', '$not'                       #Logical
-        '$exists', '$type'                                  #Element
-        '$mod', '$regex'                                    #Evaluation
-        '$all', '$elemMatch', '$size'                       #Array
+        "$gt", "$gte", "$lt", "$lte", "$ne", "$in", "$nin"  #Comparison
+        "$and", "$nor", "$or", "$not"                       #Logical
+        "$exists", "$type"                                  #Element
+        "$mod", "$regex"                                    #Evaluation
+        "$all", "$elemMatch", "$size"                       #Array
     ]
 
     isKeyReserved = (key) -> key in reservedKeys
@@ -33,7 +33,7 @@ define (require, exports, module) ->
 
     dotCheck = (data, key, condition) ->
         firstKey = key.split(".")[0]
-        Where data[if /\d/.test(firstKey) then Number(firstKey) else firstKey], (new -> @[key.substr(key.indexOf('.') + 1)] = condition;return)
+        Where data[if /\d/.test(firstKey) then Number(firstKey) else firstKey], (new -> @[key.substr(key.indexOf(".") + 1)] = condition;return)
 
     valueCheck = (data, key, condition) ->
         ###

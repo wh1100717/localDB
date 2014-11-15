@@ -2,8 +2,8 @@ define (require, exports, module) ->
 
     'use strict'
     LocalDB = require('localdb')
-    Collection = require('lib/collection')
-    Where = require('lib/where')
+    Collection = require('core/collection')
+    Where = require('core/where')
 
     db = new LocalDB("foo")
 

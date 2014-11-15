@@ -1,16 +1,16 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
-    Operation = require('lib/operation')
-    Promise = require('lib/promise')
+    Utils = require("lib/utils")
+    Promise = require("lib/promise")
+    Operation = require("core/operation")
     
     class Collection
 
         ###
          *  in LocalDB, only use LocalDB to get a collection.
-         *  db = new LocalDB('foo')
-         *  var collection = db.collection('bar')
+         *  db = new LocalDB("foo")
+         *  var collection = db.collection("bar")
         ###
         constructor: (collectionName, @engine) -> @name = "#{engine.name}_#{collectionName}"
 
@@ -18,7 +18,6 @@ define (require, exports, module) ->
          *  get data and tranfer into object from localStorage/sessionStorage
         ###
         deserialize: (callback) -> @engine.getItem @name, (data, err) ->
-            console.log "deserialize: ", data
             callback(Utils.parse(data), err)
 
         ###
@@ -53,6 +52,11 @@ define (require, exports, module) ->
                         callback(err) if callback?
                         reject(err)
                     else
+                        ### TODO
+                         1. 对rowData数组类型进行判断
+                         2. 对options参数进行判断
+                         ==》 如果判断为false的，则调用callback(err)及rejct(err)
+                        ###
                         data = Operation.insert data, rowData, options
                         self.serialize data, (err) ->
                             callback(err) if callback?

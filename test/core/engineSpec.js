@@ -2,11 +2,11 @@
 define(function(require, exports, module) {
   "use strict";
   var Engine;
-  Engine = require("lib/engine");
+  Engine = require("core/engine");
   return describe("Engine", function() {
     var engine, engineProxy;
     engine = new Engine("window", true, "test");
-    engineProxy = new Engine("none", true, "test");
+    engineProxy = new Engine("none", false, "test2", "localdb.emptystack.net");
     it("Init", function() {
       expect(engine instanceof Engine).toEqual(true);
       return expect(engineProxy instanceof Engine).toEqual(true);

@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   "use strict";
   var Server;
-  Server = require("lib/server");
+  Server = require("core/server");
   return describe("Server", function() {
     var server1, server2;
     server1 = new Server({

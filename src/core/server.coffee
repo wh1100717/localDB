@@ -1,10 +1,9 @@
 define (require, exports, module) ->
-    
-    'use strict'
+    "use strict"
 
-    Storage = require('lib/storage')
-    Evemit = require('lib/evemit')
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
+    Evemit = require("lib/evemit")
+    Storage = require("core/storage")
 
     class Server
 
@@ -39,7 +38,7 @@ define (require, exports, module) ->
 
         checkRule: (url, rule) ->
             return rule.test(url) if Utils.isRegex(rule)
-            if rule.indexOf('*') isnt -1
+            if rule.indexOf("*") isnt -1
                 segList = rule.split("*")
                 for seg in segList
                     return false if url.indexOf(seg) is -1
@@ -49,7 +48,7 @@ define (require, exports, module) ->
 
         init: ->
             self = @
-            Evemit.bind window, 'message', (e) ->
+            Evemit.bind window, "message", (e) ->
                 origin = e.origin
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data

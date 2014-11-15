@@ -2,17 +2,17 @@
 var __slice = [].slice;
 
 define(function(require, exports, module) {
-  'use strict';
+  "use strict";
   var Collection, Operation, Promise, Utils;
-  Utils = require('lib/utils');
-  Operation = require('lib/operation');
-  Promise = require('lib/promise');
+  Utils = require("lib/utils");
+  Promise = require("lib/promise");
+  Operation = require("core/operation");
   Collection = (function() {
 
     /*
      *  in LocalDB, only use LocalDB to get a collection.
-     *  db = new LocalDB('foo')
-     *  var collection = db.collection('bar')
+     *  db = new LocalDB("foo")
+     *  var collection = db.collection("bar")
      */
     function Collection(collectionName, engine) {
       this.engine = engine;
@@ -26,7 +26,6 @@ define(function(require, exports, module) {
 
     Collection.prototype.deserialize = function(callback) {
       return this.engine.getItem(this.name, function(data, err) {
-        console.log("deserialize: ", data);
         return callback(Utils.parse(data), err);
       });
     };
@@ -82,6 +81,12 @@ define(function(require, exports, module) {
             }
             return reject(err);
           } else {
+
+            /* TODO
+             1. 对rowData数组类型进行判断
+             2. 对options参数进行判断
+             ==》 如果判断为false的，则调用callback(err)及rejct(err)
+             */
             data = Operation.insert(data, rowData, options);
             return self.serialize(data, function(err) {
               if (callback != null) {

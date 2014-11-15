@@ -1,16 +1,15 @@
 define (require, exports, module) ->
-    
-    'use strict'
+    "use strict"
 
-    Evemit = require('lib/evemit')
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
+    Evemit = require("lib/evemit")
 
     class Proxy
 
         constructor: (@expire, @encrypt, @token, @proxy) ->
             self = @
             @evemit = new Evemit()
-            Evemit.bind window, 'message', (e) ->
+            Evemit.bind window, "message", (e) ->
                 result = JSON.parse e.data
                 return if self.proxy.indexOf(e.origin) is -1
                 if result.data?
@@ -34,17 +33,17 @@ define (require, exports, module) ->
                 iframe = Utils.createIframe @proxy
                 iframe.onload = -> iframe.contentWindow.postMessage data, Utils.getOrigin(self.proxy)
 
-        key: (index, callback) -> @sendMessage 'key', {index: index}, callback
+        key: (index, callback) -> @sendMessage "key", {index: index}, callback
 
-        size: (callback) -> @sendMessage 'size', {}, callback
+        size: (callback) -> @sendMessage "size", {}, callback
 
-        setItem: (key, val, callback) -> @sendMessage 'setItem', {key: key, val: val}, callback
+        setItem: (key, val, callback) -> @sendMessage "setItem", {key: key, val: val}, callback
 
-        getItem: (key, callback) -> @sendMessage 'getItem', {key: key}, callback
+        getItem: (key, callback) -> @sendMessage "getItem", {key: key}, callback
 
-        removeItem: (key, callback) -> @sendMessage 'removeItem', {key: key}, callback
+        removeItem: (key, callback) -> @sendMessage "removeItem", {key: key}, callback
 
-        usage: (callback) -> @sendMessage 'usage', {}, callback
+        usage: (callback) -> @sendMessage "usage", {}, callback
 
 
     module.exports = Proxy

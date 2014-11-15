@@ -3,8 +3,8 @@ define(function(require, exports, module) {
   'use strict';
   var Collection, LocalDB, Where, db;
   LocalDB = require('localdb');
-  Collection = require('lib/collection');
-  Where = require('lib/where');
+  Collection = require('core/collection');
+  Where = require('core/where');
   db = new LocalDB("foo");
 
   /* Where 测试用例原则:

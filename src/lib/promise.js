@@ -118,8 +118,8 @@ define(function(require, exports, module) {
 
 
   function Promise(fn) {
-    if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new')
-    if (typeof fn !== 'function') throw new TypeError('not a function')
+    if (typeof this !== "object") throw new TypeError("Promises must be constructed via new")
+    if (typeof fn !== "function") throw new TypeError("not a function")
     var state = null
     var value = null
     var deferreds = []
@@ -155,10 +155,10 @@ define(function(require, exports, module) {
 
     function resolve(newValue) {
       try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-        if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.')
-        if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+        if (newValue === self) throw new TypeError("A promise cannot be resolved with itself.")
+        if (newValue && (typeof newValue === "object" || typeof newValue === "function")) {
           var then = newValue.then
-          if (typeof then === 'function') {
+          if (typeof then === "function") {
             doResolve(then.bind(newValue), resolve, reject)
             return
           }
@@ -188,8 +188,8 @@ define(function(require, exports, module) {
 
 
   function Handler(onFulfilled, onRejected, resolve, reject) {
-    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null
-    this.onRejected = typeof onRejected === 'function' ? onRejected : null
+    this.onFulfilled = typeof onFulfilled === "function" ? onFulfilled : null
+    this.onRejected = typeof onRejected === "function" ? onRejected : null
     this.resolve = resolve
     this.reject = reject
   }
@@ -232,7 +232,7 @@ define(function(require, exports, module) {
 
   function ValuePromise(value) {
     this.then = function(onFulfilled) {
-      if (typeof onFulfilled !== 'function') return this
+      if (typeof onFulfilled !== "function") return this
       return new Promise(function(resolve, reject) {
         asap(function() {
           try {
@@ -251,7 +251,7 @@ define(function(require, exports, module) {
   var NULL = new ValuePromise(null)
   var UNDEFINED = new ValuePromise(undefined)
   var ZERO = new ValuePromise(0)
-  var EMPTYSTRING = new ValuePromise('')
+  var EMPTYSTRING = new ValuePromise("")
 
   Promise.resolve = function(value) {
     if (value instanceof Promise) return value
@@ -261,12 +261,12 @@ define(function(require, exports, module) {
     if (value === true) return TRUE
     if (value === false) return FALSE
     if (value === 0) return ZERO
-    if (value === '') return EMPTYSTRING
+    if (value === "") return EMPTYSTRING
 
-    if (typeof value === 'object' || typeof value === 'function') {
+    if (typeof value === "object" || typeof value === "function") {
       try {
         var then = value.then
-        if (typeof then === 'function') {
+        if (typeof then === "function") {
           return new Promise(then.bind(value))
         }
       } catch (ex) {
@@ -288,9 +288,9 @@ define(function(require, exports, module) {
 
       function res(i, val) {
         try {
-          if (val && (typeof val === 'object' || typeof val === 'function')) {
+          if (val && (typeof val === "object" || typeof val === "function")) {
             var then = val.then
-            if (typeof then === 'function') {
+            if (typeof then === "function") {
               then.call(val, function(val) {
                 res(i, val)
               }, reject)
@@ -327,7 +327,7 @@ define(function(require, exports, module) {
 
   /* Prototype Methods */
 
-  Promise.prototype['catch'] = function(onRejected) {
+  Promise.prototype["catch"] = function(onRejected) {
     return this.then(null, onRejected);
   }
 
@@ -353,12 +353,12 @@ define(function(require, exports, module) {
   Promise.nodeify = function(fn) {
     return function() {
       var args = Array.prototype.slice.call(arguments)
-      var callback = typeof args[args.length - 1] === 'function' ? args.pop() : null
+      var callback = typeof args[args.length - 1] === "function" ? args.pop() : null
       var ctx = this
       try {
         return fn.apply(this, arguments).nodeify(callback, ctx)
       } catch (ex) {
-        if (callback === null || typeof callback == 'undefined') {
+        if (callback === null || typeof callback == "undefined") {
           return new Promise(function(resolve, reject) {
             reject(ex)
           })
@@ -372,7 +372,7 @@ define(function(require, exports, module) {
   }
 
   Promise.prototype.nodeify = function(callback, ctx) {
-    if (typeof callback != 'function') return this
+    if (typeof callback != "function") return this
 
     this.then(function(value) {
       asap(function() {

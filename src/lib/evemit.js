@@ -2,9 +2,9 @@
 var __slice = [].slice;
 
 define(function(require, exports, module) {
-  'use strict';
+  "use strict";
   var Evemit, Utils, _isIE;
-  Utils = require('lib/utils');
+  Utils = require("lib/utils");
 
   /*
    *  https://github.com/wh1100717/evemit
@@ -84,10 +84,10 @@ define(function(require, exports, module) {
 
   })();
   Evemit.bind = function(el, eve, fn, priority) {
-    return el[_isIE ? "attachEvent" : "addEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
+    return el[_isIE ? "attachEvent" : "addEventListener"]("" + (_isIE ? "on" : "") + eve, fn, priority || false);
   };
   Evemit.unbind = function(el, eve, fn, priority) {
-    return el[_isIE ? "detachEvent" : "removeEventListener"]("" + (_isIE ? 'on' : '') + eve, fn, priority || false);
+    return el[_isIE ? "detachEvent" : "removeEventListener"]("" + (_isIE ? "on" : "") + eve, fn, priority || false);
   };
   return module.exports = Evemit;
 });

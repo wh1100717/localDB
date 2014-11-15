@@ -1,7 +1,7 @@
 define (require, exports, module) ->
     "use strict"
 
-    Server = require("lib/server")
+    Server = require("core/server")
 
     describe "Server", ->
 

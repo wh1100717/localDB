@@ -1,15 +1,15 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Support = require('lib/support')
-    Storage = require('lib/storage')
-    Proxy = require('lib/proxy')
+    Support = require("lib/support")
+    Storage = require("core/storage")
+    Proxy = require("core/proxy")
 
     class Engine
 
         constructor: (@expire, @encrypt, @name, @proxy) ->
             ### TODO
-             *  增加 @expire 类型判断，目前应该只有'none'和'window'，后续会增加'browser'和Date()类型
+             *  增加 @expire 类型判断，目前应该只有"none"和"window"，后续会增加"browser"和Date()类型
             ###
             if @proxy?
                 @proxy = @proxy.trim()

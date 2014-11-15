@@ -11,7 +11,7 @@
  *   the   server-side,   but   the   defaults   work   in   most   cases.
  */
 define(function(require, exports, module) {
-  'use strict';
+  "use strict";
   var hexcase = 0; /*   hex   output   format.   0   -   lowercase;   1   -   uppercase                 */
   var b64pad = ""; /*   base-64   pad   character.   "="   for   strict   RFC   compliance       */
   var chrsz = 8; /*   bits   per   input   character.   8   -   ASCII;   16   -   Unicode             */

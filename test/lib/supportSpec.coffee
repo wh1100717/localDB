@@ -1,10 +1,10 @@
 define (require, exports, module) ->
+    "use strict"
 
-    'use strict'
-    Support = require('lib/support')
+    Support = require("lib/support")
 
-    describe 'Support', ->
-        it 'feature', ->
+    describe "Support", ->
+        it "feature", ->
             userAgent = navigator.userAgent
             if /PhantomJS/.test userAgent
                 console.log "PhantomJS Support Test"

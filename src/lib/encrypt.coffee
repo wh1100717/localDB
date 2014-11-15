@@ -1,8 +1,8 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
-    Sha1 = require('lib/sha1')
+    Utils = require("lib/utils")
+    Sha1 = require("lib/sha1")
     Encrypt = {}
    
     ###
@@ -10,7 +10,7 @@ define (require, exports, module) ->
     ###
     Encrypt.encode = (value, key) ->
         return null if not value?
-        resultArr = ['']
+        resultArr = [""]
         key = Sha1.hex_sha1(key)
         unicodeValue = Utils.toUnicode(value)
         unicodeKey = Utils.toUnicode(key)
@@ -32,21 +32,21 @@ define (require, exports, module) ->
     ###
     Encrypt.decode = (value, key) ->
         return null if value is null
-        resultArr = ['']
+        resultArr = [""]
         key = Sha1.hex_sha1(key)
         unicodeValue = Utils.toUnicode(value)
         unicodeKey = Utils.toUnicode(key)
-        uniValueArr = unicodeValue.split('\\u').slice(1)
-        uniKeyArr = unicodeKey.split('\\u').slice(1)
+        uniValueArr = unicodeValue.split("\\u").slice(1)
+        uniKeyArr = unicodeKey.split("\\u").slice(1)
         len = uniKeyArr.length
         for uniValue,index in uniValueArr
             mod = index % len
             uniKey = uniKeyArr[mod]
             encodeVal = parseInt(uniValue, 16) - parseInt(uniKey, 16)
             encodeVal = 65536 + encodeVal if encodeVal < 0
-            comEncodeVal = ('00' + encodeVal.toString(16)).slice(-4)
+            comEncodeVal = ("00" + encodeVal.toString(16)).slice(-4)
             resultArr.push(comEncodeVal)
-        resultStr = resultArr.join('\\u')
+        resultStr = resultArr.join("\\u")
         Utils.fromUnicode(resultStr)
     
      module.exports = Encrypt

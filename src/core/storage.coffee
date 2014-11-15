@@ -1,9 +1,9 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Support = require('lib/support')
-    Utils = require('lib/utils')
-    Encrypt = require('lib/encrypt')
+    Utils = require("lib/utils")
+    Support = require("lib/support")
+    Encrypt = require("lib/encrypt")
 
     class Storage
 

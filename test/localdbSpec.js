@@ -3,8 +3,8 @@ define(function(require, exports, module) {
   "use strict";
   var Collection, LocalDB, Support;
   LocalDB = require("localdb");
-  Collection = require("lib/collection");
   Support = require("lib/support");
+  Collection = require("core/collection");
   return describe("LocalDB", function() {
     it("wrong usage", function() {
       var db, e;

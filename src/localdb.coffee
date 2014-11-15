@@ -2,10 +2,10 @@ define (require, exports, module) ->
     "use strict"
 
     Utils = require("lib/utils")
-    Collection = require("lib/collection")
-    Engine = require("lib/engine")
     Support = require("lib/support")
-    Server = require("lib/server")
+    Collection = require("core/collection")
+    Engine = require("core/engine")
+    Server = require("core/server")
 
     dbPrefix = "ldb_"
     version = ""
@@ -21,7 +21,7 @@ define (require, exports, module) ->
                 proxy: "http://www.foo.com/getProxy.html"
             })
          *
-         *  Engine will decide to choose the best way to handle the data automatically.
+         *  Engine will decide to choose the best way to handle data automatically.
             *   when expire is set as "window", the data wil be alive while the window page stay open
             *   when expire is set as "none", the data will be always stored even after the browser is closed.
             *   "window" by default

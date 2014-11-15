@@ -1,7 +1,7 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    Utils = require('lib/utils')
+    Utils = require("lib/utils")
     
     ###
      *  https://github.com/wh1100717/evemit
@@ -38,9 +38,9 @@ define (require, exports, module) ->
         listeners: (eve) -> l for l in @events[eve]
 
     Evemit.bind = (el, eve, fn, priority) ->
-        el[if _isIE then "attachEvent" else "addEventListener"]("#{if _isIE then 'on' else ''}#{eve}", fn, priority or false)
+        el[if _isIE then "attachEvent" else "addEventListener"]("#{if _isIE then "on" else ""}#{eve}", fn, priority or false)
 
     Evemit.unbind = (el, eve, fn, priority) ->
-        el[if _isIE then "detachEvent" else "removeEventListener"]("#{if _isIE then 'on' else ''}#{eve}", fn, priority or false)
+        el[if _isIE then "detachEvent" else "removeEventListener"]("#{if _isIE then "on" else ""}#{eve}", fn, priority or false)
 
     module.exports = Evemit

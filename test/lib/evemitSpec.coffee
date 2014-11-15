@@ -1,13 +1,13 @@
 define (require, exports, module) ->
+    "use strict"
 
-    'use strict'
-    Evemit = require('lib/evemit')
+    Evemit = require("lib/evemit")
 
     if not HTMLElement.prototype.click
         HTMLElement.prototype.click = ->
-            ev = document.createEvent 'MouseEvent'
+            ev = document.createEvent "MouseEvent"
             ev.initMouseEvent(
-                'click',
+                "click",
                 true, true,
                 window, null,
                 0, 0, 0, 0,
@@ -16,28 +16,28 @@ define (require, exports, module) ->
             )
             this.dispatchEvent(ev)
 
-    describe 'Evemit', ->
+    describe "Evemit", ->
 
-        it 'bind and unbind', ->
+        it "bind and unbind", ->
 
-            div = document.createElement('div')
-            div.innerHTML = '<a id="clickBtn"> Opps</a>'
+            div = document.createElement("div")
+            div.innerHTML = "<a id='clickBtn'> Opps</a>"
             document.body.insertBefore div, document.body.lastChild
 
-            btn = document.getElementById('clickBtn')
+            btn = document.getElementById("clickBtn")
 
             clickFn = ->
                 console.log "Button Clicked"
 
-            Evemit.bind btn, 'click', clickFn
+            Evemit.bind btn, "click", clickFn
 
             btn.click()
 
-            Evemit.unbind btn, 'click', clickFn
+            Evemit.unbind btn, "click", clickFn
 
             btn.click()
 
-        it 'Evemit', ->
+        it "Evemit", ->
             obj = {
                 a: 1
                 b: 2
@@ -61,7 +61,7 @@ define (require, exports, module) ->
             obj.off "wow"
             expect(obj.events().length).toEqual(0)
         
-        it 'Error', ->
+        it "Error", ->
             obj = 1
             try
                 obj = new Evemit(obj)

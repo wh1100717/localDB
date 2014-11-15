@@ -2,7 +2,7 @@ define (require, exports, module) ->
     "use strict"
 
     LocalDB = require("localdb")
-    Collection = require("lib/collection")
+    Collection = require("core/collection")
     Utils = require("lib/utils")
 
     db = new LocalDB "foo"

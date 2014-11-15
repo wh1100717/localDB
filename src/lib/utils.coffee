@@ -1,7 +1,7 @@
 define (require, exports, module) ->
-    'use strict'
+    "use strict"
 
-    ObjectID = require('lib/bson')
+    ObjectID = require("lib/bson")
 
     Utils = {}
 
@@ -18,19 +18,19 @@ define (require, exports, module) ->
         className = toString.call(a)
         return false if className isnt toString.call(b)
         switch className
-            when '[object RegExp]' then return '' + a is '' + b
-            when '[object String]' then return '' + a is '' + b
-            when '[object Number]'
+            when "[object RegExp]" then return "" + a is "" + b
+            when "[object String]" then return "" + a is "" + b
+            when "[object Number]"
                 return +b isnt +b if +a isnt +a
                 return if +a is 0 then 1 / +a is 1 / b else +a is +b
-            when '[object Date]' then return +a is +b
-            when '[object Boolean]' then return +a is +b
-        areArrays = className is '[object Array]'
+            when "[object Date]" then return +a is +b
+            when "[object Boolean]" then return +a is +b
+        areArrays = className is "[object Array]"
         if not areArrays
-            return false if typeof a isnt 'object' or typeof b isnt 'object'
+            return false if typeof a isnt "object" or typeof b isnt "object"
             aCtor = a.constructor
             bCtor = b.constructor
-            return false if (aCtor isnt bCtor) and not (Utils.isFunction(aCtor) and aCtor instanceof aCtor and Utils.isFunction(bCtor) and bCtor instanceof bCtor) and ('constructor' of a and 'constructor' of b)
+            return false if (aCtor isnt bCtor) and not (Utils.isFunction(aCtor) and aCtor instanceof aCtor and Utils.isFunction(bCtor) and bCtor instanceof bCtor) and ("constructor" of a and "constructor" of b)
         length = aStack.length
         while length--
             return bStack[length] is b if aStack[length] is a
@@ -114,7 +114,7 @@ define (require, exports, module) ->
     Utils.getTime = (objectId) -> (new ObjectID(objectId)).getTime()
 
     Utils.toUnicode = (string) ->
-        result = ['']
+        result = [""]
         index = 1
         while index <= string.length
             char = string.charCodeAt(index - 1)
@@ -122,7 +122,7 @@ define (require, exports, module) ->
             uniChar = uniChar.slice(-4)
             result.push(uniChar)
             index += 1
-        result.join('\\u')
+        result.join("\\u")
 
     Utils.fromUnicode = (string) -> unescape(string.replace(/\\/g,"%"))
 
