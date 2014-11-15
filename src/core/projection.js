@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   "use strict";
   var Projection, Utils, generateItem;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   Projection = {};
   Projection.generate = function(data, projection) {
     var d, item, result, _i, _len;

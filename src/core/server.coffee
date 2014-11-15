@@ -1,8 +1,8 @@
 define (require, exports, module) ->
     "use strict"
 
-    Utils = require("lib/utils")
     Evemit = require("lib/evemit")
+    Utils = require("core/utils")
     Storage = require("core/storage")
 
     class Server

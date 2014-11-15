@@ -21,6 +21,52 @@
   // the stack via arguments.caller.callee and Firefox dies if
   // you try to trace through "use strict" call chains. (#13335)
   //
+var Support = (function(){
+
+  
+  var Support, mod;
+  mod = "lST$*@?";
+  Support = {};
+  Support.localstorage = function() {
+    var e;
+    try {
+      localStorage.setItem(mod, mod);
+      localStorage.removeItem(mod);
+      return true;
+    } catch (_error) {
+      e = _error;
+      return false;
+    }
+  };
+  Support.sessionstorage = function() {
+    var e;
+    try {
+      sessionStorage.setItem(mod, mod);
+      sessionStorage.removeItem(mod);
+      return true;
+    } catch (_error) {
+      e = _error;
+      return false;
+    }
+  };
+  Support.postmessage = function() {
+    return typeof postMessage !== "undefined" && postMessage !== null;
+  };
+  Support.websqldatabase = function() {
+    return typeof openDatabase !== "undefined" && openDatabase !== null;
+  };
+  Support.indexedDB = function() {
+    return (typeof indexedDB !== "undefined" && indexedDB !== null) || (typeof webkitIndexedDB !== "undefined" && webkitIndexedDB !== null) || (typeof mozIndexedDB !== "undefined" && mozIndexedDB !== null) || (typeof OIndexedDB !== "undefined" && OIndexedDB !== null) || (typeof msIndexedDB !== "undefined" && msIndexedDB !== null);
+  };
+  Support.applicationcache = function() {
+    return typeof applicationCache !== "undefined" && applicationCache !== null;
+  };
+  Support.userdata = function() {
+    return document.documentElement.addBehavior != null;
+  };
+  return Support;
+})();
+
 var BinaryParser = (function(){
 
   /**
@@ -520,52 +566,6 @@ var Utils = (function(){
     return url.match(/(https?:\/\/)?([^\/]+)/)[0];
   };
   return Utils;
-})();
-
-var Support = (function(){
-
-  
-  var Support, mod;
-  mod = "lST$*@?";
-  Support = {};
-  Support.localstorage = function() {
-    var e;
-    try {
-      localStorage.setItem(mod, mod);
-      localStorage.removeItem(mod);
-      return true;
-    } catch (_error) {
-      e = _error;
-      return false;
-    }
-  };
-  Support.sessionstorage = function() {
-    var e;
-    try {
-      sessionStorage.setItem(mod, mod);
-      sessionStorage.removeItem(mod);
-      return true;
-    } catch (_error) {
-      e = _error;
-      return false;
-    }
-  };
-  Support.postmessage = function() {
-    return typeof postMessage !== "undefined" && postMessage !== null;
-  };
-  Support.websqldatabase = function() {
-    return typeof openDatabase !== "undefined" && openDatabase !== null;
-  };
-  Support.indexedDB = function() {
-    return (typeof indexedDB !== "undefined" && indexedDB !== null) || (typeof webkitIndexedDB !== "undefined" && webkitIndexedDB !== null) || (typeof mozIndexedDB !== "undefined" && mozIndexedDB !== null) || (typeof OIndexedDB !== "undefined" && OIndexedDB !== null) || (typeof msIndexedDB !== "undefined" && msIndexedDB !== null);
-  };
-  Support.applicationcache = function() {
-    return typeof applicationCache !== "undefined" && applicationCache !== null;
-  };
-  Support.userdata = function() {
-    return document.documentElement.addBehavior != null;
-  };
-  return Support;
 })();
 
 var Promise = (function(){

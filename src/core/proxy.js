@@ -2,8 +2,8 @@
 define(function(require, exports, module) {
   "use strict";
   var Evemit, Proxy, Utils;
-  Utils = require("lib/utils");
   Evemit = require("lib/evemit");
+  Utils = require("core/utils");
   Proxy = (function() {
     function Proxy(expire, encrypt, token, proxy) {
       var self;

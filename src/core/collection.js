@@ -4,8 +4,8 @@ var __slice = [].slice;
 define(function(require, exports, module) {
   "use strict";
   var Collection, Operation, Promise, Utils;
-  Utils = require("lib/utils");
   Promise = require("lib/promise");
+  Utils = require("core/utils");
   Operation = require("core/operation");
   Collection = (function() {
 

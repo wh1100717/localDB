@@ -4,7 +4,7 @@ define(function(require, exports, module) {
   var Collection, LocalDB, Utils, db;
   LocalDB = require("localdb");
   Collection = require("core/collection");
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   db = new LocalDB("foo");
   return describe("Collection Promise", function() {
     it("InsertPromise", function() {

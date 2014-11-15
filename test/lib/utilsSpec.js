@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   "use strict";
   var Utils;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   return describe("Utils", function() {
     it("isType", function() {
       expect(Utils.isType(new Object(), "object")).toBe(true);

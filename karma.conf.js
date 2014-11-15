@@ -39,6 +39,10 @@ module.exports = function(config) {
   };
   if (process.env.TRAVIS) {
     configuration.browsers = ['Chrome_travis_ci', 'PhantomJS', 'Firefox'];
+    configuration.preprocessors = {
+      "src/*.js": "coverage",
+      "src/core/*.js": "coverage"
+    };
   }
   return config.set(configuration);
 };

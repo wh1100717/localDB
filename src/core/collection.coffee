@@ -1,8 +1,8 @@
 define (require, exports, module) ->
     "use strict"
 
-    Utils = require("lib/utils")
     Promise = require("lib/promise")
+    Utils = require("core/utils")
     Operation = require("core/operation")
     
     class Collection

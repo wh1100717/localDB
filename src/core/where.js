@@ -4,7 +4,7 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 define(function(require, exports, module) {
   "use strict";
   var Utils, Where, arrayCheck, dotCheck, isKeyReserved, keywordCheck, numberCheck, objectCheck, regexCheck, reservedKeys, stringCheck, valueCheck;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   reservedKeys = ["$gt", "$gte", "$lt", "$lte", "$ne", "$in", "$nin", "$and", "$nor", "$or", "$not", "$exists", "$type", "$mod", "$regex", "$all", "$elemMatch", "$size"];
   isKeyReserved = function(key) {
     return __indexOf.call(reservedKeys, key) >= 0;

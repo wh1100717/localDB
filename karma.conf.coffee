@@ -95,6 +95,10 @@ module.exports = (config) ->
 
     if process.env.TRAVIS
         configuration.browsers = ['Chrome_travis_ci', 'PhantomJS', 'Firefox']
+        configuration.preprocessors = {
+            "src/*.js": "coverage"
+            "src/core/*.js": "coverage"
+        }
 
     config.set configuration
     

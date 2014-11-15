@@ -4,7 +4,7 @@ var __slice = [].slice;
 define(function(require, exports, module) {
   "use strict";
   var Evemit, Utils, _isIE;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
 
   /*
    *  https://github.com/wh1100717/evemit

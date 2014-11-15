@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   "use strict";
   var Operation, Projection, Update, Utils, Where;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   Where = require("core/where");
   Projection = require("core/projection");
   Operation = {};

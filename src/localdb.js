@@ -2,8 +2,8 @@
 define(function(require, exports, module) {
   "use strict";
   var Collection, Engine, LocalDB, Server, Support, Utils, dbPrefix, version;
-  Utils = require("lib/utils");
   Support = require("lib/support");
+  Utils = require("core/utils");
   Collection = require("core/collection");
   Engine = require("core/engine");
   Server = require("core/server");

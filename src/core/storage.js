@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
   "use strict";
   var Encrypt, Storage, Support, Utils;
-  Utils = require("lib/utils");
+  Utils = require("core/utils");
   Support = require("lib/support");
   Encrypt = require("lib/encrypt");
   Storage = (function() {

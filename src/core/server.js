@@ -2,8 +2,8 @@
 define(function(require, exports, module) {
   "use strict";
   var Evemit, Server, Storage, Utils;
-  Utils = require("lib/utils");
   Evemit = require("lib/evemit");
+  Utils = require("core/utils");
   Storage = require("core/storage");
   Server = (function() {
     function Server(config) {

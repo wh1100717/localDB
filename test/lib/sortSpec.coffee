@@ -1,5 +1,7 @@
 define (require, exports, module) ->
-    Utils = require("lib/utils")
+    "use strict"
+
+    Utils = require("core/utils")
 
     describe "sort", ->
         it "quickSort simple asc", ->

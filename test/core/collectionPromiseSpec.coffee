@@ -3,7 +3,7 @@ define (require, exports, module) ->
 
     LocalDB = require("localdb")
     Collection = require("core/collection")
-    Utils = require("lib/utils")
+    Utils = require("core/utils")
 
     db = new LocalDB "foo"
 
