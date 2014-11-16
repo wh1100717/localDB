@@ -294,7 +294,7 @@ define(function(require, exports, module) {
     return iframe;
   };
   Utils.getDomain = function(url) {
-    return url.match(/(https?:\/\/)?([^\/]+)/)[2];
+    return url.match(/(https?:\/\/)?([^\/]+)/)[2].split(":")[0];
   };
   Utils.getOrigin = function(url) {
     return url.match(/(https?:\/\/)?([^\/]+)/)[0];

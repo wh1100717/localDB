@@ -6,7 +6,7 @@ define(function(require, exports, module) {
   return describe("Engine", function() {
     var engine, engineProxy;
     engine = new Engine("window", true, "test");
-    engineProxy = new Engine("none", false, "test2", "localdb.emptystack.net");
+    engineProxy = new Engine("none", true, "test");
     it("Init", function() {
       expect(engine instanceof Engine).toEqual(true);
       return expect(engineProxy instanceof Engine).toEqual(true);

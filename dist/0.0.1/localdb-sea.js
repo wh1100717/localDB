@@ -560,7 +560,7 @@ var Utils = (function(){
     return iframe;
   };
   Utils.getDomain = function(url) {
-    return url.match(/(https?:\/\/)?([^\/]+)/)[2];
+    return url.match(/(https?:\/\/)?([^\/]+)/)[2].split(":")[0];
   };
   Utils.getOrigin = function(url) {
     return url.match(/(https?:\/\/)?([^\/]+)/)[0];
@@ -2229,6 +2229,7 @@ var Proxy = (function(){
       this.proxy = proxy;
       self = this;
       this.evemit = new Evemit();
+      this.iframe = Utils.createIframe(this.proxy);
       Evemit.bind(window, "message", function(e) {
         var result;
         result = JSON.parse(e.data);
@@ -2244,7 +2245,7 @@ var Proxy = (function(){
     }
 
     Proxy.prototype.sendMessage = function(type, data, callback) {
-      var eve, iframe, self;
+      var e, eve, ifrWin, self;
       self = this;
       eve = type + "|" + new Date().getTime();
       data.eve = eve;
@@ -2253,14 +2254,17 @@ var Proxy = (function(){
       data.token = this.token;
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
-      iframe = Utils.getIframe(this.proxy);
-      if (iframe != null) {
-        return iframe.contentWindow.postMessage(data, Utils.getOrigin(this.proxy));
-      } else {
-        iframe = Utils.createIframe(this.proxy);
-        return iframe.onload = function() {
-          return iframe.contentWindow.postMessage(data, Utils.getOrigin(self.proxy));
-        };
+      ifrWin = this.iframe.contentWindow;
+      try {
+        ifrWin.document;
+        console.log("lalala");
+        return Evemit.bind(this.iframe, "load", function() {
+          return ifrWin.postMessage(data, Utils.getOrigin(self.proxy));
+        });
+      } catch (_error) {
+        e = _error;
+        console.log("wowowo", e);
+        return ifrWin.postMessage(data, Utils.getOrigin(this.proxy));
       }
     };
 
@@ -2322,6 +2326,7 @@ var Engine = (function(){
         if (this.proxy.indexOf("http") === -1) {
           this.proxy = "http://" + this.proxy;
         }
+        console.log("new Engine:", this.proxy);
         this.proxy = new Proxy(this.expire, this.encrypt, this.name, this.proxy);
       } else {
         this.storage = new Storage(this.expire, this.encrypt, this.name);
@@ -2444,6 +2449,7 @@ var Server = (function(){
       return Evemit.bind(window, "message", function(e) {
         var origin, result, storage;
         origin = e.origin;
+        console.log("checkOrigin: ", self.checkOrigin(origin));
         if (!self.checkOrigin(origin)) {
           return false;
         }

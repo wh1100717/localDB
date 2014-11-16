@@ -9,6 +9,7 @@ define (require, exports, module) ->
         constructor: (@expire, @encrypt, @token, @proxy) ->
             self = @
             @evemit = new Evemit()
+            @iframe = Utils.createIframe @proxy
             Evemit.bind window, "message", (e) ->
                 result = JSON.parse e.data
                 return if self.proxy.indexOf(e.origin) is -1
@@ -26,12 +27,13 @@ define (require, exports, module) ->
             data.token = @token
             @evemit.once eve, callback
             data = JSON.stringify data
-            iframe = Utils.getIframe @proxy
-            if iframe?
-                iframe.contentWindow.postMessage data, Utils.getOrigin(@proxy)
-            else
-                iframe = Utils.createIframe @proxy
-                iframe.onload = -> iframe.contentWindow.postMessage data, Utils.getOrigin(self.proxy)
+            ifrWin = @iframe.contentWindow
+            try
+                ifrWin.document
+                Evemit.bind @iframe, "load", ->
+                    ifrWin.postMessage data, Utils.getOrigin(self.proxy)
+            catch e
+                ifrWin.postMessage data, Utils.getOrigin(@proxy)
 
         key: (index, callback) -> @sendMessage "key", {index: index}, callback
 

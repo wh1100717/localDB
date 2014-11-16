@@ -13,6 +13,7 @@ define(function(require, exports, module) {
       this.proxy = proxy;
       self = this;
       this.evemit = new Evemit();
+      this.iframe = Utils.createIframe(this.proxy);
       Evemit.bind(window, "message", function(e) {
         var result;
         result = JSON.parse(e.data);
@@ -28,7 +29,7 @@ define(function(require, exports, module) {
     }
 
     Proxy.prototype.sendMessage = function(type, data, callback) {
-      var eve, iframe, self;
+      var e, eve, ifrWin, self;
       self = this;
       eve = type + "|" + new Date().getTime();
       data.eve = eve;
@@ -37,14 +38,15 @@ define(function(require, exports, module) {
       data.token = this.token;
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
-      iframe = Utils.getIframe(this.proxy);
-      if (iframe != null) {
-        return iframe.contentWindow.postMessage(data, Utils.getOrigin(this.proxy));
-      } else {
-        iframe = Utils.createIframe(this.proxy);
-        return iframe.onload = function() {
-          return iframe.contentWindow.postMessage(data, Utils.getOrigin(self.proxy));
-        };
+      ifrWin = this.iframe.contentWindow;
+      try {
+        ifrWin.document;
+        return Evemit.bind(this.iframe, "load", function() {
+          return ifrWin.postMessage(data, Utils.getOrigin(self.proxy));
+        });
+      } catch (_error) {
+        e = _error;
+        return ifrWin.postMessage(data, Utils.getOrigin(this.proxy));
       }
     };
 
