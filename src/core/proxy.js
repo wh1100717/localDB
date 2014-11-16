@@ -39,6 +39,15 @@ define(function(require, exports, module) {
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
       ifrWin = this.iframe.contentWindow;
+
+      /*
+       *  当加载非同源iframe时，不能简单的通过 iframe.contentWindow.document.readystate来判断页面是否为complete
+       *  第一: readystate为complete不代表server端的localDB初始化完成
+       *  第二: 一旦非同源iframe加载完成，则无法访问到readystate
+       *  因此通过能否访问到iframe.contentWindow.document来判断其是否完成加载
+          *   如果能访问到，则给iframe的load事件增加函数
+          *   如果不能访问到，则直接iframe.contentWindow.postMessage发送请求
+       */
       try {
         ifrWin.document;
         return Evemit.bind(this.iframe, "load", function() {
