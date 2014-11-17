@@ -6,8 +6,12 @@ define (require, exports, module) ->
 
     class Proxy
 
-        constructor: (@expire, @encrypt, @token, @proxy) ->
+        constructor: (options) ->
             self = @
+            @expire = options.expire
+            @encrypt = options.encrypt
+            @name = options.name
+            @proxy = options.proxy
             @evemit = new Evemit()
             @iframe = Utils.createIframe @proxy
             Evemit.bind window, "message", (e) ->
@@ -24,7 +28,7 @@ define (require, exports, module) ->
             data.eve = eve
             data.expire = @expire
             data.encrypt = @encrypt
-            data.token = @token
+            data.name = @name
             @evemit.once eve, callback
             data = JSON.stringify data
             ifrWin = @iframe.contentWindow

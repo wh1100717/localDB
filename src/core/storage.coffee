@@ -7,7 +7,10 @@ define (require, exports, module) ->
 
     class Storage
 
-        constructor: (@expire, @encrypt, @token) ->
+        constructor: (options) ->
+            @expire = options.expire
+            @encrypt = options.encrypt
+            @token = options.name
             if @expire is "window"
                 throw new Error("sessionStorage is not supported!") if not Support.sessionstorage()
                 @storage = sessionStorage

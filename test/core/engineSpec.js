@@ -4,9 +4,20 @@ define(function(require, exports, module) {
   var Engine;
   Engine = require("core/engine");
   return describe("Engine", function() {
-    var engine, engineProxy;
-    engine = new Engine("window", true, "test");
-    engineProxy = new Engine("none", true, "test");
+    var engine, engineProxy, options, optionsProxy;
+    options = {
+      expire: "window",
+      encrypt: true,
+      name: "test"
+    };
+    optionsProxy = {
+      expire: "none",
+      encrypt: true,
+      name: "test2",
+      proxy: "http://localdb.emptystack.net/server.html"
+    };
+    engine = new Engine(options);
+    engineProxy = new Engine(optionsProxy);
     it("Init", function() {
       expect(engine instanceof Engine).toEqual(true);
       return expect(engineProxy instanceof Engine).toEqual(true);

@@ -108,15 +108,7 @@ define (require, exports, module) ->
             toUnicode = Utils.toUnicode(string)
             fromUnicode = Utils.fromUnicode(toUnicode)
             expect(fromUnicode).toEqual(string)
-        it "Iframe",->
-            iframe = Utils.getIframe("http://www.baidu.com/test.html")
-            expect(iframe).toEqual(null)
-            iframe1 = Utils.createIframe("http://www.baidu.com")
-            iframe2 = Utils.getIframe("http://www.baidu.com")
-            iframe3 = Utils.createIframe("http://www.baidu.com")
-            expect(iframe1).toEqual(iframe2)
-            expect(iframe1).toEqual(iframe3)
-
-
-
-
+        it "Domain", ->
+            url = "http://www.taobao.com:8080/test.html"
+            expect(Utils.getDomain(url)).toEqual("www.taobao.com")
+            expect(Utils.getOrigin(url)).toEqual("http://www.taobao.com:8080")

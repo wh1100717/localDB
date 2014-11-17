@@ -26,7 +26,7 @@ define(function(require, exports, module) {
         *   "window" by default
         *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
         *   TODO: Date(), means the data will be alive until Date()
-     *  The data will be stored encrypted if the encrpyt options is true, true by default.
+     *  The data will be stored encrypted if the encrypt options is true, true by default.
      */
     function LocalDB(dbName, options) {
       if (options == null) {
@@ -39,7 +39,12 @@ define(function(require, exports, module) {
       this.expire = options.expire != null ? options.expire : "window";
       this.encrypt = options.encrypt != null ? options.encrypt : true;
       this.proxy = options.proxy != null ? options.proxy : null;
-      this.engine = new Engine(this.expire, this.encrypt, this.name, this.proxy);
+      this.engine = new Engine({
+        expire: this.expire,
+        encrypt: this.encrypt,
+        name: this.name,
+        proxy: this.proxy
+      });
     }
 
     LocalDB.prototype.options = function() {

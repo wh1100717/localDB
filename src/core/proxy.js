@@ -5,13 +5,13 @@ define(function(require, exports, module) {
   Evemit = require("lib/evemit");
   Utils = require("core/utils");
   Proxy = (function() {
-    function Proxy(expire, encrypt, token, proxy) {
+    function Proxy(options) {
       var self;
-      this.expire = expire;
-      this.encrypt = encrypt;
-      this.token = token;
-      this.proxy = proxy;
       self = this;
+      this.expire = options.expire;
+      this.encrypt = options.encrypt;
+      this.name = options.name;
+      this.proxy = options.proxy;
       this.evemit = new Evemit();
       this.iframe = Utils.createIframe(this.proxy);
       Evemit.bind(window, "message", function(e) {
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
       data.eve = eve;
       data.expire = this.expire;
       data.encrypt = this.encrypt;
-      data.token = this.token;
+      data.name = this.name;
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
       ifrWin = this.iframe.contentWindow;
