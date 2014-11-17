@@ -27,7 +27,7 @@ define (require, exports, module) ->
             *   "window" by default
             *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
             *   TODO: Date(), means the data will be alive until Date()
-         *  The data will be stored encrypted if the encrpyt options is true, true by default.
+         *  The data will be stored encrypted if the encrypt options is true, true by default.
         ###
         constructor: (dbName, options = {}) ->
             throw new Error("dbName should be specified.") if not dbName?
@@ -35,7 +35,12 @@ define (require, exports, module) ->
             @expire = if options.expire? then options.expire else "window"
             @encrypt = if options.encrypt? then options.encrypt else true
             @proxy = if options.proxy? then options.proxy else null
-            @engine = new Engine(@expire, @encrypt, @name, @proxy)
+            @engine = new Engine {
+                expire: @expire
+                encrypt: @encrypt
+                name: @name
+                proxy: @proxy
+            }
 
         # get options
         options: -> {

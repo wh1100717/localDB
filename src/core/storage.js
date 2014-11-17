@@ -6,10 +6,10 @@ define(function(require, exports, module) {
   Support = require("lib/support");
   Encrypt = require("lib/encrypt");
   Storage = (function() {
-    function Storage(expire, encrypt, token) {
-      this.expire = expire;
-      this.encrypt = encrypt;
-      this.token = token;
+    function Storage(options) {
+      this.expire = options.expire;
+      this.encrypt = options.encrypt;
+      this.token = options.name;
       if (this.expire === "window") {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");

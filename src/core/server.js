@@ -90,10 +90,10 @@ define(function(require, exports, module) {
           return false;
         }
         result = JSON.parse(e.data);
-        if (self.storages[result.token] == null) {
-          self.storages[result.token] = new Storage(result.expire, result.encrypt, result.token);
+        if (self.storages[result.name] == null) {
+          self.storages[result.name] = new Storage(result);
         }
-        storage = self.storages[result.token];
+        storage = self.storages[result.name];
         switch (result.eve.split("|")[0]) {
           case "key":
             return storage.key(result.index, function(data, err) {

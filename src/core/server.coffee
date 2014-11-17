@@ -52,9 +52,9 @@ define (require, exports, module) ->
                 origin = e.origin
                 return false if not self.checkOrigin(origin)
                 result = JSON.parse e.data
-                if not self.storages[result.token]?
-                    self.storages[result.token] = new Storage(result.expire, result.encrypt, result.token)
-                storage = self.storages[result.token]
+                if not self.storages[result.name]?
+                    self.storages[result.name] = new Storage(result)
+                storage = self.storages[result.name]
                 switch result.eve.split("|")[0]
                     when "key"
                         storage.key result.index, (data, err) ->

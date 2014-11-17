@@ -121,12 +121,18 @@ define(function(require, exports, module) {
     it("keys", function() {
       return expect(Utils.keys([])).toEqual([]);
     });
-    return it("toUnicode&fromUnicode", function() {
+    it("toUnicode&fromUnicode", function() {
       var fromUnicode, string, toUnicode;
       string = " 京东买奶茶——=+~！@#￥%……&*（）";
       toUnicode = Utils.toUnicode(string);
       fromUnicode = Utils.fromUnicode(toUnicode);
       return expect(fromUnicode).toEqual(string);
+    });
+    return it("Domain", function() {
+      var url;
+      url = "http://www.taobao.com:8080/test.html";
+      expect(Utils.getDomain(url)).toEqual("www.taobao.com");
+      return expect(Utils.getOrigin(url)).toEqual("http://www.taobao.com:8080");
     });
   });
 });

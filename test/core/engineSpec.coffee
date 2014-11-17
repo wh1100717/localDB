@@ -4,10 +4,21 @@ define (require, exports, module) ->
     Engine = require("core/engine")
 
     describe "Engine", ->
+        options = {
+            expire: "window"
+            encrypt: true
+            name: "test"
+        }
+        optionsProxy = {
+            expire: "none"
+            encrypt: true
+            name: "test2"
+            proxy: "http://localdb.emptystack.net/server.html"
+        }
 
-        engine = new Engine("window", true, "test")
-        engineProxy = new Engine("none", true, "test")
-        # engineProxy = new Engine("none", false, "test2", "http://localdb.emptystack.net/server.html")
+        engine = new Engine(options)
+        # engineProxy = new Engine("none", true, "test")
+        engineProxy = new Engine(optionsProxy)
 
         it "Init", ->
             expect(engine instanceof Engine).toEqual(true)

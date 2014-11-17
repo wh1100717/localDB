@@ -108,6 +108,10 @@ define (require, exports, module) ->
             toUnicode = Utils.toUnicode(string)
             fromUnicode = Utils.fromUnicode(toUnicode)
             expect(fromUnicode).toEqual(string)
+        it "Domain", ->
+            url = "http://www.taobao.com:8080/test.html"
+            expect(Utils.getDomain(url)).toEqual("www.taobao.com")
+            expect(Utils.getOrigin(url)).toEqual("http://www.taobao.com:8080")
 
 
 

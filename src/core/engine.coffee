@@ -7,16 +7,17 @@ define (require, exports, module) ->
 
     class Engine
 
-        constructor: (@expire, @encrypt, @name, @proxy) ->
+        constructor: (options) ->
             ### TODO
              *  增加 @expire 类型判断，目前应该只有"none"和"window"，后续会增加"browser"和Date()类型
             ###
-            if @proxy?
-                @proxy = @proxy.trim()
-                @proxy = "http://" + @proxy if @proxy.indexOf("http") is -1
-                @proxy = new Proxy(@expire, @encrypt, @name, @proxy)
+            proxy = options.proxy
+            if proxy?
+                proxy = proxy.trim()
+                proxy = "http://" + proxy if proxy.indexOf("http") is -1
+                @proxy = new Proxy(options)
             else
-                @storage = new Storage(@expire, @encrypt, @name)
+                @storage = new Storage(options)
             return
 
         key: (index, callback) -> (if @proxy? then @proxy else @storage).key(index, callback)
