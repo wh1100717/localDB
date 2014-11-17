@@ -46,8 +46,9 @@ define(function(require, exports, module) {
     };
 
     Storage.prototype.setItem = function(key, val, callback) {
-      var data, e, flag, self;
+      var cnt, data, e, self;
       self = this;
+      cnt = 0;
       try {
         if (this.encrypt) {
           val = Encrypt.encode(val, this.token);
@@ -60,18 +61,11 @@ define(function(require, exports, module) {
          *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
          *  增加过期时间配置项
          */
-
-        /* TODO
-         *  这里有可能是非容量满等其他原因导致出错
-         *  所以需要设置一个最大尝试阀值，或者根据出错信息来判断是否继续循环
-         *  避免死循环
-         */
-        flag = true;
         if (this.encrypt) {
           val = Encrypt.decode(val, this.token);
         }
         data = Utils.parse(val);
-        while (flag) {
+        while (cnt > 10) {
           try {
             data.splice(0, 1);
             val = Utils.stringify(data);
@@ -79,16 +73,14 @@ define(function(require, exports, module) {
               val = Encrypt.encode(val, self.token);
             }
             self.storage.setItem(key, val);
-            flag = false;
-          } catch (_error) {}
+            cnt = 11;
+          } catch (_error) {
+            e = _error;
+            cnt += 1;
+          }
         }
       }
-
-      /* TODO
-       *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
-       *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回e
-       */
-      callback();
+      callback((cnt > 10 ? new Error("exceed maximum times trying setItem into Storage") : void 0));
     };
 
     Storage.prototype.getItem = function(key, callback) {

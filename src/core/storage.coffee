@@ -33,6 +33,7 @@ define (require, exports, module) ->
 
         setItem: (key, val, callback) ->
             self = @
+            cnt = 0
             try
                 val = Encrypt.encode(val, @token) if @encrypt
                 @storage.setItem(key, val)
@@ -41,26 +42,18 @@ define (require, exports, module) ->
                  *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
                  *  增加过期时间配置项
                 ###
-                ### TODO
-                 *  这里有可能是非容量满等其他原因导致出错
-                 *  所以需要设置一个最大尝试阀值，或者根据出错信息来判断是否继续循环
-                 *  避免死循环
-                ###
-                flag = true
                 val = Encrypt.decode(val, @token) if @encrypt
                 data = Utils.parse val
-                while flag
+                while cnt > 10
                     try
                         data.splice(0, 1)
                         val = Utils.stringify(data)
                         val = Encrypt.encode(val, self.token) if self.encrypt
                         self.storage.setItem(key, val)
-                        flag = false
-            ### TODO
-             *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
-             *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回e
-            ###
-            callback()
+                        cnt = 11
+                    catch e
+                        cnt += 1
+            callback (new Error("exceed maximum times trying setItem into Storage") if cnt > 10)
             return
 
         getItem: (key, callback) ->
