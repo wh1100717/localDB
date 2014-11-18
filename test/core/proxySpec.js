@@ -4,8 +4,14 @@ define(function(require, exports, module) {
   var Proxy;
   Proxy = require('core/proxy');
   return describe('Proxy', function() {
-    var proxy;
-    proxy = new Proxy(false, true, true, "http://localdb.emptystack.net/server.html");
+    var options, proxy;
+    options = {
+      expire: "none",
+      encrypt: true,
+      name: "test",
+      proxy: "http://localdb.emptystack.net/server.html"
+    };
+    proxy = new Proxy(options);
     it('setItem', function() {
       return proxy.setItem("name", "Arron", function(data) {
         return console.log("proxy=======>setItem==" + data);
