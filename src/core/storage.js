@@ -10,6 +10,7 @@ define(function(require, exports, module) {
       this.expire = options.expire;
       this.encrypt = options.encrypt;
       this.token = options.name;
+      this.insert_guarantee = options.insert_guarantee;
       if (this.expire === "window") {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");
@@ -58,9 +59,12 @@ define(function(require, exports, module) {
         e = _error;
 
         /* TODO
-         *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
          *  增加过期时间配置项
          */
+        if (!this.insert_guarantee) {
+          callback(e);
+          return;
+        }
         if (this.encrypt) {
           val = Encrypt.decode(val, this.token);
         }

@@ -12,6 +12,7 @@ define(function(require, exports, module) {
       this.encrypt = options.encrypt;
       this.name = options.name;
       this.proxy = options.proxy;
+      this.insert_guarantee = options.insert_guarantee;
       this.evemit = new Evemit();
       this.iframe = Utils.createIframe(this.proxy);
       Evemit.bind(window, "message", function(e) {
@@ -36,6 +37,7 @@ define(function(require, exports, module) {
       data.expire = this.expire;
       data.encrypt = this.encrypt;
       data.name = this.name;
+      data.insert_guarantee = this.insert_guarantee;
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
       ifrWin = this.iframe.contentWindow;

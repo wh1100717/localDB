@@ -39,11 +39,13 @@ define(function(require, exports, module) {
       this.expire = options.expire != null ? options.expire : "window";
       this.encrypt = options.encrypt != null ? options.encrypt : true;
       this.proxy = options.proxy != null ? options.proxy : null;
+      this.insert_guarantee = options.guarantee ? options.guarantee : false;
       this.engine = new Engine({
         expire: this.expire,
         encrypt: this.encrypt,
         name: this.name,
-        proxy: this.proxy
+        proxy: this.proxy,
+        insert_guarantee: this.insert_guarantee
       });
     }
 

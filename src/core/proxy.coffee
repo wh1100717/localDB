@@ -12,6 +12,7 @@ define (require, exports, module) ->
             @encrypt = options.encrypt
             @name = options.name
             @proxy = options.proxy
+            @insert_guarantee = options.insert_guarantee
             @evemit = new Evemit()
             @iframe = Utils.createIframe @proxy
             Evemit.bind window, "message", (e) ->
@@ -29,6 +30,7 @@ define (require, exports, module) ->
             data.expire = @expire
             data.encrypt = @encrypt
             data.name = @name
+            data.insert_guarantee = @insert_guarantee
             @evemit.once eve, callback
             data = JSON.stringify data
             ifrWin = @iframe.contentWindow

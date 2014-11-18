@@ -35,11 +35,13 @@ define (require, exports, module) ->
             @expire = if options.expire? then options.expire else "window"
             @encrypt = if options.encrypt? then options.encrypt else true
             @proxy = if options.proxy? then options.proxy else null
+            @insert_guarantee = if options.guarantee then options.guarantee else false
             @engine = new Engine {
                 expire: @expire
                 encrypt: @encrypt
                 name: @name
                 proxy: @proxy
+                insert_guarantee: @insert_guarantee
             }
 
         # get options

@@ -11,6 +11,7 @@ define (require, exports, module) ->
             @expire = options.expire
             @encrypt = options.encrypt
             @token = options.name
+            @insert_guarantee = options.insert_guarantee
             if @expire is "window"
                 throw new Error("sessionStorage is not supported!") if not Support.sessionstorage()
                 @storage = sessionStorage
@@ -42,9 +43,11 @@ define (require, exports, module) ->
                 @storage.setItem(key, val)
             catch e
                 ### TODO
-                 *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
                  *  增加过期时间配置项
                 ###
+                if not @insert_guarantee
+                    callback(e)
+                    return
                 val = Encrypt.decode(val, @token) if @encrypt
                 data = Utils.parse val
                 while cnt > 10
