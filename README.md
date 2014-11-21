@@ -16,7 +16,6 @@
 ## Feature
 
 *   基于 JSON 风格文档的存储方式
-*   类 MongoDB API 接口
 *   支持基于文档的富查询方式
 *   支持 seajs 模块化加载
 *   支持 requirejs 模块化加载
