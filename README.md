@@ -26,7 +26,6 @@
 *   支持sort排序
 *   支持 BSON ObjectId
 *   支持存储函数和正则表达式
-*   采用coffeescript编写源码及测试用例
 
 ## Documentation
 
