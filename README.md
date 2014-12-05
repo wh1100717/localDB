@@ -34,6 +34,8 @@
 *   [Support Feature](doc/supportFeature.md)
 *   [TODO List](doc/todoList.md)
 
+git clone --depth=50 --branch=master git://github.com/wh1100717/localDB.git wh1100717/localDB
+
 ## License
 
 [LocalDB](http://localdb.emptystack.net/) is licensed under the [MIT license](http://opensource.org/licenses/MIT).

@@ -13,6 +13,7 @@ define(function(require, exports, module) {
        */
       var proxy;
       proxy = options.proxy;
+      this.name = options.name;
       if (proxy != null) {
         proxy = proxy.trim();
         if (proxy.indexOf("http") === -1) {

@@ -1987,10 +1987,11 @@ var Storage = (function(){
   
   var Storage;
   Storage = (function() {
-    function Storage(expire, encrypt, token) {
-      this.expire = expire;
-      this.encrypt = encrypt;
-      this.token = token;
+    function Storage(options) {
+      this.expire = options.expire;
+      this.encrypt = options.encrypt;
+      this.token = options.name;
+      this.insert_guarantee = options.insert_guarantee;
       if (this.expire === "window") {
         if (!Support.sessionstorage()) {
           throw new Error("sessionStorage is not supported!");
@@ -2027,8 +2028,9 @@ var Storage = (function(){
     };
 
     Storage.prototype.setItem = function(key, val, callback) {
-      var data, e, flag, self;
+      var cnt, data, e, self;
       self = this;
+      cnt = 0;
       try {
         if (this.encrypt) {
           val = Encrypt.encode(val, this.token);
@@ -2038,21 +2040,17 @@ var Storage = (function(){
         e = _error;
 
         /* TODO
-         *  需要在LocalDB的构造函数中增加配置参数，来确定是否自动删除最老数据
          *  增加过期时间配置项
          */
-
-        /* TODO
-         *  这里有可能是非容量满等其他原因导致出错
-         *  所以需要设置一个最大尝试阀值，或者根据出错信息来判断是否继续循环
-         *  避免死循环
-         */
-        flag = true;
+        if (!this.insert_guarantee) {
+          callback(e);
+          return;
+        }
         if (this.encrypt) {
           val = Encrypt.decode(val, this.token);
         }
         data = Utils.parse(val);
-        while (flag) {
+        while (cnt > 10) {
           try {
             data.splice(0, 1);
             val = Utils.stringify(data);
@@ -2060,16 +2058,14 @@ var Storage = (function(){
               val = Encrypt.encode(val, self.token);
             }
             self.storage.setItem(key, val);
-            flag = false;
-          } catch (_error) {}
+            cnt = 11;
+          } catch (_error) {
+            e = _error;
+            cnt += 1;
+          }
         }
       }
-
-      /* TODO
-       *  目前采用的是删除初始数据来保证在数据存满以后仍然可以继续存下去
-       *  在初始化LocalDB的时候需要增加配置参数，根据参数来决定是否自动删除初始数据，还是返回e
-       */
-      callback();
+      callback((cnt > 10 ? new Error("exceed maximum times trying setItem into Storage") : void 0));
     };
 
     Storage.prototype.getItem = function(key, callback) {
@@ -2221,13 +2217,14 @@ var Proxy = (function(){
   
   var Proxy;
   Proxy = (function() {
-    function Proxy(expire, encrypt, token, proxy) {
+    function Proxy(options) {
       var self;
-      this.expire = expire;
-      this.encrypt = encrypt;
-      this.token = token;
-      this.proxy = proxy;
       self = this;
+      this.expire = options.expire;
+      this.encrypt = options.encrypt;
+      this.name = options.name;
+      this.proxy = options.proxy;
+      this.insert_guarantee = options.insert_guarantee;
       this.evemit = new Evemit();
       this.iframe = Utils.createIframe(this.proxy);
       Evemit.bind(window, "message", function(e) {
@@ -2251,19 +2248,27 @@ var Proxy = (function(){
       data.eve = eve;
       data.expire = this.expire;
       data.encrypt = this.encrypt;
-      data.token = this.token;
+      data.name = this.name;
+      data.insert_guarantee = this.insert_guarantee;
       this.evemit.once(eve, callback);
       data = JSON.stringify(data);
       ifrWin = this.iframe.contentWindow;
+
+      /*
+       *  当加载非同源iframe时，不能简单的通过 iframe.contentWindow.document.readystate来判断页面是否为complete
+       *  第一: readystate为complete不代表server端的localDB初始化完成
+       *  第二: 一旦非同源iframe加载完成，则无法访问到readystate
+       *  因此通过能否访问到iframe.contentWindow.document来判断其是否完成加载
+          *   如果能访问到，则给iframe的load事件增加函数
+          *   如果不能访问到，则直接iframe.contentWindow.postMessage发送请求
+       */
       try {
         ifrWin.document;
-        console.log("lalala");
         return Evemit.bind(this.iframe, "load", function() {
           return ifrWin.postMessage(data, Utils.getOrigin(self.proxy));
         });
       } catch (_error) {
         e = _error;
-        console.log("wowowo", e);
         return ifrWin.postMessage(data, Utils.getOrigin(this.proxy));
       }
     };
@@ -2312,24 +2317,22 @@ var Engine = (function(){
   
   var Engine;
   Engine = (function() {
-    function Engine(expire, encrypt, name, proxy) {
-      this.expire = expire;
-      this.encrypt = encrypt;
-      this.name = name;
-      this.proxy = proxy;
+    function Engine(options) {
 
       /* TODO
        *  增加 @expire 类型判断，目前应该只有"none"和"window"，后续会增加"browser"和Date()类型
        */
-      if (this.proxy != null) {
-        this.proxy = this.proxy.trim();
-        if (this.proxy.indexOf("http") === -1) {
-          this.proxy = "http://" + this.proxy;
+      var proxy;
+      proxy = options.proxy;
+      this.name = options.name;
+      if (proxy != null) {
+        proxy = proxy.trim();
+        if (proxy.indexOf("http") === -1) {
+          proxy = "http://" + proxy;
         }
-        console.log("new Engine:", this.proxy);
-        this.proxy = new Proxy(this.expire, this.encrypt, this.name, this.proxy);
+        this.proxy = new Proxy(options);
       } else {
-        this.storage = new Storage(this.expire, this.encrypt, this.name);
+        this.storage = new Storage(options);
       }
       return;
     }
@@ -2449,15 +2452,14 @@ var Server = (function(){
       return Evemit.bind(window, "message", function(e) {
         var origin, result, storage;
         origin = e.origin;
-        console.log("checkOrigin: ", self.checkOrigin(origin));
         if (!self.checkOrigin(origin)) {
           return false;
         }
         result = JSON.parse(e.data);
-        if (self.storages[result.token] == null) {
-          self.storages[result.token] = new Storage(result.expire, result.encrypt, result.token);
+        if (self.storages[result.name] == null) {
+          self.storages[result.name] = new Storage(result);
         }
-        storage = self.storages[result.token];
+        storage = self.storages[result.name];
         switch (result.eve.split("|")[0]) {
           case "key":
             return storage.key(result.index, function(data, err) {
@@ -2526,7 +2528,7 @@ var LocalDB = (function(){
         *   "window" by default
         *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
         *   TODO: Date(), means the data will be alive until Date()
-     *  The data will be stored encrypted if the encrpyt options is true, true by default.
+     *  The data will be stored encrypted if the encrypt options is true, true by default.
      */
     function LocalDB(dbName, options) {
       if (options == null) {
@@ -2539,7 +2541,14 @@ var LocalDB = (function(){
       this.expire = options.expire != null ? options.expire : "window";
       this.encrypt = options.encrypt != null ? options.encrypt : true;
       this.proxy = options.proxy != null ? options.proxy : null;
-      this.engine = new Engine(this.expire, this.encrypt, this.name, this.proxy);
+      this.insert_guarantee = options.guarantee ? options.guarantee : false;
+      this.engine = new Engine({
+        expire: this.expire,
+        encrypt: this.encrypt,
+        name: this.name,
+        proxy: this.proxy,
+        insert_guarantee: this.insert_guarantee
+      });
     }
 
     LocalDB.prototype.options = function() {

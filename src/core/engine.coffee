@@ -12,6 +12,7 @@ define (require, exports, module) ->
              *  增加 @expire 类型判断，目前应该只有"none"和"window"，后续会增加"browser"和Date()类型
             ###
             proxy = options.proxy
+            @name = options.name
             if proxy?
                 proxy = proxy.trim()
                 proxy = "http://" + proxy if proxy.indexOf("http") is -1
