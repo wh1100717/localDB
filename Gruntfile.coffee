@@ -37,6 +37,7 @@ module.exports = (grunt) ->
         }
         clean: {
             build: ['dist/<%= pkg.version %>']
+            doc: ['docs']
             # release: ['dist/*', '!dist/localdb{.,.min.}js']
         }
         requirejs: {
@@ -123,11 +124,24 @@ module.exports = (grunt) ->
                 recursive: true
             }
         }
+        jsdoc: {
+            dist: {
+                src: ['src/**/*.js', 'README.md']
+                dest: "docs"
+                options: {
+                    template: "node_modules/jaguarjs-jsdoc"
+                    configure: "jsdoc.json"
+                    private: false
+                }
+            }
+        }
     }
 
     grunt.registerTask 'test', ['karma', 'coveralls']
 
     grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify:*']
+
+    grunt.registerTask 'build-doc', ['clean:doc', 'jsdoc']
 
     grunt.registerTask 'default', ['test']
 

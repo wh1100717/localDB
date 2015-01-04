@@ -10,25 +10,30 @@ define (require, exports, module) ->
     dbPrefix = "ldb_"
     version = ""
 
+    ###*
+     *  @class LocalDB
+     *  @classdesc LocalDB用来生成数据库对象
+     *  @author [wh1100717]{@link https://github.com/wh1100717}
+     *  @param  {String}    dbName - 数据库名
+     *  @param  {Object}    [options] 配置参数
+     *  @param  {String}    [options.expire="window"] - "window"：数据随着当前页面标签关闭而消失, "none"：数据会一直存在对应的域内，不随着页面或者浏览器关闭而消失。
+     *  @param  {Boolean}   [options.encrypt=true] - true：对存储的数据进行加密操作
+     *  @param  {String}    [options.proxy=null] - 指定proxy url来进行跨域数据存取，具体请参考@todo Proxy文档
+     *  @return {LocalDB}
+     *  @example
+    ```javascript
+    var db = new LocalDB("foo")
+    var db = new LocaoDB("foo", {
+       expire: "window",
+       encrypt: true,
+       proxy: "http://www.foo.com/getProxy.html"
+    })
+    ```
+     *  @todo 增加 options.expire 对"browser"的支持，数据可以在可以在同一个域的多个页面之间共享，但随着浏览器关闭而消失。
+     *  @todo 增加 options.expire 对"Date()"的支持，数据可以在指定日期内一直存在。
+    ###
     class LocalDB
 
-        ###
-         *  Constructor
-         *  var db = new LocalDB("foo")
-         *  var db = new LocaoDB("foo", {
-                expire: "window",
-                encrypt: true,
-                proxy: "http://www.foo.com/getProxy.html"
-            })
-         *
-         *  Engine will decide to choose the best way to handle data automatically.
-            *   when expire is set as "window", the data wil be alive while the window page stay open
-            *   when expire is set as "none", the data will be always stored even after the browser is closed.
-            *   "window" by default
-            *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
-            *   TODO: Date(), means the data will be alive until Date()
-         *  The data will be stored encrypted if the encrypt options is true, true by default.
-        ###
         constructor: (dbName, options = {}) ->
             throw new Error("dbName should be specified.") if not dbName?
             @name = dbPrefix + dbName
@@ -44,7 +49,16 @@ define (require, exports, module) ->
                 insert_guarantee: @insert_guarantee
             }
 
-        # get options
+        ###*
+         *  @function LocalDB#options
+         *  @desc get options
+         *  @instance
+         *  @return {Object}
+         *  @example
+         var db = new LocalDB("foo")
+         var options = db.options()
+         console.log(options)
+        ###
         options: -> {
             name: @name.substr(dbPrefix.length)
             expire: @expire
@@ -58,9 +72,16 @@ define (require, exports, module) ->
         # ###
         # collections: -> (@ls.key(i).substr("#{@name}_".length) for i in [0...@ls.size()] when @ls.key(i).indexOf("#{@name}_") is 0)
 
-        ###
-         *  Get Collection
-         *  var collection = db.collection("bar")
+        ###*
+         *  @function LocalDB#collection
+         *  @desc get collection
+         *  @instance
+         *  @param {String} collectionName - collection Name
+         *  @return {Collection}    Instance of Collection Class
+         *  @example
+         var db = new LocalDB("foo")
+         var collection = db.collection("bar")
+         console.log(typeof collection)
         ###
         collection: (collectionName) ->
             throw new Error("collectionName should be specified.") if not collectionName?
@@ -76,34 +97,46 @@ define (require, exports, module) ->
         #     @ls.removeItem(j) for j in keys
         #     return true
 
-    ###
-     *  Check Browser Feature Compatibility
+    ###*
+     *  @function LocalDB.getSupport
+     *  @desc Check Browser Feature Compatibility
+     *  @return {Support}
+     *  @example
+     if(LocalDB.getSupport().localstorage()){
+        alert("Your Browser support LocalStorage!")
+     }
     ###
     LocalDB.getSupport = -> Support
 
-    ###
-     *  Version
+    ###*
+     *  @function LocalDB.getVersion
+     *  @desc Get LocalDB version
+     *  @return {String}
+     *  @example
+     console.log("The version of LocalDB is:", LocalDB.getVersion())
     ###
     LocalDB.getVersion = -> version
 
-    ###
-     *  Get Timestamp
-     *  Convert ObjectId to timestamp
+    ###*
+     *  @function LocalDB.getTimestamp
+     *  @desc Convert ObjectId to timestamp
+     *  @param {String} objectId
+     *  @return {Number}
     ###
     LocalDB.getTimestamp = (objectId) -> Utils.getTimestamp(objectId)
 
-    ###
-     *  Get Time
-     *  Convert ObjectId to time
+    ###*
+     *  @function LocalDB.getTime
+     *  @desc Convert ObjectId to time
+     *  @param {String} objectId
+     *  @return {String}
     ###
     LocalDB.getTime = (objectId) -> Utils.getTime(objectId)
 
-    ###
-     *  Proxy Server Init
-     *  LocalDB.init({
-            allow: ["*.baidu.com", "pt.aliexpress.com"]
-            deny: ["map.baidu.com"]
-        })
+    ###*
+     *  @function LocalDB.init
+     *  @desc Proxy Server Init
+     *  @param {Object} config
     ###
     LocalDB.init = (config) -> (new Server(config)).init()
 
