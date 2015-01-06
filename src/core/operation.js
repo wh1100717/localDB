@@ -31,7 +31,7 @@ define(function(require, exports, module) {
     var action, multi, upsert, value, where;
     where = options.where || {};
     multi = options.multi != null ? options.multi : true;
-    upsert = options.upsert != null ? options.upsert : false;
+    upsert = options.upsert != null ? options.upsert : true;
     for (action in actions) {
       value = actions[action];
       data = Update.generate(data, action, value, where, multi, upsert);

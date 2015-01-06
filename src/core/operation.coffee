@@ -20,7 +20,7 @@ define (require, exports, module) ->
     Operation.update = (data, actions, options) ->
         where = options.where or {}
         multi = if options.multi? then options.multi else true
-        upsert = if options.upsert? then options.upsert else false
+        upsert = if options.upsert? then options.upsert else true
         for action, value of actions
             data = Update.generate data, action, value, where, multi, upsert
         return data

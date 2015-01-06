@@ -1,14 +1,13 @@
 {
   "name": "localDB",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "local database using localStorage",
   "homepage": "https://github.com/wh1100717/localDB",
   "author": {
-    "name": "Eric Wang",
-    "email": "me@emptystack.net",
-    "url": "http://localdb.emptystack.net/"
+    "name": "wh1100717",
+    "email": "me@emptystack.net"
   },
-  "main": "dist/0.0.1/localdb.js",
+  "main": "dist/0.1.0/localdb.js",
   "keywords": [
     "localdb",
     "localstorage",

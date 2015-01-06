@@ -139,9 +139,9 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'test', ['karma', 'coveralls']
 
-    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify:*']
-
     grunt.registerTask 'build-doc', ['clean:doc', 'jsdoc']
+
+    grunt.registerTask 'build', ['test', 'clean:build', 'requirejs', 'copy', 'uglify:*', 'build-doc']
 
     grunt.registerTask 'default', ['test']
 

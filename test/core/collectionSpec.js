@@ -162,7 +162,8 @@ define(function(require, exports, module) {
                     }, {
                       where: {
                         a: 1
-                      }
+                      },
+                      upsert: false
                     }, function() {
                       return update_bar.find(function(data) {
                         data = data[0];
@@ -202,6 +203,7 @@ define(function(require, exports, module) {
                                   where: {
                                     a: 1
                                   },
+                                  upsert: false,
                                   multi: false
                                 }, function() {
                                   return update_bar.find(function(data) {

@@ -1411,7 +1411,7 @@ var Operation = (function(){
     var action, multi, upsert, value, where;
     where = options.where || {};
     multi = options.multi != null ? options.multi : true;
-    upsert = options.upsert != null ? options.upsert : false;
+    upsert = options.upsert != null ? options.upsert : true;
     for (action in actions) {
       value = actions[action];
       data = Update.generate(data, action, value, where, multi, upsert);
@@ -1541,22 +1541,52 @@ var __slice = [].slice;
 
 
   
-  var Collection;
-  Collection = (function() {
 
-    /*
-     *  in LocalDB, only use LocalDB to get a collection.
-     *  db = new LocalDB("foo")
-     *  var collection = db.collection("bar")
-     */
+  /**
+   *  该callback只接受err参数
+   *  @callback CallbackStatus
+   *  @param  {Error} err - 返回错误信息，null则表示success
+   */
+
+  /**
+   *  该callback接受两个参数，第一个参数为具体数据信息，第二个参数为err
+   *  @callback CallbackData
+   *  @param  {*} data - 返回的数据
+   *  @param  {Error} err - 返回错误信息，null则表示success
+   */
+  var Collection;
+
+  /**
+   *  @class Collection
+   *  @classdesc Collection类用来操作collection集合，Collection不直接进行初始化，而是通过db来获取，具体方式参考Example
+   *  @author [wh1100717]{@link https://github.com/wh1100717}
+   *  @param  {String}    collectionName - 集合名
+   *  @param  {Engine}    engine - 使用的引擎
+   *  @return {Collection}   Instance of Collection Class
+   *
+   *  @todo Update Actions 文档需要撰写
+   *  @todo Where 支持的操作文档需要撰写
+   *  @todo Promise 相关使用方式文档撰写
+   *  @todo Projection 相关使用方式文档撰写
+   *  @todo Sort 相关使用方式文档撰写
+   *
+   *  @example
+   db = new LocalDB("foo")
+   var collection = db.collection("bar")
+   */
+  Collection = (function() {
     function Collection(collectionName, engine) {
       this.engine = engine;
       this.name = "" + engine.name + "_" + collectionName;
     }
 
 
-    /*
-     *  get data and tranfer into object from localStorage/sessionStorage
+    /**
+     *  @function Collection#deserialize
+     *  @desc 从engine中获取数据并将其转化为对象
+     *  @instance
+     *  @private
+     *  @param {CallbackData} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.deserialize = function(callback) {
@@ -1566,9 +1596,12 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  save data into localStorage/sessionStorage
-     *  when catching error in setItem(), delete the oldest data and try again.
+    /**
+     *  @function Collection#serialize
+     *  @desc 将数据存储到engine中
+     *  @instance
+     *  @private
+     *  @param {CallbackData} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.serialize = function(data, callback) {
@@ -1576,8 +1609,11 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  delete this collection
+    /**
+     *  @function Collection#drop
+     *  @desc 执行删除集合操作
+     *  @instance
+     *  @param {CallbackStatus} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.drop = function(callback) {
@@ -1599,8 +1635,16 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  insert data into collection
+    /**
+     *  @function Collection#insert
+     *  @desc 集合执行插入数据操作
+     *  @instance
+     *  @param {Object|Array<Object>} rowData 要插入的源数据
+     *  @param {Object} [options]   配置参数，预留配置参数接口，目前没有用到
+     *  @param {CallbackStatus} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
+     *
+     *  @todo 对rowData数组类型进行判断
+     *  @todo 对options参数进行判断，如果判断为false的，则调用callback(err)及rejct(err)
      */
 
     Collection.prototype.insert = function() {
@@ -1616,12 +1660,6 @@ var __slice = [].slice;
             }
             return reject(err);
           } else {
-
-            /* TODO
-             1. 对rowData数组类型进行判断
-             2. 对options参数进行判断
-             ==》 如果判断为false的，则调用callback(err)及rejct(err)
-             */
             data = Operation.insert(data, rowData, options);
             return self.serialize(data, function(err) {
               if (callback != null) {
@@ -1640,8 +1678,16 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  update collection
+    /**
+     *  @function Collection#update
+     *  @desc 集合执行更新数据操作
+     *  @instance
+     *  @param {Object} actions 更新操作，目前支持$inc, $set, $mul, $rename, $unset, $min, $max操作
+     *  @param {Object} [options]   配置参数
+     *  @param {Object} [options.where] 更新条件匹配参数
+     *  @param {Boolean} [options.multi] false表示只更新匹配上的第一条数据，true表示更新全部匹配数据，默认为true
+     *  @param {Boolean} [options.upsert] true表示如果更新的数据的key不存在则插入该数据，false则丢弃，默认为true
+     *  @param {CallbackStatus} [callback] 需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.update = function() {
@@ -1675,8 +1721,14 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  remove data from collection
+    /**
+     *  @function Collection#remove
+     *  @desc 集合执行删除数据操作
+     *  @instance
+     *  @param {Object} [options]   配置参数
+     *  @param {Object} [options.where] 删除条件匹配参数
+     *  @param {Boolean} [options.multi] false表示只删除匹配上的第一条数据，true表示删除全部匹配数据，默认为true
+     *  @param {CallbackStatus} [callback] 需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.remove = function() {
@@ -1710,8 +1762,16 @@ var __slice = [].slice;
     };
 
 
-    /*
-     * find data from collection
+    /**
+     *  @function Collection#find
+     *  @desc 集合执行查询数据操作
+     *  @instance
+     *  @param {Object} [options]   配置参数
+     *  @param {Object} [options.where] 查询条件匹配参数
+     *  @param {Object} [options.projection] 返回数据格式配置参数
+     *  @param {Number} [options.limit] 返回数据数量配置参数
+     *  @param {Object} [options.sort] 返回数据排序方式配置参数
+     *  @param {CallbackData} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.find = function() {
@@ -1743,8 +1803,15 @@ var __slice = [].slice;
     };
 
 
-    /*
-     *  find data and only return one data from collection
+    /**
+     *  @function Collection#findOne
+     *  @desc 集合执行查询一条数据操作
+     *  @instance
+     *  @param {Object} [options]   配置参数
+     *  @param {Object} [options.where] 查询条件匹配参数
+     *  @param {Object} [options.projection] 返回数据格式配置参数
+     *  @param {Object} [options.sort] 返回数据排序方式配置参数
+     *  @param {CallbackData} [callback]    需要异步执行的回调函数，支持Promise异步编程方式
      */
 
     Collection.prototype.findOne = function() {
@@ -2510,26 +2577,31 @@ var LocalDB = (function(){
   
   var LocalDB, dbPrefix, version;
   dbPrefix = "ldb_";
-  version = "0.0.1"
-  LocalDB = (function() {
+  version = "0.1.0"
 
-    /*
-     *  Constructor
-     *  var db = new LocalDB("foo")
-     *  var db = new LocaoDB("foo", {
-            expire: "window",
-            encrypt: true,
-            proxy: "http://www.foo.com/getProxy.html"
-        })
-     *
-     *  Engine will decide to choose the best way to handle data automatically.
-        *   when expire is set as "window", the data wil be alive while the window page stay open
-        *   when expire is set as "none", the data will be always stored even after the browser is closed.
-        *   "window" by default
-        *   TODO: "browser", means the data will be alive and shared between the same origin page and disappear when the brower close.
-        *   TODO: Date(), means the data will be alive until Date()
-     *  The data will be stored encrypted if the encrypt options is true, true by default.
-     */
+  /**
+   *  @class LocalDB
+   *  @classdesc LocalDB用来生成数据库对象
+   *  @author [wh1100717]{@link https://github.com/wh1100717}
+   *  @param  {String}    dbName - 数据库名
+   *  @param  {Object}    [options] 配置参数
+   *  @param  {String}    [options.expire="window"] - "window"：数据随着当前页面标签关闭而消失, "none"：数据会一直存在对应的域内，不随着页面或者浏览器关闭而消失。
+   *  @param  {Boolean}   [options.encrypt=true] - true：对存储的数据进行加密操作
+   *  @param  {String}    [options.proxy=null] - 指定proxy url来进行跨域数据存取，具体请参考@todo Proxy文档
+   *  @return {LocalDB}
+   *  @example
+  ```javascript
+  var db = new LocalDB("foo")
+  var db = new LocaoDB("foo", {
+     expire: "window",
+     encrypt: true,
+     proxy: "http://www.foo.com/getProxy.html"
+  })
+  ```
+   *  @todo 增加 options.expire 对"browser"的支持，数据可以在可以在同一个域的多个页面之间共享，但随着浏览器关闭而消失。
+   *  @todo 增加 options.expire 对"Date()"的支持，数据可以在指定日期内一直存在。
+   */
+  LocalDB = (function() {
     function LocalDB(dbName, options) {
       if (options == null) {
         options = {};
@@ -2551,6 +2623,18 @@ var LocalDB = (function(){
       });
     }
 
+
+    /**
+     *  @function LocalDB#options
+     *  @desc get options
+     *  @instance
+     *  @return {Object}
+     *  @example
+     var db = new LocalDB("foo")
+     var options = db.options()
+     console.log(options)
+     */
+
     LocalDB.prototype.options = function() {
       return {
         name: this.name.substr(dbPrefix.length),
@@ -2561,9 +2645,16 @@ var LocalDB = (function(){
     };
 
 
-    /*
-     *  Get Collection
-     *  var collection = db.collection("bar")
+    /**
+     *  @function LocalDB#collection
+     *  @desc get collection
+     *  @instance
+     *  @param {String} collectionName - collection Name
+     *  @return {Collection}    Instance of Collection Class
+     *  @example
+     var db = new LocalDB("foo")
+     var collection = db.collection("bar")
+     console.log(typeof collection)
      */
 
     LocalDB.prototype.collection = function(collectionName) {
@@ -2583,42 +2674,54 @@ var LocalDB = (function(){
 
   })();
 
-  /*
-   *  Check Browser Feature Compatibility
+  /**
+   *  @function LocalDB.getSupport
+   *  @desc Check Browser Feature Compatibility
+   *  @return {Support}
+   *  @example
+   if(LocalDB.getSupport().localstorage()){
+      alert("Your Browser support LocalStorage!")
+   }
    */
   LocalDB.getSupport = function() {
     return Support;
   };
 
-  /*
-   *  Version
+  /**
+   *  @function LocalDB.getVersion
+   *  @desc Get LocalDB version
+   *  @return {String}
+   *  @example
+   console.log("The version of LocalDB is:", LocalDB.getVersion())
    */
   LocalDB.getVersion = function() {
     return version;
   };
 
-  /*
-   *  Get Timestamp
-   *  Convert ObjectId to timestamp
+  /**
+   *  @function LocalDB.getTimestamp
+   *  @desc Convert ObjectId to timestamp
+   *  @param {String} objectId
+   *  @return {Number}
    */
   LocalDB.getTimestamp = function(objectId) {
     return Utils.getTimestamp(objectId);
   };
 
-  /*
-   *  Get Time
-   *  Convert ObjectId to time
+  /**
+   *  @function LocalDB.getTime
+   *  @desc Convert ObjectId to time
+   *  @param {String} objectId
+   *  @return {String}
    */
   LocalDB.getTime = function(objectId) {
     return Utils.getTime(objectId);
   };
 
-  /*
-   *  Proxy Server Init
-   *  LocalDB.init({
-          allow: ["*.baidu.com", "pt.aliexpress.com"]
-          deny: ["map.baidu.com"]
-      })
+  /**
+   *  @function LocalDB.init
+   *  @desc Proxy Server Init
+   *  @param {Object} config
    */
   LocalDB.init = function(config) {
     return (new Server(config)).init();

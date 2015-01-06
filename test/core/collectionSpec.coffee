@@ -131,6 +131,7 @@ define (require, exports, module) ->
                                             }
                                         }, {
                                             where: {a:1}
+                                            upsert: false
                                         }, ->
                                             update_bar.find (data) ->
                                                 data = data[0]
@@ -161,6 +162,7 @@ define (require, exports, module) ->
                                                                     where: {
                                                                         a: 1
                                                                     }
+                                                                    upsert: false
                                                                     multi: false
                                                                 }, ->
                                                                     update_bar.find (data) ->

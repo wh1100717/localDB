@@ -1,6 +1,19 @@
 define (require, exports, module) ->
     "use strict"
 
+    ###*
+     *  该callback只接受err参数
+     *  @callback CallbackStatus
+     *  @param  {Error} err - 返回错误信息，null则表示success
+    ###
+
+    ###*
+     *  该callback接受两个参数，第一个参数为具体数据信息，第二个参数为err
+     *  @callback CallbackData
+     *  @param  {*} data - 返回的数据
+     *  @param  {Error} err - 返回错误信息，null则表示success
+    ###
+
     Promise = require("lib/promise")
     Utils = require("core/utils")
     Operation = require("core/operation")
@@ -100,7 +113,7 @@ define (require, exports, module) ->
          *  @param {Object} [options]   配置参数
          *  @param {Object} [options.where] 更新条件匹配参数
          *  @param {Boolean} [options.multi] false表示只更新匹配上的第一条数据，true表示更新全部匹配数据，默认为true
-         *  @param {Boolean} [options.upsert] true表示如果更新的数据的key不存在则插入该数据，false则丢弃，默认为false
+         *  @param {Boolean} [options.upsert] true表示如果更新的数据的key不存在则插入该数据，false则丢弃，默认为true
          *  @param {CallbackStatus} [callback] 需要异步执行的回调函数，支持Promise异步编程方式
         ###
         update: (actions, paras...) ->
@@ -205,16 +218,3 @@ define (require, exports, module) ->
             new Promise(promiseFn)
 
     module.exports = Collection
-
-###*
- *  该callback只接受err参数
- *  @callback CallbackStatus
- *  @param  {Error} err - 返回错误信息，null则表示success
-###
-
-###*
- *  该callback接受两个参数，第一个参数为具体数据信息，第二个参数为err
- *  @callback CallbackData
- *  @param  {*} data - 返回的数据
- *  @param  {Error} err - 返回错误信息，null则表示success
-###
