@@ -1,6 +1,0 @@
-encoding: utf-8
-name: localDB
-markdown: redcarpet
-pygments: true
-baseurl: /
-relative_permalinks: false
