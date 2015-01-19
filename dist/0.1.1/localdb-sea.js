@@ -1,4 +1,4 @@
-(function( global, factory ) {
+define(function(require, exports, module) {(function( global, factory ) {
 
     if ( typeof module === "object" && typeof module.exports === "object" ) {
         module.exports = global.document ?
@@ -2577,7 +2577,7 @@ var LocalDB = (function(){
   
   var LocalDB, dbPrefix, version;
   dbPrefix = "ldb_";
-  version = "0.1.0"
+  version = "0.1.1"
 
   /**
    *  @class LocalDB
@@ -2741,4 +2741,4 @@ var LocalDB = (function(){
   }
 
   return LocalDB
-}));
+}));});

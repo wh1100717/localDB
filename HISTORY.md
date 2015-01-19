@@ -2,6 +2,10 @@
 
 ---
 
+## 0.1.1
+
+*   https://github.com/then/promise 的性能存在一定的问题，某些情况下会增加300左右的延迟，实际上现代浏览器都已高效实现Promise，如果已经实现则使用原生Promise。
+
 ## 0.1.0
 
 First Release.

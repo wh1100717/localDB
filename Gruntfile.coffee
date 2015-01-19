@@ -21,6 +21,8 @@ module.exports = (grunt) ->
         contents = contents.replace(/version = \"\";/, "version = \"#{pkg.version}\"")
         contents = "var #{exportVar} = (function(){\n" + contents
         contents += "\n})();\n"
+        # 特殊处理Promise
+        contents = contents.replace("var Promise =", "var Promise = Utils.isFunction(window.Promise) ? window.Promise :")
         return contents
 
 

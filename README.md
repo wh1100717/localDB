@@ -75,7 +75,7 @@ $ spm install localdb
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="dist/0.1.0/localdb.js"></script>
+    <script type="text/javascript" src="dist/0.1.1/localdb.js"></script>
 </head>
 <body>
 </body>
@@ -96,7 +96,7 @@ $ spm install localdb
 <body>
 </body>
 <script type="text/javascript">
-    require(['dist/0.1.0/localdb'],function(LocalDB){
+    require(['dist/0.1.1/localdb'],function(LocalDB){
         var db = new LocalDB("foo")
     }
 </script>
@@ -114,7 +114,7 @@ $ spm install localdb
 <body>
 </body>
 <script type="text/javascript">
-    seajs.use('dist/0.1.0/localdb-seajs.js', function(LocalDB){
+    seajs.use('dist/0.1.1/localdb-seajs.js', function(LocalDB){
         var db = new LocalDB("foo")
     })
 </script>

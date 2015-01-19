@@ -29,6 +29,7 @@ module.exports = function(grunt) {
     contents = contents.replace(/version = \"\";/, "version = \"" + pkg.version + "\"");
     contents = ("var " + exportVar + " = (function(){\n") + contents;
     contents += "\n})();\n";
+    contents = contents.replace("var Promise =", "var Promise = Utils.isFunction(window.Promise) ? window.Promise :");
     return contents;
   };
   require('load-grunt-tasks')(grunt);

@@ -568,7 +568,7 @@ var Utils = (function(){
   return Utils;
 })();
 
-var Promise = (function(){
+var Promise = Utils.isFunction(window.Promise) ? window.Promise : (function(){
 
   /**
    * https://github.com/then/promise [v6.0.1]
