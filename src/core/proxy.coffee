@@ -42,6 +42,9 @@ define (require, exports, module) ->
                 *   如果能访问到，则给iframe的load事件增加函数
                 *   如果不能访问到，则直接iframe.contentWindow.postMessage发送请求
             ###
+            ###
+             *  @todo 同源下这个处理逻辑是有问题的==！
+            ###
             try
                 ifrWin.document
                 Evemit.bind @iframe, "load", ->
